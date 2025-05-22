@@ -1,4 +1,4 @@
-﻿//=============================================================================
+//=============================================================================
 //
 // メイン処理 [main.cpp]
 // Author : 
@@ -20,6 +20,9 @@
 #include "score.h"
 #include "sprite.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -107,6 +110,26 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		return -1;
 	}
 
+	// ✅ 加在這裡開始初始化 ImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+	ImGui::StyleColorsDark();
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	ID3D11Device* g_pd3dDevice = GetD3DDevice();
+	ID3D11DeviceContext* g_d3dDeviceContext = GetD3DDeviceContext();
+
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX11_Init(g_pd3dDevice, g_d3dDeviceContext);
 	// フレームカウント初期化
 	timeBeginPeriod(1);	// 分解能を設定
 	dwExecLastTime = dwFPSLastTime = timeGetTime();	// システム時刻をミリ秒単位で取得
@@ -175,6 +198,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	// 終了処理
 	Uninit();
 
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 	return (int)msg.wParam;
 }
 
@@ -183,6 +209,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	// 先讓 ImGui 處理訊息，如果它回傳 true 就不繼續處理
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
 	UINT dataSize = 0; 
 	switch (message)
 	{
@@ -440,6 +469,25 @@ void Draw(void)
 #ifdef _DEBUG
 	// デバッグ表示
 	DrawDebugProc();
+	// 新幀開始
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	// UI繪製
+	ImGui::Begin("Debug Window");
+	ImGui::Text("Hello, ImGui!");
+	ImGui::End();
+
+	// 結束新幀
+	ImGui::Render();
+
+	// 渲染 ImGui 主視窗
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	// 如果啟用了多視窗（Docking / Viewports），要呼叫這兩個函式
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
 #endif
 
 	// バックバッファ、フロントバッファ入れ替え
@@ -540,6 +588,7 @@ void HandleMouseMove(int deltaX, int deltaY) {
 	float pitch = deltaY * sensitivity; // 垂直回転（Pitch）
 }
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #ifdef _DEBUG
 char* GetDebugStr(void)

@@ -98,3 +98,5 @@ POINT GetClientCursorPos(HWND hwnd);
 float GetCameraYaw(XMFLOAT3 dir, XMFLOAT3 pos);
 float GetCameraPitch(XMFLOAT3 dir, XMFLOAT3 pos);
 XMFLOAT3 GetDeltaMove(XMFLOAT3 dir, XMFLOAT3 pos);
+
+LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

@@ -364,6 +364,9 @@ void SetShaderCamera(XMFLOAT3 pos)
 	GetDeviceContext()->UpdateSubresource(g_CameraBuffer, 0, NULL, &tmp, 0, 0);
 }
 
+ID3D11Device* GetD3DDevice() { return g_D3DDevice; }
+ID3D11DeviceContext* GetD3DDeviceContext() { return g_ImmediateContext; }
+
 
 
 //=============================================================================
