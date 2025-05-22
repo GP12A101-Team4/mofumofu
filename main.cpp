@@ -1,4 +1,4 @@
-﻿//=============================================================================
+//=============================================================================
 //
 // メイン処理 [main.cpp]
 // Author : 
@@ -14,6 +14,7 @@
 #include "shadow.h"
 #include "light.h"
 #include "meshfield.h"
+#include "fragment.h"
 #include "meshwall.h"
 #include "sound.h"
 #include "score.h"
@@ -22,7 +23,6 @@
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
-
 
 //*****************************************************************************
 // マクロ定義
@@ -130,7 +130,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(g_pd3dDevice, g_d3dDeviceContext);
-
 	// フレームカウント初期化
 	timeBeginPeriod(1);	// 分解能を設定
 	dwExecLastTime = dwFPSLastTime = timeGetTime();	// システム時刻をミリ秒単位で取得
@@ -202,7 +201,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	ImGui_ImplDX11_Shutdown();
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
-
 	return (int)msg.wParam;
 }
 
@@ -211,11 +209,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-
 	// 先讓 ImGui 處理訊息，如果它回傳 true 就不繼續處理
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
 		return true;
-
 	UINT dataSize = 0; 
 	switch (message)
 	{
@@ -317,6 +313,9 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// 影の初期化処理
 	InitShadow();
 
+	// 欠片の初期処理
+	InitFragment();
+
 	// プレイヤーの初期化
 	InitPlayer();
 
@@ -343,6 +342,9 @@ void Uninit(void)
 
 	// 壁の終了処理
 	UninitMeshWall();
+
+	//欠片の終了処理
+	UninitFragment();
 
 	// 地面の終了処理
 	UninitMeshField();
@@ -373,6 +375,9 @@ void Update(void)
 	// プレイヤーの更新処理
 	UpdatePlayer();
 
+	//欠片の更新処理
+	UpdateFragment();
+
 	// カメラ更新
 	UpdateCamera();
 
@@ -393,7 +398,8 @@ void Update(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void Draw0(void) {
+void Draw0(void) 
+{
 	// 地面の描画処理
 	DrawMeshField();
 
@@ -401,11 +407,13 @@ void Draw0(void) {
 	DrawShadow();
 
 	// プレイヤーの描画処理
-	DrawPlayer();
+	/*DrawPlayer();*/
 
 	// 壁の描画処理
 	DrawMeshWall();
 
+	//欠片の描画処理
+	DrawFragment();
 }
 
 void Draw(void)
@@ -424,7 +432,7 @@ void Draw(void)
 		SetCameraAT(camera->dir);
 		SetCamera();
 		
-
+		
 
 		SetViewPort(TYPE_FULL_SCREEN);
 		Draw0();	//OBJ描画処理
@@ -445,6 +453,8 @@ void Draw(void)
 
 	DrawScore();	//スコア描画
 
+	
+
 	// Z比較なし
 	SetDepthEnable(TRUE);
 
@@ -459,7 +469,6 @@ void Draw(void)
 #ifdef _DEBUG
 	// デバッグ表示
 	DrawDebugProc();
-
 	// 新幀開始
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
