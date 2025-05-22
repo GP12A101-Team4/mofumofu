@@ -1,0 +1,138 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\ths41016\\Desktop\\mofumofu\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|C:\\Users\\ths41016\\Desktop\\mofumofu\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|C:\\Users\\ths41016\\Desktop\\mofumofu\\main.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|solutionrelative:main.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|C:\\Users\\ths41016\\Desktop\\mofumofu\\imgui-docking\\backends\\imgui_impl_win32.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|solutionrelative:imgui-docking\\backends\\imgui_impl_win32.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|C:\\PROGRAM FILES (X86)\\WINDOWS KITS\\10\\INCLUDE\\10.0.22621.0\\UM\\WINBASE.H||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|C:\\Users\\ths41016\\Desktop\\mofumofu\\imgui-docking\\backends\\imgui_impl_win32.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|solutionrelative:imgui-docking\\backends\\imgui_impl_win32.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|C:\\Users\\ths41016\\Desktop\\mofumofu\\renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|solutionrelative:renderer.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|C:\\Users\\ths41016\\Desktop\\mofumofu\\camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{886725B4-11FC-4A4D-938B-77BD4ECC6D0C}|sample.vcxproj|solutionrelative:camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "main.h",
+              "DocumentMoniker": "C:\\Users\\ths41016\\Desktop\\mofumofu\\main.h",
+              "RelativeDocumentMoniker": "main.h",
+              "ToolTip": "C:\\Users\\ths41016\\Desktop\\mofumofu\\main.h",
+              "RelativeToolTip": "main.h",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAGUAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-05-22T08:07:07.602Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "WinBase.h",
+              "DocumentMoniker": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinBase.h",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinBase.h",
+              "ToolTip": "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinBase.h",
+              "RelativeToolTip": "..\\..\\..\\..\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.22621.0\\um\\WinBase.h",
+              "ViewState": "AgIAAN0cAAAAAAAAAAAkwO4cAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-05-22T08:06:29.575Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "imgui_impl_win32.cpp",
+              "DocumentMoniker": "C:\\Users\\ths41016\\Desktop\\mofumofu\\imgui-docking\\backends\\imgui_impl_win32.cpp",
+              "RelativeDocumentMoniker": "imgui-docking\\backends\\imgui_impl_win32.cpp",
+              "ToolTip": "C:\\Users\\ths41016\\Desktop\\mofumofu\\imgui-docking\\backends\\imgui_impl_win32.cpp",
+              "RelativeToolTip": "imgui-docking\\backends\\imgui_impl_win32.cpp",
+              "ViewState": "AgIAALgCAAAAAAAAAAAUwMACAAA8AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-22T07:46:42.063Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "imgui_impl_win32.h",
+              "DocumentMoniker": "C:\\Users\\ths41016\\Desktop\\mofumofu\\imgui-docking\\backends\\imgui_impl_win32.h",
+              "RelativeDocumentMoniker": "imgui-docking\\backends\\imgui_impl_win32.h",
+              "ToolTip": "C:\\Users\\ths41016\\Desktop\\mofumofu\\imgui-docking\\backends\\imgui_impl_win32.h",
+              "RelativeToolTip": "imgui-docking\\backends\\imgui_impl_win32.h",
+              "ViewState": "AgIAABUAAAAAAAAAAAAkwCQAAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-05-22T07:43:23.038Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "renderer.cpp",
+              "DocumentMoniker": "C:\\Users\\ths41016\\Desktop\\mofumofu\\renderer.cpp",
+              "RelativeDocumentMoniker": "renderer.cpp",
+              "ToolTip": "C:\\Users\\ths41016\\Desktop\\mofumofu\\renderer.cpp",
+              "RelativeToolTip": "renderer.cpp",
+              "ViewState": "AgIAAGYBAAAAAAAAAAAAAG8BAAAqAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-22T07:27:14.874Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "camera.cpp",
+              "DocumentMoniker": "C:\\Users\\ths41016\\Desktop\\mofumofu\\camera.cpp",
+              "RelativeDocumentMoniker": "camera.cpp",
+              "ToolTip": "C:\\Users\\ths41016\\Desktop\\mofumofu\\camera.cpp",
+              "RelativeToolTip": "camera.cpp",
+              "ViewState": "AgIAACYAAAAAAAAAAAAAAN0AAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-22T07:26:39.456Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\ths41016\\Desktop\\mofumofu\\main.cpp",
+              "RelativeDocumentMoniker": "main.cpp",
+              "ToolTip": "C:\\Users\\ths41016\\Desktop\\mofumofu\\main.cpp",
+              "RelativeToolTip": "main.cpp",
+              "ViewState": "AgIAAB0BAAAAAAAAAAAAAC0BAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-05-22T07:11:43.23Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

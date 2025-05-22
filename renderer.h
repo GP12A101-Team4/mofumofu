@@ -121,3 +121,6 @@ void SetShaderCamera(XMFLOAT3 pos);
 
 void SetClearColor(float* color4);
 
+ID3D11Device* GetD3DDevice();
+ID3D11DeviceContext* GetD3DDeviceContext();
+
