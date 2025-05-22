@@ -14,6 +14,7 @@
 #include "shadow.h"
 #include "light.h"
 #include "meshfield.h"
+#include "fragment.h"
 #include "meshwall.h"
 #include "sound.h"
 #include "score.h"
@@ -283,6 +284,9 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// 影の初期化処理
 	InitShadow();
 
+	// 欠片の初期処理
+	InitFragment();
+
 	// プレイヤーの初期化
 	InitPlayer();
 
@@ -309,6 +313,9 @@ void Uninit(void)
 
 	// 壁の終了処理
 	UninitMeshWall();
+
+	//欠片の終了処理
+	UninitFragment();
 
 	// 地面の終了処理
 	UninitMeshField();
@@ -339,6 +346,9 @@ void Update(void)
 	// プレイヤーの更新処理
 	UpdatePlayer();
 
+	//欠片の更新処理
+	UpdateFragment();
+
 	// カメラ更新
 	UpdateCamera();
 
@@ -359,7 +369,8 @@ void Update(void)
 //=============================================================================
 // 描画処理
 //=============================================================================
-void Draw0(void) {
+void Draw0(void) 
+{
 	// 地面の描画処理
 	DrawMeshField();
 
@@ -367,11 +378,13 @@ void Draw0(void) {
 	DrawShadow();
 
 	// プレイヤーの描画処理
-	DrawPlayer();
+	/*DrawPlayer();*/
 
 	// 壁の描画処理
 	DrawMeshWall();
 
+	//欠片の描画処理
+	DrawFragment();
 }
 
 void Draw(void)
@@ -390,7 +403,7 @@ void Draw(void)
 		SetCameraAT(camera->dir);
 		SetCamera();
 		
-
+		
 
 		SetViewPort(TYPE_FULL_SCREEN);
 		Draw0();	//OBJ描画処理
@@ -410,6 +423,8 @@ void Draw(void)
 	//ここに2Dで表示させたいものを書いていく
 
 	DrawScore();	//スコア描画
+
+	
 
 	// Z比較なし
 	SetDepthEnable(TRUE);
