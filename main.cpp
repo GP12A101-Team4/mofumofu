@@ -236,7 +236,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		g_MouseY = HIWORD(lParam);
 
 		POINT point = GetClientCenter(g_hWnd);
-		SetCursorPos(point.x, point.y);
+		/*SetCursorPos(point.x, point.y);*/
 
 
 		break;
@@ -244,11 +244,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		if (wParam != WA_INACTIVE) {
 
-			ShowCursor(FALSE);
+			ShowCursor(TRUE);
 			RECT rect;
 			GetClientRect(hWnd, &rect);
 			MapWindowPoints(hWnd, nullptr, (POINT*)&rect, 2);
-			ClipCursor(&rect);
+			/*ClipCursor(&rect);*/
 
 		}
 		else {
@@ -467,6 +467,9 @@ void Draw(void)
 
 
 #ifdef _DEBUG
+
+	/*g_ImmediateContext->OMSetRenderTargets(1, &g_RenderTargetView, g_DepthStencilView);*/
+
 	// デバッグ表示
 	DrawDebugProc();
 	// 新幀開始
@@ -474,10 +477,13 @@ void Draw(void)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	// UI繪製
-	ImGui::Begin("Debug Window");
-	ImGui::Text("Hello, ImGui!");
+	ImGui::Begin("Debug Info");
+	ImGui::Text("FPS: %d", g_CountFPS); // 你已有的 FPS 計算變數
+	ImGui::Text("Player Pos: %.2f, %.2f, %.2f", player->pos.x, player->pos.y, player->pos.z);
 	ImGui::End();
+
+
+	ImGui::ShowDemoWindow();
 
 	// 結束新幀
 	ImGui::Render();
@@ -488,8 +494,15 @@ void Draw(void)
 	// 如果啟用了多視窗（Docking / Viewports），要呼叫這兩個函式
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
+
+	
 #endif
 
+	ID3D11RenderTargetView* g_RenderTargetView = GetRenderTargetView();
+	ID3D11DepthStencilView* g_DepthStencilView = GetDepthStencilView();
+	ID3D11DeviceContext* g_D3DContext = GetD3DDeviceContext();
+
+	g_D3DContext->OMSetRenderTargets(1, &g_RenderTargetView, g_DepthStencilView);
 	// バックバッファ、フロントバッファ入れ替え
 	Present();
 }
