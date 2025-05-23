@@ -817,3 +817,10 @@ void DebugTextOut(char* text, int x, int y)
 	}
 #endif
 }
+
+ID3D11RenderTargetView* GetRenderTargetView() {
+	return g_RenderTargetView;
+}
+ID3D11DepthStencilView* GetDepthStencilView() {
+	return g_DepthStencilView;
+}
