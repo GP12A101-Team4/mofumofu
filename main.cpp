@@ -18,6 +18,10 @@
 #include "sound.h"
 #include "score.h"
 #include "sprite.h"
+#include "fade.h"
+#include "game.h"
+#include "title.h"
+#include "result.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -47,14 +51,14 @@ long g_MouseY = 0;
 
 HWND g_hWnd = nullptr;
 
-float yaw ;
-float pitch;
-
 #ifdef _DEBUG
 int		g_CountFPS;							// FPSカウンタ
 char	g_DebugStr[2048] = WINDOW_NAME;		// デバッグ文字表示用
 
 #endif
+
+int	g_Mode = MODE_TITLE;					// 起動時の画面を設定
+
 
 
 //=============================================================================
@@ -288,6 +292,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	InitScore();
 
+
+
 	// 入力処理の初期化
 	InitInput(hInstance, hWnd);
 
@@ -325,6 +331,12 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// 背面ポリゴンをカリング
 	SetCullingMode(CULL_MODE_BACK);
+
+	// フェードの初期化
+	InitFade();
+
+	// 最初のモードをセット
+	SetMode(g_Mode);	// ここはSetModeのままで！
 
 	return S_OK;
 }
@@ -370,90 +382,107 @@ void Update(void)
 	// 入力の更新処理
 	UpdateInput();
 
-	// プレイヤーの更新処理
-	UpdatePlayer();
-
 	// カメラ更新
 	UpdateCamera();
 
-	// 地面処理の更新
-	UpdateMeshField();
+	switch (g_Mode)
+	{
+	case MODE_TITLE:		// タイトル画面の更新
+		UpdateTitle();
+		break;
 
+	case MODE_GAME:			// ゲーム画面の更新
+		UpdateGame();
+		break;
 
-	// 壁処理の更新
-	UpdateMeshWall();
+	case MODE_RESULT:		// リザルト画面の更新
+		UpdateResult();
+		break;
+	}
 
-	// 影の更新処理
-	UpdateShadow();
-
-	UpdateScore();
+	// フェード処理の更新
+	UpdateFade();
 
 }
 
 //=============================================================================
 // 描画処理
 //=============================================================================
-void Draw0(void) {
-	// 地面の描画処理
-	DrawMeshField();
-
-	// 影の描画処理
-	DrawShadow();
-
-	// プレイヤーの描画処理
-	DrawPlayer();
-
-	// 壁の描画処理
-	DrawMeshWall();
-
-}
-
 void Draw(void)
 {
 	// バックバッファクリア
 	Clear();
 
-	CAMERA* camera = GetCamera();
+	SetCamera();
+
+
 	PLAYER* player = GetPlayer();
 
+	switch (g_Mode)
 	{
-		
-
-		camera->dir = GetCameraDir(player->pos);
-		
-		SetCameraAT(camera->dir);
-		SetCamera();
-		
-
-
+	case MODE_TITLE:
 		SetViewPort(TYPE_FULL_SCREEN);
-		Draw0();	//OBJ描画処理
+
+		// 2Dの物を描画する処理
+		// Z比較なし
+		SetDepthEnable(FALSE);
+
+		// ライティングを無効
+		SetLightEnable(FALSE);
+
+		DrawTitle();
+
+		// ライティングを有効に
+		SetLightEnable(TRUE);
+
+		// Z比較あり
+		SetDepthEnable(TRUE);
+		break;
+	case MODE_GAME:
+		DrawGame();
+		break;
+	case MODE_RESULT:
+		SetViewPort(TYPE_FULL_SCREEN);
+
+		// 2Dの物を描画する処理
+		// Z比較なし
+		SetDepthEnable(FALSE);
+
+		// ライティングを無効
+		SetLightEnable(FALSE);
+
+		DrawResult();
+
+		// ライティングを有効に
+		SetLightEnable(TRUE);
+
+		// Z比較あり
+		SetDepthEnable(TRUE);
+		break;
+
+	default:
+		break;
 	}
-
-	//すべての3D
-
-	// 2Dの物を描画する処理
-	SetViewPort(TYPE_FULL_SCREEN);
-
-	// Z比較なし
-	SetDepthEnable(FALSE);
-
-	// ライティングを無効
-	SetLightEnable(FALSE);
-
-	//ここに2Dで表示させたいものを書いていく
-
-	DrawScore();	//スコア描画
-
-	// Z比較なし
-	SetDepthEnable(TRUE);
-
-	// ライティングを無効
-	SetLightEnable(TRUE);
-
-
-
 	
+	{	// フェード処理
+		SetViewPort(TYPE_FULL_SCREEN);
+
+		// 2Dの物を描画する処理
+		// Z比較なし
+		SetDepthEnable(FALSE);
+
+		// ライティングを無効
+		SetLightEnable(FALSE);
+
+		// フェード描画
+		DrawFade();
+
+		// ライティングを有効に
+		SetLightEnable(TRUE);
+
+		// Z比較あり
+		SetDepthEnable(TRUE);
+	}
 
 
 #ifdef _DEBUG
@@ -493,10 +522,64 @@ void Draw(void)
 	ID3D11DepthStencilView* g_DepthStencilView = GetDepthStencilView();
 	ID3D11DeviceContext* g_D3DContext = GetD3DDeviceContext();
 
+
 	g_D3DContext->OMSetRenderTargets(1, &g_RenderTargetView, g_DepthStencilView);
 	// バックバッファ、フロントバッファ入れ替え
 	Present();
 }
+
+//=============================================================================
+// モードの設定
+//=============================================================================
+void SetMode(int mode)
+{
+	// モードを変える前に全部メモリを解放しちゃう
+	StopSound();			// まず曲を止める
+
+	// モードを変える前に全部メモリを解放しちゃう
+
+	// プレイヤーの終了処理
+	UninitPlayer();
+
+	// スコアの終了処理
+	UninitScore();
+
+	g_Mode = mode;	// 次のモードをセットしている
+
+	switch (g_Mode)
+	{
+	case MODE_TITLE:
+		//タイトル画面の初期化
+		InitTitle();
+		//PlaySound(SOUND_LABEL_BGM_bgm_title);
+		break;
+
+	case MODE_GAME:
+		// ゲーム画面の初期化
+		InitPlayer();
+		InitScore();
+
+		//PlaySound(SOUND_LABEL_BGM_bgm);
+		break;
+
+	case MODE_RESULT:
+		InitResult();
+		//PlaySound(SOUND_LABEL_BGM_sample002);
+		break;
+
+	case MODE_MAX:
+		break;
+	}
+}
+
+//=============================================================================
+// モードの取得
+//=============================================================================
+int GetMode(void)
+{
+	return g_Mode;
+}
+
 
 POINT GetClientCenter(HWND hWnd){
 	RECT clientRect;
@@ -509,69 +592,6 @@ POINT GetClientCenter(HWND hWnd){
 
 	return Center;
 }
-POINT GetClientCursorPos(HWND hWnd) {
-	POINT cursor;
-	GetCursorPos(&cursor);
-
-	return cursor;
-}
-
-XMFLOAT3 GetCameraDir(XMFLOAT3 pos) {
-	/*POINT center = GetClientCenter(g_hWnd);
-	POINT cursor = GetClientCursorPos(g_hWnd);*/
-
-	int deltaX = GetMouseX();
-	int deltaZ = GetMouseY();
-
-	XMFLOAT3 dir;
-
-	yaw   += deltaX * 0.4f;
-	pitch -= deltaZ * 0.4f;	
-
-	if (pitch > 89.0f) { pitch = 89.0f; }
-	if (pitch < -89.0f) { pitch = -89.0f; }
-
-	float yawRad = DirectX::XMConvertToRadians(yaw);
-	float pitchRad = DirectX::XMConvertToRadians(pitch);
-
-	dir = { pos.x + sinf(yawRad) * cosf((pitchRad)),pos.y + sinf(pitchRad), pos.z + cosf(yawRad) * cosf(pitchRad) };
-
-	return dir;
-}
-
-float GetCameraYaw(XMFLOAT3 dir, XMFLOAT3 pos) {
-	float deltaX = dir.x - pos.x;
-	float deltaZ = dir.z - pos.z;
-
-	float yaw = atan2f(deltaX, deltaZ);
-
-	return yaw;
-}
-
-float GetCameraPitch(XMFLOAT3 dir, XMFLOAT3 pos) {
-	float deltaY = dir.y - pos.y;
-	float deltaX = dir.x - pos.x;
-	float deltaZ = dir.z - pos.z;
-
-	float XY = (float)sqrt(deltaX * deltaX + deltaZ * deltaZ);
-
-	float pitch = atan2f(deltaY, XY);
-
-		
-
-	return pitch;
-}
-
-XMFLOAT3 GetDeltaMove(XMFLOAT3 dir, XMFLOAT3 pos) {
-	XMFLOAT3 DeltaMove;
-	DeltaMove.x = dir.x - pos.x;
-	DeltaMove.y = dir.y - pos.y;
-	DeltaMove.z = dir.z - pos.z;
-
-	return DeltaMove;
-}
-
-
 
 long GetMousePosX(void)
 {
@@ -582,14 +602,6 @@ long GetMousePosX(void)
 long GetMousePosY(void)
 {
 	return g_MouseY;
-}
-
-
-
-void HandleMouseMove(int deltaX, int deltaY) {
-	float sensitivity = 0.1f; // 感度設定
-	float yaw = deltaX * sensitivity;  // 水平回転（Yaw）
-	float pitch = deltaY * sensitivity; // 垂直回転（Pitch）
 }
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
