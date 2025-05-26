@@ -49,4 +49,4 @@ void UpdatePlayer(void);
 void DrawPlayer(void);
 
 PLAYER *GetPlayer(void);
-
+void DrawPlayerDebugUI();

@@ -14,6 +14,7 @@
 #include "light.h"
 #include "collision.h"
 #include "sound.h"
+#include "imgui.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`
@@ -223,5 +224,11 @@ PLAYER *GetPlayer(void)
 	return &g_Player;
 }
 
+void DrawPlayerDebugUI()
+{
+	ImGui::Begin("Player Debug");
+	ImGui::Text("Position: (%.2f, %.2f, %.2f)", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+	ImGui::End();
+}
 
 
