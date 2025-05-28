@@ -15,6 +15,7 @@
 #include "collision.h"
 #include "sound.h"
 #include "imgui.h"
+#include "game.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`
