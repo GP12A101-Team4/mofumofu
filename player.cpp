@@ -90,7 +90,6 @@ void UninitPlayer(void)
 //=============================================================================
 void UpdatePlayer(void)
 {
-	CAMERA *cam = GetCamera();
 
 	// ˆÚ“®‚³‚¹‚¿‚á‚¤
 	if (GetKeyboardPress(DIK_A))

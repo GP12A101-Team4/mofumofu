@@ -20,6 +20,7 @@
 #include "collision.h"
 #include "debugproc.h"
 #include "meshwall.h"
+#include "fragment.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -66,6 +67,9 @@ HRESULT InitGame(void)
 
 	// ライトを有効化	// 影の初期化処理
 	InitShadow();
+
+	// 欠片の初期処理
+	InitFragment();
 
 	// プレイヤーの初期化
 	InitPlayer();
@@ -133,8 +137,12 @@ void UpdateGame(void)
 	// プレイヤーの更新処理
 	UpdatePlayer();
 
+	//欠片の更新処理
+	UpdateFragment();
+
+
 	// 影の更新処理
-	UpdateShadow();
+	//UpdateShadow();
 
 	// スコアの更新処理
 	UpdateScore();
@@ -151,14 +159,18 @@ void DrawGame0(void)
 	DrawMeshField();
 
 	// 影の描画処理
-	DrawShadow();
+	//DrawShadow();
 
 	// プレイヤーの描画処理
 	DrawPlayer();
 
+	
 	// 壁の描画処理
 	DrawMeshWall();
 
+	//欠片の描画処理
+	DrawFragment();
+	
 	// 2Dの物を描画する処理
 	// Z比較なし
 	SetDepthEnable(FALSE);
@@ -169,6 +181,7 @@ void DrawGame0(void)
 	// スコアの描画処理
 	DrawScore();
 
+	
 	/*if(g_Ui.pause == TRUE)
 	DrawUi();*/
 
@@ -235,7 +248,6 @@ XMFLOAT3 GetCameraDir(XMFLOAT3 pos) {
 	yaw += deltaX * 0.4f;
 	pitch -= deltaZ * 0.4f;
 
-	//上下角度制限
 	if (pitch > 89.0f) { pitch = 89.0f; }
 	if (pitch < -89.0f) { pitch = -89.0f; }
 

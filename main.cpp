@@ -240,7 +240,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		g_MouseY = HIWORD(lParam);
 
 		POINT point = GetClientCenter(g_hWnd);
-		/*SetCursorPos(point.x, point.y);*/
+		SetCursorPos(point.x, point.y);
 
 
 		break;
@@ -252,12 +252,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			RECT rect;
 			GetClientRect(hWnd, &rect);
 			MapWindowPoints(hWnd, nullptr, (POINT*)&rect, 2);
-			/*ClipCursor(&rect);*/
+			ClipCursor(&rect);
 
 		}
 		else {
 
-		/*	ClipCursor(nullptr);*/
+			ClipCursor(nullptr);
 			ShowCursor(TRUE);
 		}
 		break;
@@ -384,14 +384,6 @@ void Update(void)
 	// 入力の更新処理
 	UpdateInput();
 
-	// プレイヤーの更新処理
-	UpdatePlayer();
-
-	//欠片の更新処理
-	UpdateFragment();
-
-	// カメラ更新
-	UpdateCamera();
 
 	switch (g_Mode)
 	{
@@ -408,6 +400,9 @@ void Update(void)
 		break;
 	}
 
+	// カメラ更新
+	UpdateCamera();
+
 	// フェード処理の更新
 	UpdateFade();
 
@@ -422,7 +417,7 @@ void Draw0(void)
 	DrawMeshField();
 
 	// 影の描画処理
-	DrawShadow();
+	//DrawShadow();
 
 	// プレイヤーの描画処理
 	/*DrawPlayer();*/
@@ -430,8 +425,7 @@ void Draw0(void)
 	// 壁の描画処理
 	DrawMeshWall();
 
-	//欠片の描画処理
-	DrawFragment();
+	
 }
 
 void Draw(void)
