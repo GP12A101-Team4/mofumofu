@@ -1,4 +1,4 @@
-﻿//=============================================================================
+//=============================================================================
 //
 // メイン処理 [main.cpp]
 // Author : 
@@ -19,7 +19,14 @@
 #include "sound.h"
 #include "score.h"
 #include "sprite.h"
+#include "fade.h"
+#include "game.h"
+#include "title.h"
+#include "result.h"
 
+#include "imgui.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -44,14 +51,14 @@ long g_MouseY = 0;
 
 HWND g_hWnd = nullptr;
 
-float yaw ;
-float pitch;
-
 #ifdef _DEBUG
 int		g_CountFPS;							// FPSカウンタ
 char	g_DebugStr[2048] = WINDOW_NAME;		// デバッグ文字表示用
 
 #endif
+
+int	g_Mode = MODE_TITLE;					// 起動時の画面を設定
+
 
 
 //=============================================================================
@@ -107,6 +114,26 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 		return -1;
 	}
 
+	// ✅ 加在這裡開始初始化 ImGui
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+
+	ImGui::StyleColorsDark();
+	ImGuiStyle& style = ImGui::GetStyle();
+	if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+	{
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+	}
+
+	ID3D11Device* g_pd3dDevice = GetD3DDevice();
+	ID3D11DeviceContext* g_d3dDeviceContext = GetD3DDeviceContext();
+
+	ImGui_ImplWin32_Init(hWnd);
+	ImGui_ImplDX11_Init(g_pd3dDevice, g_d3dDeviceContext);
 	// フレームカウント初期化
 	timeBeginPeriod(1);	// 分解能を設定
 	dwExecLastTime = dwFPSLastTime = timeGetTime();	// システム時刻をミリ秒単位で取得
@@ -175,6 +202,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 	// 終了処理
 	Uninit();
 
+	ImGui_ImplDX11_Shutdown();
+	ImGui_ImplWin32_Shutdown();
+	ImGui::DestroyContext();
 	return (int)msg.wParam;
 }
 
@@ -183,6 +213,9 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 //=============================================================================
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	// 先讓 ImGui 處理訊息，如果它回傳 true 就不繼續處理
+	if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+		return true;
 	UINT dataSize = 0; 
 	switch (message)
 	{
@@ -215,7 +248,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		if (wParam != WA_INACTIVE) {
 
-			ShowCursor(FALSE);
+			ShowCursor(TRUE);
 			RECT rect;
 			GetClientRect(hWnd, &rect);
 			MapWindowPoints(hWnd, nullptr, (POINT*)&rect, 2);
@@ -224,7 +257,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		else {
 
-		/*	ClipCursor(nullptr);*/
+			ClipCursor(nullptr);
 			ShowCursor(TRUE);
 		}
 		break;
@@ -254,6 +287,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitSound(hWnd);
 
 	InitScore();
+
+
 
 	// 入力処理の初期化
 	InitInput(hInstance, hWnd);
@@ -295,6 +330,12 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// 背面ポリゴンをカリング
 	SetCullingMode(CULL_MODE_BACK);
+
+	// フェードの初期化
+	InitFade();
+
+	// 最初のモードをセット
+	SetMode(g_Mode);	// ここはSetModeのままで！
 
 	return S_OK;
 }
@@ -343,26 +384,27 @@ void Update(void)
 	// 入力の更新処理
 	UpdateInput();
 
-	// プレイヤーの更新処理
-	UpdatePlayer();
 
-	//欠片の更新処理
-	UpdateFragment();
+	switch (g_Mode)
+	{
+	case MODE_TITLE:		// タイトル画面の更新
+		UpdateTitle();
+		break;
+
+	case MODE_GAME:			// ゲーム画面の更新
+		UpdateGame();
+		break;
+
+	case MODE_RESULT:		// リザルト画面の更新
+		UpdateResult();
+		break;
+	}
 
 	// カメラ更新
 	UpdateCamera();
 
-	// 地面処理の更新
-	UpdateMeshField();
-
-
-	// 壁処理の更新
-	UpdateMeshWall();
-
-	// 影の更新処理
-	UpdateShadow();
-
-	UpdateScore();
+	// フェード処理の更新
+	UpdateFade();
 
 }
 
@@ -375,7 +417,7 @@ void Draw0(void)
 	DrawMeshField();
 
 	// 影の描画処理
-	DrawShadow();
+	//DrawShadow();
 
 	// プレイヤーの描画処理
 	/*DrawPlayer();*/
@@ -383,8 +425,7 @@ void Draw0(void)
 	// 壁の描画処理
 	DrawMeshWall();
 
-	//欠片の描画処理
-	DrawFragment();
+	
 }
 
 void Draw(void)
@@ -392,56 +433,87 @@ void Draw(void)
 	// バックバッファクリア
 	Clear();
 
-	CAMERA* camera = GetCamera();
+	SetCamera();
+
+
 	PLAYER* player = GetPlayer();
 
+	switch (g_Mode)
 	{
-		
-
-		camera->dir = GetCameraDir(player->pos);
-		
-		SetCameraAT(camera->dir);
-		SetCamera();
-		
-		
-
+	case MODE_TITLE:
 		SetViewPort(TYPE_FULL_SCREEN);
-		Draw0();	//OBJ描画処理
+
+		// 2Dの物を描画する処理
+		// Z比較なし
+		SetDepthEnable(FALSE);
+
+		// ライティングを無効
+		SetLightEnable(FALSE);
+
+		DrawTitle();
+
+		// ライティングを有効に
+		SetLightEnable(TRUE);
+      
+		// Z比較あり
+		SetDepthEnable(TRUE);
+		break;
+      
+	case MODE_GAME:
+		DrawGame();
+		break;
+	case MODE_RESULT:
+		SetViewPort(TYPE_FULL_SCREEN);
+
+		// 2Dの物を描画する処理
+		// Z比較なし
+		SetDepthEnable(FALSE);
+
+		// ライティングを無効
+		SetLightEnable(FALSE);
+
+		DrawResult();
+
+		// ライティングを有効に
+		SetLightEnable(TRUE);
+
+		// Z比較あり
+		SetDepthEnable(TRUE);
+		break;
+
+	default:
+		break;
 	}
-
-	//すべての3D
-
-	// 2Dの物を描画する処理
-	SetViewPort(TYPE_FULL_SCREEN);
-
-	// Z比較なし
-	SetDepthEnable(FALSE);
-
-	// ライティングを無効
-	SetLightEnable(FALSE);
-
-	//ここに2Dで表示させたいものを書いていく
-
-	DrawScore();	//スコア描画
-
 	
+	{	// フェード処理
+		SetViewPort(TYPE_FULL_SCREEN);
 
-	// Z比較なし
-	SetDepthEnable(TRUE);
-
-	// ライティングを無効
-	SetLightEnable(TRUE);
+		// 2Dの物を描画する処理
+		// Z比較なし
+		SetDepthEnable(FALSE);
 
 
+		// ライティングを無効
+		SetLightEnable(FALSE);
 
-	
+		// フェード描画
+		DrawFade();
+
+		// ライティングを有効に
+		SetLightEnable(TRUE);
+
+		// Z比較あり
+		SetDepthEnable(TRUE);
+	}
 
 
 #ifdef _DEBUG
+
+	/*g_ImmediateContext->OMSetRenderTargets(1, &g_RenderTargetView, g_DepthStencilView);*/
+
 	// デバッグ表示
 	DrawDebugProc();
-<<<<<<< Updated upstream
-=======
+
 	// 新幀開始
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -453,7 +525,8 @@ void Draw(void)
 	
 	ImGui::End();
 
-    DrawPartDebugUI();
+  DrawPartDebugUI();
+  
 	ImGui::ShowDemoWindow();
 
 	// 結束新幀
@@ -467,12 +540,91 @@ void Draw(void)
 	ImGui::RenderPlatformWindowsDefault();
 
 	
->>>>>>> Stashed changes
 #endif
 
+	ImGui::Begin("Debug Info");
+	ImGui::Text("FPS: %d", g_CountFPS); // 你已有的 FPS 計算變數
+	ImGui::Text("Player Pos: %.2f, %.2f, %.2f", player->pos.x, player->pos.y, player->pos.z);
+	ImGui::End();
+
+
+	ImGui::ShowDemoWindow();
+
+	// 結束新幀
+	ImGui::Render();
+
+	// 渲染 ImGui 主視窗
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	// 如果啟用了多視窗（Docking / Viewports），要呼叫這兩個函式
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
+
+	
+#endif
+
+	ID3D11RenderTargetView* g_RenderTargetView = GetRenderTargetView();
+	ID3D11DepthStencilView* g_DepthStencilView = GetDepthStencilView();
+	ID3D11DeviceContext* g_D3DContext = GetD3DDeviceContext();
+
+
+	g_D3DContext->OMSetRenderTargets(1, &g_RenderTargetView, g_DepthStencilView);
 	// バックバッファ、フロントバッファ入れ替え
 	Present();
 }
+
+//=============================================================================
+// モードの設定
+//=============================================================================
+void SetMode(int mode)
+{
+	// モードを変える前に全部メモリを解放しちゃう
+	StopSound();			// まず曲を止める
+
+	// モードを変える前に全部メモリを解放しちゃう
+
+	// プレイヤーの終了処理
+	UninitPlayer();
+
+	// スコアの終了処理
+	UninitScore();
+
+	g_Mode = mode;	// 次のモードをセットしている
+
+	switch (g_Mode)
+	{
+	case MODE_TITLE:
+		//タイトル画面の初期化
+		InitTitle();
+		//PlaySound(SOUND_LABEL_BGM_bgm_title);
+		break;
+
+	case MODE_GAME:
+		// ゲーム画面の初期化
+		InitPlayer();
+		InitScore();
+
+		//PlaySound(SOUND_LABEL_BGM_bgm);
+		break;
+
+	case MODE_RESULT:
+		InitResult();
+		//PlaySound(SOUND_LABEL_BGM_sample002);
+		break;
+
+	case MODE_MAX:
+		break;
+	}
+}
+
+//=============================================================================
+// モードの取得
+//=============================================================================
+int GetMode(void)
+{
+	return g_Mode;
+}
+
 
 POINT GetClientCenter(HWND hWnd){
 	RECT clientRect;
@@ -485,69 +637,6 @@ POINT GetClientCenter(HWND hWnd){
 
 	return Center;
 }
-POINT GetClientCursorPos(HWND hWnd) {
-	POINT cursor;
-	GetCursorPos(&cursor);
-
-	return cursor;
-}
-
-XMFLOAT3 GetCameraDir(XMFLOAT3 pos) {
-	/*POINT center = GetClientCenter(g_hWnd);
-	POINT cursor = GetClientCursorPos(g_hWnd);*/
-
-	int deltaX = GetMouseX();
-	int deltaZ = GetMouseY();
-
-	XMFLOAT3 dir;
-
-	yaw   += deltaX * 0.4f;
-	pitch -= deltaZ * 0.4f;	
-
-	if (pitch > 89.0f) { pitch = 89.0f; }
-	if (pitch < -89.0f) { pitch = -89.0f; }
-
-	float yawRad = DirectX::XMConvertToRadians(yaw);
-	float pitchRad = DirectX::XMConvertToRadians(pitch);
-
-	dir = { pos.x + sinf(yawRad) * cosf((pitchRad)),pos.y + sinf(pitchRad), pos.z + cosf(yawRad) * cosf(pitchRad) };
-
-	return dir;
-}
-
-float GetCameraYaw(XMFLOAT3 dir, XMFLOAT3 pos) {
-	float deltaX = dir.x - pos.x;
-	float deltaZ = dir.z - pos.z;
-
-	float yaw = atan2f(deltaX, deltaZ);
-
-	return yaw;
-}
-
-float GetCameraPitch(XMFLOAT3 dir, XMFLOAT3 pos) {
-	float deltaY = dir.y - pos.y;
-	float deltaX = dir.x - pos.x;
-	float deltaZ = dir.z - pos.z;
-
-	float XY = (float)sqrt(deltaX * deltaX + deltaZ * deltaZ);
-
-	float pitch = atan2f(deltaY, XY);
-
-		
-
-	return pitch;
-}
-
-XMFLOAT3 GetDeltaMove(XMFLOAT3 dir, XMFLOAT3 pos) {
-	XMFLOAT3 DeltaMove;
-	DeltaMove.x = dir.x - pos.x;
-	DeltaMove.y = dir.y - pos.y;
-	DeltaMove.z = dir.z - pos.z;
-
-	return DeltaMove;
-}
-
-
 
 long GetMousePosX(void)
 {
@@ -560,14 +649,7 @@ long GetMousePosY(void)
 	return g_MouseY;
 }
 
-
-
-void HandleMouseMove(int deltaX, int deltaY) {
-	float sensitivity = 0.1f; // 感度設定
-	float yaw = deltaX * sensitivity;  // 水平回転（Yaw）
-	float pitch = deltaY * sensitivity; // 垂直回転（Pitch）
-}
-
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 #ifdef _DEBUG
 char* GetDebugStr(void)

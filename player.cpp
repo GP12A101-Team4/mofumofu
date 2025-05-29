@@ -14,6 +14,8 @@
 #include "light.h"
 #include "collision.h"
 #include "sound.h"
+#include "imgui.h"
+#include "game.h"
 
 //*****************************************************************************
 // É}ÉNÉçíËã`
@@ -88,7 +90,6 @@ void UninitPlayer(void)
 //=============================================================================
 void UpdatePlayer(void)
 {
-	CAMERA *cam = GetCamera();
 
 	// à⁄ìÆÇ≥ÇπÇøÇ·Ç§
 	if (GetKeyboardPress(DIK_A))
@@ -223,5 +224,11 @@ PLAYER *GetPlayer(void)
 	return &g_Player;
 }
 
+void DrawPlayerDebugUI()
+{
+	ImGui::Begin("Player Debug");
+	ImGui::Text("Position: (%.2f, %.2f, %.2f)", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+	ImGui::End();
+}
 
 

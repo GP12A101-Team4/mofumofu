@@ -364,6 +364,9 @@ void SetShaderCamera(XMFLOAT3 pos)
 	GetDeviceContext()->UpdateSubresource(g_CameraBuffer, 0, NULL, &tmp, 0, 0);
 }
 
+ID3D11Device* GetD3DDevice() { return g_D3DDevice; }
+ID3D11DeviceContext* GetD3DDeviceContext() { return g_ImmediateContext; }
+
 
 
 //=============================================================================
@@ -813,4 +816,11 @@ void DebugTextOut(char* text, int x, int y)
 		g_ImmediateContext->OMSetRenderTargets(1, &g_RenderTargetView, g_DepthStencilView);
 	}
 #endif
+}
+
+ID3D11RenderTargetView* GetRenderTargetView() {
+	return g_RenderTargetView;
+}
+ID3D11DepthStencilView* GetDepthStencilView() {
+	return g_DepthStencilView;
 }
