@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "debugproc.h"
 #include "fragment.h"
+#include "imgui.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -234,17 +235,93 @@ void UpdateFragment(void)
 		g_Fragment[0].overallPos.z += 1.0f;
 	}*/
 
+	//猫の頭
+	if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[0].scl.x -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[0].scl.x += 0.01f;
+	}
+	if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[0].scl.y -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[0].scl.y += 0.01f;
+	}
+
+	//猫の体
+	/*if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[1].scl.x -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[1].scl.x += 0.01f;
+	}
+	if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[1].scl.y -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[1].scl.y += 0.01f;
+	}*/
+
+	//猫の手
+	/*if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[2].scl.x -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[2].scl.x += 0.01f;
+	}
+	if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[2].scl.y -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[2].scl.y += 0.01f;
+	}*/
+
+	//猫の尻尾
+	/*if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[3].scl.x -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[3].scl.x += 0.01f;
+	}
+	if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[3].scl.y -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[3].scl.y += 0.01f;
+	}*/
+
 #endif
 
 
 
 #ifdef _DEBUG	// デバッグ情報を表示する
 
-	PrintDebugProc("Field:↑→↓←\n");
+	/*PrintDebugProc("Field:↑→↓←\n");
 	PrintDebugProc("cat head: X:%f Y:%f Z:%f\n", g_Fragment[0].overallPos.x, g_Fragment[0].overallPos.y, g_Fragment[0].overallPos.z);
 	PrintDebugProc("cat body: X:%f Y:%f Z:%f\n", g_Fragment[1].overallPos.x, g_Fragment[1].overallPos.y, g_Fragment[1].overallPos.z);
 	PrintDebugProc("cat head: X:%f Y:%f Z:%f\n", g_Fragment[2].overallPos.x, g_Fragment[2].overallPos.y, g_Fragment[2].overallPos.z);
 	PrintDebugProc("cat tail: X:%f Y:%f Z:%f\n", g_Fragment[3].overallPos.x, g_Fragment[3].overallPos.y, g_Fragment[3].overallPos.z);
+	PrintDebugProc("cat scale head: X:%f Y:%f Z:%f\n", g_Fragment[0].scl.x, g_Fragment[0].scl.y);
+	PrintDebugProc("cat scale body: X:%f Y:%f Z:%f\n", g_Fragment[1].scl.x, g_Fragment[1].scl.y);
+	PrintDebugProc("cat scale head: X:%f Y:%f Z:%f\n", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
+	PrintDebugProc("cat scale tail: X:%f Y:%f Z:%f\n", g_Fragment[3].scl.x, g_Fragment[3].scl.y);*/
 
 
 
@@ -297,6 +374,11 @@ void DrawFragment(void)
 		g_Fragment[2].overallPos = XMFLOAT3(5.0f,  0.0f, 80.0f);
 		g_Fragment[3].overallPos = XMFLOAT3(70.0f, 0.0f, 90.0f);*/
 
+		/*g_Fragment[0].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		g_Fragment[1].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		g_Fragment[2].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		g_Fragment[3].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);*/
+
 		// ワールドマトリックスの初期化
 		SetWorldMatrix(&mtxWorld);
 		XMStoreFloat4x4(&g_Fragment[i].mtxWorld, mtxWorld);
@@ -334,4 +416,18 @@ HRESULT MakeVertexFragment(void)
 	GetDevice()->CreateBuffer(&bd, &sd, &g_VertexBuffer);
 
 	return S_OK;
+}
+
+void DrawPartDebugUI()
+{
+	ImGui::Begin("Part Debug");
+	ImGui::Text("Position Head Part: (%.2f, %.2f, %.2f)", g_Fragment[0].overallPos.x, g_Fragment[0].overallPos.y, g_Fragment[0].overallPos.z);
+	ImGui::Text("Position Body Part: (%.2f, %.2f, %.2f)", g_Fragment[1].overallPos.x, g_Fragment[1].overallPos.y, g_Fragment[1].overallPos.z);
+	ImGui::Text("Position Hand Part: (%.2f, %.2f, %.2f)", g_Fragment[2].overallPos.x, g_Fragment[2].overallPos.y, g_Fragment[2].overallPos.z);
+	ImGui::Text("Position Tail Part: (%.2f, %.2f, %.2f)", g_Fragment[3].overallPos.x, g_Fragment[3].overallPos.y, g_Fragment[3].overallPos.z);
+	ImGui::Text("Scl Head Part: (%.2f, %.2f, %.2f)", g_Fragment[0].scl.x, g_Fragment[0].scl.y);
+	ImGui::Text("Scl Body Part: (%.2f, %.2f, %.2f)", g_Fragment[1].scl.x, g_Fragment[1].scl.y);
+	ImGui::Text("Scl Hand Part: (%.2f, %.2f, %.2f)", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
+	ImGui::Text("Scl Tail Part: (%.2f, %.2f, %.2f)", g_Fragment[3].scl.x, g_Fragment[3].scl.y);
+	ImGui::End();
 }

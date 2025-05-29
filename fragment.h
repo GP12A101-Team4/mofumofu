@@ -34,3 +34,5 @@ void UninitFragment(void);
 void UpdateFragment(void);
 void DrawFragment(void);
 
+void DrawPartDebugUI();
+
