@@ -207,7 +207,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		g_MouseY = HIWORD(lParam);
 
 		POINT point = GetClientCenter(g_hWnd);
-		SetCursorPos(point.x, point.y);
+		//SetCursorPos(point.x, point.y);
 
 
 		break;
@@ -219,7 +219,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			RECT rect;
 			GetClientRect(hWnd, &rect);
 			MapWindowPoints(hWnd, nullptr, (POINT*)&rect, 2);
-			ClipCursor(&rect);
+			//ClipCursor(&rect);
 
 		}
 		else {
@@ -440,6 +440,34 @@ void Draw(void)
 #ifdef _DEBUG
 	// デバッグ表示
 	DrawDebugProc();
+<<<<<<< Updated upstream
+=======
+	// 新幀開始
+	ImGui_ImplDX11_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
+	ImGui::Begin("Debug Info");
+	ImGui::Text("FPS: %d", g_CountFPS); // 你已有的 FPS 計算變數
+	ImGui::Text("Player Pos: %.2f, %.2f, %.2f", player->pos.x, player->pos.y, player->pos.z);
+	
+	ImGui::End();
+
+    DrawPartDebugUI();
+	ImGui::ShowDemoWindow();
+
+	// 結束新幀
+	ImGui::Render();
+
+	// 渲染 ImGui 主視窗
+	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+	// 如果啟用了多視窗（Docking / Viewports），要呼叫這兩個函式
+	ImGui::UpdatePlatformWindows();
+	ImGui::RenderPlatformWindowsDefault();
+
+	
+>>>>>>> Stashed changes
 #endif
 
 	// バックバッファ、フロントバッファ入れ替え
