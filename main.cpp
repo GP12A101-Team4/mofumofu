@@ -542,26 +542,6 @@ void Draw(void)
 	
 #endif
 
-	ImGui::Begin("Debug Info");
-	ImGui::Text("FPS: %d", g_CountFPS); // 你已有的 FPS 計算變數
-	ImGui::Text("Player Pos: %.2f, %.2f, %.2f", player->pos.x, player->pos.y, player->pos.z);
-	ImGui::End();
-
-
-	ImGui::ShowDemoWindow();
-
-	// 結束新幀
-	ImGui::Render();
-
-	// 渲染 ImGui 主視窗
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-	// 如果啟用了多視窗（Docking / Viewports），要呼叫這兩個函式
-	ImGui::UpdatePlatformWindows();
-	ImGui::RenderPlatformWindowsDefault();
-
-	
-#endif
 
 	ID3D11RenderTargetView* g_RenderTargetView = GetRenderTargetView();
 	ID3D11DepthStencilView* g_DepthStencilView = GetDepthStencilView();
