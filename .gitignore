@@ -1,0 +1,8 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.VC.db
+*.ipch/
+sample/
+x64/
