@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// ƒtƒB[ƒ‹ƒh•\¦ˆ— [fragment.cpp]
+// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰è¡¨ç¤ºå‡¦ç† [fragment.cpp]
 // Author : 
 //
 //=============================================================================
@@ -12,31 +12,31 @@
 #include "imgui.h"
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
-#define TEXTURE_MAX		(4)						// ƒeƒNƒXƒ`ƒƒ‚Ì”
+#define TEXTURE_MAX		(4)						// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ•°
 
-#define MAX_POLYGON		(6)						// ƒLƒ…[ƒu‚PŒÂ‚ ‚½‚è‚Ì–Ê”
+#define MAX_POLYGON		(6)						// ã‚­ãƒ¥ãƒ¼ãƒ–ï¼‘å€‹ã‚ãŸã‚Šã®é¢æ•°
 
-#define	VALUE_MOVE		(5.0f)					// ˆÚ“®—Ê
-#define	VALUE_ROTATE	(XM_PI * 0.02f)			// ‰ñ“]—Ê
+#define	VALUE_MOVE		(5.0f)					// ç§»å‹•é‡
+#define	VALUE_ROTATE	(XM_PI * 0.02f)			// å›è»¢é‡
 
-#define	SIZE_WH			(100.0f)				// ’n–Ê‚ÌƒTƒCƒY
+#define	SIZE_WH			(100.0f)				// åœ°é¢ã®ã‚µã‚¤ã‚º
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 HRESULT MakeVertexFragment(void);
 
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //*****************************************************************************
-static ID3D11Buffer					*g_VertexBuffer = NULL;	// ’¸“_î•ñ
-static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// ƒeƒNƒXƒ`ƒƒî•ñ
+static ID3D11Buffer					*g_VertexBuffer = NULL;	// é ‚ç‚¹æƒ…å ±
+static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// ãƒ†ã‚¯ã‚¹ãƒãƒ£æƒ…å ±
 
-static FRAGMENT						g_Fragment[TEXTURE_MAX];				// ƒ|ƒŠƒSƒ“ƒf[ƒ^
-static int							g_TexNo;				// ƒeƒNƒXƒ`ƒƒ”Ô†
+static FRAGMENT						g_Fragment[TEXTURE_MAX];				// ãƒãƒªã‚´ãƒ³ãƒ‡ãƒ¼ã‚¿
+static int							g_TexNo;				// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·
 
 static char* g_TextureName[] = {
 	"data/TEXTURE/cat_01.png",
@@ -46,11 +46,11 @@ static char* g_TextureName[] = {
 
 };
 
-// ’¸“_”z—ñ
+// é ‚ç‚¹é…åˆ—
 static VERTEX_3D g_VertexArray[4 * MAX_POLYGON] = {
-			// ‚R‚cÀ•W							’¸“_‚ÌŒü‚«						‚q‚f‚a‚`					‚s‚d‚wÀ•W
+			// ï¼“ï¼¤åº§æ¨™							é ‚ç‚¹ã®å‘ã						ï¼²ï¼§ï¼¢ï¼¡					ï¼´ï¼¥ï¼¸åº§æ¨™
 	
-   // @–Ê
+   // åé¢
    {XMFLOAT3(-SIZE_WH,  SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f)},
    {XMFLOAT3( SIZE_WH,  SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 0.0f)},
    {XMFLOAT3(-SIZE_WH, -SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f)},
@@ -61,14 +61,14 @@ static VERTEX_3D g_VertexArray[4 * MAX_POLYGON] = {
 };
 
 //=============================================================================
-// ‰Šú‰»ˆ—
+// åˆæœŸåŒ–å‡¦ç†
 //=============================================================================
 HRESULT InitFragment(void)
 {
-	// ’¸“_ƒoƒbƒtƒ@‚Ìì¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ
 	MakeVertexFragment();
 
-	// ƒeƒNƒXƒ`ƒƒ¶¬
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ
 	for (int i = 0; i < TEXTURE_MAX; i++)
 	{
 		D3DX11CreateShaderResourceViewFromFile(GetDevice(),
@@ -81,10 +81,10 @@ HRESULT InitFragment(void)
 
 	for (int i = 0; i < TEXTURE_MAX; i++)
 	{
-		// ˆÊ’uE‰ñ“]EƒXƒP[ƒ‹‚Ì‰Šúİ’è
-		g_Fragment[i].pos = XMFLOAT3(0.0f, 0.0f, 0.0f); // ”z’uÀ•W
-		g_Fragment[i].rot = XMFLOAT3(0.0f, 0.0f, 0.0f); // ‰ñ“]
-		g_Fragment[i].scl = XMFLOAT3(1.0f, 1.0f, 1.0f); // Šg‘åk¬—¦ X,Y,Z
+		// ä½ç½®ãƒ»å›è»¢ãƒ»ã‚¹ã‚±ãƒ¼ãƒ«ã®åˆæœŸè¨­å®š
+		g_Fragment[i].pos = XMFLOAT3(0.0f, 0.0f, 0.0f); // é…ç½®åº§æ¨™
+		g_Fragment[i].rot = XMFLOAT3(0.0f, 0.0f, 0.0f); // å›è»¢
+		g_Fragment[i].scl = XMFLOAT3(1.0f, 1.0f, 1.0f); // æ‹¡å¤§ç¸®å°ç‡ X,Y,Z
 		g_Fragment[i].overallPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	}
 
@@ -99,18 +99,18 @@ HRESULT InitFragment(void)
 }
 
 //=============================================================================
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 //=============================================================================
 void UninitFragment(void)
 {
-	// ’¸“_ƒoƒbƒtƒ@‚Ì‰ğ•ú
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®è§£æ”¾
 	if (g_VertexBuffer) 
 	{
 		g_VertexBuffer->Release();
 		g_VertexBuffer = NULL;
 	}
 
-	// ƒeƒNƒXƒ`ƒƒ‚Ì‰ğ•ú
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è§£æ”¾
 	for (int i = 0; i < TEXTURE_MAX; i++)
 	{
 		if (g_Texture[i])
@@ -123,7 +123,7 @@ void UninitFragment(void)
 }
 
 //=============================================================================
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 //=============================================================================
 void UpdateFragment(void)
 {
@@ -131,33 +131,85 @@ void UpdateFragment(void)
 
 #ifdef _DEBUG
 	
-	//”L‚Ì“ª
+	//çŒ«ã®é ­
+	//if (GetKeyboardPress(DIK_LEFT))
+	//{
+	//	g_Fragment[0].overallPos.x -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_RIGHT))
+	//{
+	//	g_Fragment[0].overallPos.x += 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_UP))
+	//{
+	//	g_Fragment[0].overallPos.y += 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_DOWN))
+	//{
+	//	g_Fragment[0].overallPos.y -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_M))
+	//{
+	//	g_Fragment[0].overallPos.z -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_N))
+	//{
+	//	g_Fragment[0].overallPos.z += 1.0f;
+	//}
+
+	//çŒ«ã®ä½“
+	/*if (GetKeyboardPress(DIK_LEFT))
+	{
+		g_Fragment[0].overallPos.x -= 1.0f;
+	}
+	if (GetKeyboardPress(DIK_RIGHT))
+	{
+		g_Fragment[0].overallPos.x += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_UP))
+	{
+		g_Fragment[0].overallPos.y += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_DOWN))
+	{
+		g_Fragment[0].overallPos.y -= 1.0f;
+	}
+	if (GetKeyboardPress(DIK_M))
+	{
+		g_Fragment[0].overallPos.z -= 1.0f;
+	}
+	if (GetKeyboardPress(DIK_N))
+	{
+		g_Fragment[0].overallPos.z += 1.0f;
+	}*/
+
+	//çŒ«ã®æ‰‹
 	if (GetKeyboardPress(DIK_LEFT))
 	{
-		g_Fragment[0].overallPos.x -= 1.0f;
+		g_Fragment[2].overallPos.x -= 1.0f;
 	}
 	if (GetKeyboardPress(DIK_RIGHT))
 	{
-		g_Fragment[0].overallPos.x += 1.0f;
+		g_Fragment[2].overallPos.x += 1.0f;
 	}
 	if (GetKeyboardPress(DIK_UP))
 	{
-		g_Fragment[0].overallPos.y += 1.0f;
+		g_Fragment[2].overallPos.y += 1.0f;
 	}
 	if (GetKeyboardPress(DIK_DOWN))
 	{
-		g_Fragment[0].overallPos.y -= 1.0f;
+		g_Fragment[2].overallPos.y -= 1.0f;
 	}
 	if (GetKeyboardPress(DIK_M))
 	{
-		g_Fragment[0].overallPos.z -= 1.0f;
+		g_Fragment[2].overallPos.z -= 1.0f;
 	}
 	if (GetKeyboardPress(DIK_N))
 	{
-		g_Fragment[0].overallPos.z += 1.0f;
+		g_Fragment[2].overallPos.z += 1.0f;
 	}
 
-	//”L‚Ì‘Ì
+	//çŒ«ã®å°»å°¾
 	/*if (GetKeyboardPress(DIK_LEFT))
 	{
 		g_Fragment[0].overallPos.x -= 1.0f;
@@ -183,59 +235,7 @@ void UpdateFragment(void)
 		g_Fragment[0].overallPos.z += 1.0f;
 	}*/
 
-	//”L‚Ìè
-	/*if (GetKeyboardPress(DIK_LEFT))
-	{
-		g_Fragment[0].overallPos.x -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_RIGHT))
-	{
-		g_Fragment[0].overallPos.x += 1.0f;
-	}
-	if (GetKeyboardPress(DIK_UP))
-	{
-		g_Fragment[0].overallPos.y += 1.0f;
-	}
-	if (GetKeyboardPress(DIK_DOWN))
-	{
-		g_Fragment[0].overallPos.y -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_M))
-	{
-		g_Fragment[0].overallPos.z -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_N))
-	{
-		g_Fragment[0].overallPos.z += 1.0f;
-	}*/
-
-	//”L‚ÌK”ö
-	/*if (GetKeyboardPress(DIK_LEFT))
-	{
-		g_Fragment[0].overallPos.x -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_RIGHT))
-	{
-		g_Fragment[0].overallPos.x += 1.0f;
-	}
-	if (GetKeyboardPress(DIK_UP))
-	{
-		g_Fragment[0].overallPos.y += 1.0f;
-	}
-	if (GetKeyboardPress(DIK_DOWN))
-	{
-		g_Fragment[0].overallPos.y -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_M))
-	{
-		g_Fragment[0].overallPos.z -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_N))
-	{
-		g_Fragment[0].overallPos.z += 1.0f;
-	}*/
-
-	//”L‚Ì“ª
+	//çŒ«ã®é ­
 	if (GetKeyboardPress(DIK_O))
 	{
 		g_Fragment[0].scl.x -= 0.01f;
@@ -253,67 +253,67 @@ void UpdateFragment(void)
 		g_Fragment[0].scl.y += 0.01f;
 	}
 
-	//”L‚Ì‘Ì
-	/*if (GetKeyboardPress(DIK_O))
+	//çŒ«ã®ä½“
+	if (GetKeyboardPress(DIK_U))
 	{
 		g_Fragment[1].scl.x -= 0.01f;
 	}
-	if (GetKeyboardPress(DIK_P))
+	if (GetKeyboardPress(DIK_I))
 	{
 		g_Fragment[1].scl.x += 0.01f;
 	}
-	if (GetKeyboardPress(DIK_O))
+	if (GetKeyboardPress(DIK_U))
 	{
 		g_Fragment[1].scl.y -= 0.01f;
 	}
-	if (GetKeyboardPress(DIK_P))
+	if (GetKeyboardPress(DIK_I))
 	{
 		g_Fragment[1].scl.y += 0.01f;
-	}*/
+	}
 
-	//”L‚Ìè
-	/*if (GetKeyboardPress(DIK_O))
+	//çŒ«ã®æ‰‹
+	if (GetKeyboardPress(DIK_H))
 	{
 		g_Fragment[2].scl.x -= 0.01f;
 	}
-	if (GetKeyboardPress(DIK_P))
+	if (GetKeyboardPress(DIK_J))
 	{
 		g_Fragment[2].scl.x += 0.01f;
 	}
-	if (GetKeyboardPress(DIK_O))
+	if (GetKeyboardPress(DIK_H))
 	{
 		g_Fragment[2].scl.y -= 0.01f;
 	}
-	if (GetKeyboardPress(DIK_P))
+	if (GetKeyboardPress(DIK_J))
 	{
 		g_Fragment[2].scl.y += 0.01f;
-	}*/
+	}
 
-	//”L‚ÌK”ö
-	/*if (GetKeyboardPress(DIK_O))
+	//çŒ«ã®å°»å°¾
+	if (GetKeyboardPress(DIK_K))
 	{
 		g_Fragment[3].scl.x -= 0.01f;
 	}
-	if (GetKeyboardPress(DIK_P))
+	if (GetKeyboardPress(DIK_L))
 	{
 		g_Fragment[3].scl.x += 0.01f;
 	}
-	if (GetKeyboardPress(DIK_O))
+	if (GetKeyboardPress(DIK_K))
 	{
 		g_Fragment[3].scl.y -= 0.01f;
 	}
-	if (GetKeyboardPress(DIK_P))
+	if (GetKeyboardPress(DIK_L))
 	{
 		g_Fragment[3].scl.y += 0.01f;
-	}*/
+	}
 
 #endif
 
 
 
-#ifdef _DEBUG	// ƒfƒoƒbƒOî•ñ‚ğ•\¦‚·‚é
+#ifdef _DEBUG	// ãƒ‡ãƒãƒƒã‚°æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
 
-	/*PrintDebugProc("Field:ª¨«©\n");
+	/*PrintDebugProc("Field:â†‘â†’â†“â†\n");
 	PrintDebugProc("cat head: X:%f Y:%f Z:%f\n", g_Fragment[0].overallPos.x, g_Fragment[0].overallPos.y, g_Fragment[0].overallPos.z);
 	PrintDebugProc("cat body: X:%f Y:%f Z:%f\n", g_Fragment[1].overallPos.x, g_Fragment[1].overallPos.y, g_Fragment[1].overallPos.z);
 	PrintDebugProc("cat head: X:%f Y:%f Z:%f\n", g_Fragment[2].overallPos.x, g_Fragment[2].overallPos.y, g_Fragment[2].overallPos.z);
@@ -329,25 +329,25 @@ void UpdateFragment(void)
 }
 
 //=============================================================================
-// •`‰æˆ—
+// æç”»å‡¦ç†
 //=============================================================================
 void DrawFragment(void)
 {
-	// ’¸“_ƒoƒbƒtƒ@İ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &g_VertexBuffer, &stride, &offset);
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	// ƒ}ƒeƒŠƒAƒ‹İ’è
+	// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 
-	// ƒeƒNƒXƒ`ƒƒİ’è
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
 	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
 
 	/*for (int i = 0; i < g_Field.historyCount; ++i) {
@@ -374,19 +374,34 @@ void DrawFragment(void)
 		g_Fragment[2].overallPos = XMFLOAT3(5.0f,  0.0f, 80.0f);
 		g_Fragment[3].overallPos = XMFLOAT3(70.0f, 0.0f, 90.0f);*/
 
+		g_Fragment[0].overallPos = XMFLOAT3(-513.0f, -4.0f, 402.0f);
+		g_Fragment[1].overallPos = XMFLOAT3(-511.0f, -4.0f, 291.0f);
+		g_Fragment[2].overallPos = XMFLOAT3(-518.0f, -4.0f, 280.0f);
+		g_Fragment[3].overallPos = XMFLOAT3(-518.0f, -5.0f, 223.0f);
+
+
+		g_Fragment[0].scl = XMFLOAT3(1.21f, 1.21f, 0.0f);
+		g_Fragment[1].scl = XMFLOAT3(0.87f, 0.87f, 0.0f);
+		g_Fragment[2].scl = XMFLOAT3(0.84f, 0.84f, 0.0f);
+		g_Fragment[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
+
+
 		/*g_Fragment[0].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		g_Fragment[1].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		g_Fragment[2].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		g_Fragment[3].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);*/
 
-		// ƒ[ƒ‹ƒhƒ}ƒgƒŠƒbƒNƒX‚Ì‰Šú‰»
+		// çŒ«ã®æ­£ã—ã„è¦‹ã¤ã‹ã‚Šä½ç½®åº§æ¨™
+		// -507 , 57 , 70 - 80 
+
+		// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã®åˆæœŸåŒ–
 		SetWorldMatrix(&mtxWorld);
 		XMStoreFloat4x4(&g_Fragment[i].mtxWorld, mtxWorld);
 
-		// ƒeƒNƒXƒ`ƒƒ[İ’è
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¼è¨­å®š
 		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[i]);
 
-		//ƒ|ƒŠƒSƒ“•`‰æ
+		//ãƒãƒªã‚´ãƒ³æç”»
 		GetDeviceContext()->Draw(4, 0);  
 	}
 
@@ -400,7 +415,7 @@ void DrawFragment(void)
 
 HRESULT MakeVertexFragment(void)
 {
-	// ’¸“_ƒoƒbƒtƒ@¶¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DYNAMIC;;
@@ -408,7 +423,7 @@ HRESULT MakeVertexFragment(void)
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
-	// ƒOƒ[ƒoƒ‹‚Ì’¸“_”z—ñ‚©‚ç’¸“_ƒoƒbƒtƒ@‚ğ‚Â‚­‚é
+	// ã‚°ãƒ­ãƒ¼ãƒãƒ«ã®é ‚ç‚¹é…åˆ—ã‹ã‚‰é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’ã¤ãã‚‹
 	D3D11_SUBRESOURCE_DATA sd;
 	ZeroMemory(&sd, sizeof(sd));
 	sd.pSysMem = g_VertexArray;
