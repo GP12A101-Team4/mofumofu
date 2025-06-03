@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "debugproc.h"
 #include "fragment.h"
+#include "imgui.h"
 
 //*****************************************************************************
 // ƒ}ƒNƒ’è‹`
@@ -131,30 +132,30 @@ void UpdateFragment(void)
 #ifdef _DEBUG
 	
 	//”L‚Ì“ª
-	if (GetKeyboardPress(DIK_LEFT))
-	{
-		g_Fragment[0].overallPos.x -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_RIGHT))
-	{
-		g_Fragment[0].overallPos.x += 1.0f;
-	}
-	if (GetKeyboardPress(DIK_UP))
-	{
-		g_Fragment[0].overallPos.y += 1.0f;
-	}
-	if (GetKeyboardPress(DIK_DOWN))
-	{
-		g_Fragment[0].overallPos.y -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_M))
-	{
-		g_Fragment[0].overallPos.z -= 1.0f;
-	}
-	if (GetKeyboardPress(DIK_N))
-	{
-		g_Fragment[0].overallPos.z += 1.0f;
-	}
+	//if (GetKeyboardPress(DIK_LEFT))
+	//{
+	//	g_Fragment[0].overallPos.x -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_RIGHT))
+	//{
+	//	g_Fragment[0].overallPos.x += 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_UP))
+	//{
+	//	g_Fragment[0].overallPos.y += 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_DOWN))
+	//{
+	//	g_Fragment[0].overallPos.y -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_M))
+	//{
+	//	g_Fragment[0].overallPos.z -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_N))
+	//{
+	//	g_Fragment[0].overallPos.z += 1.0f;
+	//}
 
 	//”L‚Ì‘Ì
 	/*if (GetKeyboardPress(DIK_LEFT))
@@ -183,30 +184,30 @@ void UpdateFragment(void)
 	}*/
 
 	//”L‚ÌŽè
-	/*if (GetKeyboardPress(DIK_LEFT))
+	if (GetKeyboardPress(DIK_LEFT))
 	{
-		g_Fragment[0].overallPos.x -= 1.0f;
+		g_Fragment[2].overallPos.x -= 1.0f;
 	}
 	if (GetKeyboardPress(DIK_RIGHT))
 	{
-		g_Fragment[0].overallPos.x += 1.0f;
+		g_Fragment[2].overallPos.x += 1.0f;
 	}
 	if (GetKeyboardPress(DIK_UP))
 	{
-		g_Fragment[0].overallPos.y += 1.0f;
+		g_Fragment[2].overallPos.y += 1.0f;
 	}
 	if (GetKeyboardPress(DIK_DOWN))
 	{
-		g_Fragment[0].overallPos.y -= 1.0f;
+		g_Fragment[2].overallPos.y -= 1.0f;
 	}
 	if (GetKeyboardPress(DIK_M))
 	{
-		g_Fragment[0].overallPos.z -= 1.0f;
+		g_Fragment[2].overallPos.z -= 1.0f;
 	}
 	if (GetKeyboardPress(DIK_N))
 	{
-		g_Fragment[0].overallPos.z += 1.0f;
-	}*/
+		g_Fragment[2].overallPos.z += 1.0f;
+	}
 
 	//”L‚ÌK”ö
 	/*if (GetKeyboardPress(DIK_LEFT))
@@ -234,17 +235,93 @@ void UpdateFragment(void)
 		g_Fragment[0].overallPos.z += 1.0f;
 	}*/
 
+	//”L‚Ì“ª
+	if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[0].scl.x -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[0].scl.x += 0.01f;
+	}
+	if (GetKeyboardPress(DIK_O))
+	{
+		g_Fragment[0].scl.y -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_P))
+	{
+		g_Fragment[0].scl.y += 0.01f;
+	}
+
+	//”L‚Ì‘Ì
+	if (GetKeyboardPress(DIK_U))
+	{
+		g_Fragment[1].scl.x -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_I))
+	{
+		g_Fragment[1].scl.x += 0.01f;
+	}
+	if (GetKeyboardPress(DIK_U))
+	{
+		g_Fragment[1].scl.y -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_I))
+	{
+		g_Fragment[1].scl.y += 0.01f;
+	}
+
+	//”L‚ÌŽè
+	if (GetKeyboardPress(DIK_H))
+	{
+		g_Fragment[2].scl.x -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_J))
+	{
+		g_Fragment[2].scl.x += 0.01f;
+	}
+	if (GetKeyboardPress(DIK_H))
+	{
+		g_Fragment[2].scl.y -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_J))
+	{
+		g_Fragment[2].scl.y += 0.01f;
+	}
+
+	//”L‚ÌK”ö
+	if (GetKeyboardPress(DIK_K))
+	{
+		g_Fragment[3].scl.x -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_L))
+	{
+		g_Fragment[3].scl.x += 0.01f;
+	}
+	if (GetKeyboardPress(DIK_K))
+	{
+		g_Fragment[3].scl.y -= 0.01f;
+	}
+	if (GetKeyboardPress(DIK_L))
+	{
+		g_Fragment[3].scl.y += 0.01f;
+	}
+
 #endif
 
 
 
 #ifdef _DEBUG	// ƒfƒoƒbƒOî•ñ‚ð•\Ž¦‚·‚é
 
-	PrintDebugProc("Field:ª¨«©\n");
+	/*PrintDebugProc("Field:ª¨«©\n");
 	PrintDebugProc("cat head: X:%f Y:%f Z:%f\n", g_Fragment[0].overallPos.x, g_Fragment[0].overallPos.y, g_Fragment[0].overallPos.z);
 	PrintDebugProc("cat body: X:%f Y:%f Z:%f\n", g_Fragment[1].overallPos.x, g_Fragment[1].overallPos.y, g_Fragment[1].overallPos.z);
 	PrintDebugProc("cat head: X:%f Y:%f Z:%f\n", g_Fragment[2].overallPos.x, g_Fragment[2].overallPos.y, g_Fragment[2].overallPos.z);
 	PrintDebugProc("cat tail: X:%f Y:%f Z:%f\n", g_Fragment[3].overallPos.x, g_Fragment[3].overallPos.y, g_Fragment[3].overallPos.z);
+	PrintDebugProc("cat scale head: X:%f Y:%f Z:%f\n", g_Fragment[0].scl.x, g_Fragment[0].scl.y);
+	PrintDebugProc("cat scale body: X:%f Y:%f Z:%f\n", g_Fragment[1].scl.x, g_Fragment[1].scl.y);
+	PrintDebugProc("cat scale head: X:%f Y:%f Z:%f\n", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
+	PrintDebugProc("cat scale tail: X:%f Y:%f Z:%f\n", g_Fragment[3].scl.x, g_Fragment[3].scl.y);*/
 
 
 
@@ -297,6 +374,26 @@ void DrawFragment(void)
 		g_Fragment[2].overallPos = XMFLOAT3(5.0f,  0.0f, 80.0f);
 		g_Fragment[3].overallPos = XMFLOAT3(70.0f, 0.0f, 90.0f);*/
 
+		g_Fragment[0].overallPos = XMFLOAT3(-513.0f, -4.0f, 402.0f);
+		g_Fragment[1].overallPos = XMFLOAT3(-511.0f, -4.0f, 291.0f);
+		g_Fragment[2].overallPos = XMFLOAT3(-518.0f, -4.0f, 280.0f);
+		g_Fragment[3].overallPos = XMFLOAT3(-518.0f, -5.0f, 223.0f);
+
+
+		g_Fragment[0].scl = XMFLOAT3(1.21f, 1.21f, 0.0f);
+		g_Fragment[1].scl = XMFLOAT3(0.87f, 0.87f, 0.0f);
+		g_Fragment[2].scl = XMFLOAT3(0.84f, 0.84f, 0.0f);
+		g_Fragment[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
+
+
+		/*g_Fragment[0].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		g_Fragment[1].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		g_Fragment[2].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		g_Fragment[3].scl = XMFLOAT3(0.0f, 0.0f, 0.0f);*/
+
+		// ”L‚Ì³‚µ‚¢Œ©‚Â‚©‚èˆÊ’uÀ•W
+		// -507 , 57 , 70 - 80 
+
 		// ƒ[ƒ‹ƒhƒ}ƒgƒŠƒbƒNƒX‚Ì‰Šú‰»
 		SetWorldMatrix(&mtxWorld);
 		XMStoreFloat4x4(&g_Fragment[i].mtxWorld, mtxWorld);
@@ -334,4 +431,18 @@ HRESULT MakeVertexFragment(void)
 	GetDevice()->CreateBuffer(&bd, &sd, &g_VertexBuffer);
 
 	return S_OK;
+}
+
+void DrawPartDebugUI()
+{
+	ImGui::Begin("Part Debug");
+	ImGui::Text("Position Head Part: (%.2f, %.2f, %.2f)", g_Fragment[0].overallPos.x, g_Fragment[0].overallPos.y, g_Fragment[0].overallPos.z);
+	ImGui::Text("Position Body Part: (%.2f, %.2f, %.2f)", g_Fragment[1].overallPos.x, g_Fragment[1].overallPos.y, g_Fragment[1].overallPos.z);
+	ImGui::Text("Position Hand Part: (%.2f, %.2f, %.2f)", g_Fragment[2].overallPos.x, g_Fragment[2].overallPos.y, g_Fragment[2].overallPos.z);
+	ImGui::Text("Position Tail Part: (%.2f, %.2f, %.2f)", g_Fragment[3].overallPos.x, g_Fragment[3].overallPos.y, g_Fragment[3].overallPos.z);
+	ImGui::Text("Scl Head Part: (%.2f, %.2f, %.2f)", g_Fragment[0].scl.x, g_Fragment[0].scl.y);
+	ImGui::Text("Scl Body Part: (%.2f, %.2f, %.2f)", g_Fragment[1].scl.x, g_Fragment[1].scl.y);
+	ImGui::Text("Scl Hand Part: (%.2f, %.2f, %.2f)", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
+	ImGui::Text("Scl Tail Part: (%.2f, %.2f, %.2f)", g_Fragment[3].scl.x, g_Fragment[3].scl.y);
+	ImGui::End();
 }
