@@ -205,8 +205,18 @@ void DrawGame(void)
 	PLAYER* player = GetPlayer();
 
 	{
-		camera->dir = GetCameraDir(player->pos);
+		float dist = 10.0f;
+		XMFLOAT3 dir = GetCameraDir();
 		
+		//ベクトルを拡大する　Camera.atとCamera.posの値が同じになるバグを防ぐため 
+		dir.x *= dist;
+		dir.y *= dist;
+		dir.z *= dist;
+
+		camera->dir = { camera->pos.x + dir.x,
+						camera->pos.y + dir.y,
+						camera->pos.z + dir.z };
+
 		SetCameraAT(camera->dir);
 		SetCamera();
 		
@@ -238,15 +248,15 @@ float NormalizeAngle(float angle) {
 }
 
 //カメラ角度制御
-XMFLOAT3 GetCameraDir(XMFLOAT3 pos) {
+XMFLOAT3 GetCameraDir() {
 
 	int deltaX = GetMouseX();
-	int deltaZ = GetMouseY();
+	/*int deltaZ = GetMouseY();*/
 
 	XMFLOAT3 dir;
 
 	yaw += deltaX * 0.4f;
-	pitch -= deltaZ * 0.4f;
+	/*pitch -= deltaZ * 0.4f;*/
 
 	if (pitch > 89.0f) { pitch = 89.0f; }
 	if (pitch < -89.0f) { pitch = -89.0f; }
@@ -254,7 +264,13 @@ XMFLOAT3 GetCameraDir(XMFLOAT3 pos) {
 	float yawRad = DirectX::XMConvertToRadians(yaw);
 	float pitchRad = DirectX::XMConvertToRadians(pitch);
 
-	dir = { pos.x + sinf(yawRad) * cosf((pitchRad)),pos.y + sinf(pitchRad), pos.z + cosf(yawRad) * cosf(pitchRad) };
+	dir = { sinf(yawRad) * cosf((pitchRad)),
+		sinf(pitchRad), 
+		cosf(yawRad) * cosf(pitchRad) };
+
+	//正規化
+	XMVECTOR v = XMVector3Normalize(XMLoadFloat3(&dir));
+	XMStoreFloat3(&dir, v);
 
 	return dir;
 }

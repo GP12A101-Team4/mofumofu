@@ -36,7 +36,7 @@ void UninitGame(void);
 void UpdateGame(void);
 void DrawGame(void);
 
-XMFLOAT3 GetCameraDir(XMFLOAT3 pos);
+XMFLOAT3 GetCameraDir();
 float GetCameraYaw(XMFLOAT3 dir, XMFLOAT3 pos);
 float GetCameraPitch(XMFLOAT3 dir, XMFLOAT3 pos);
 
