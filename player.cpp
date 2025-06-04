@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒ‚ƒfƒ‹ˆ— [player.cpp]
+// ãƒ¢ãƒ‡ãƒ«å‡¦ç† [player.cpp]
 // Author : 
 //
 //=============================================================================
@@ -18,30 +18,30 @@
 #include "game.h"
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
-#define	MODEL_PLAYER		"data/MODEL/player.obj"			// “Ç‚İ‚Şƒ‚ƒfƒ‹–¼
+#define	MODEL_PLAYER		"data/MODEL/player.obj"			// èª­ã¿è¾¼ã‚€ãƒ¢ãƒ‡ãƒ«å
 
-#define	VALUE_MOVE			(2.0f)							// ˆÚ“®—Ê
-#define	VALUE_ROTATE		(XM_PI * 0.02f)					// ‰ñ“]—Ê
+#define	VALUE_MOVE			(2.0f)							// ç§»å‹•é‡
+#define	VALUE_ROTATE		(XM_PI * 0.02f)					// å›è»¢é‡
 
-#define PLAYER_SHADOW_SIZE	(0.4f)							// ‰e‚Ì‘å‚«‚³
-#define PLAYER_OFFSET_Y		(7.0f)							// ƒvƒŒƒCƒ„[‚Ì‘«Œ³‚ğ‚ ‚í‚¹‚é
-
-
-//*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
-//*****************************************************************************
+#define PLAYER_SHADOW_SIZE	(0.4f)							// å½±ã®å¤§ãã•
+#define PLAYER_OFFSET_Y		(7.0f)							// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®è¶³å…ƒã‚’ã‚ã‚ã›ã‚‹
 
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
-static PLAYER				g_Player;						// ƒvƒŒƒCƒ„[
+
+
+//*****************************************************************************
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
+//*****************************************************************************
+static PLAYER				g_Player;						// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼
 
 
 //=============================================================================
-// ‰Šú‰»ˆ—
+// åˆæœŸåŒ–å‡¦ç†
 //=============================================================================
 HRESULT InitPlayer(void)
 {
@@ -52,30 +52,30 @@ HRESULT InitPlayer(void)
 	g_Player.rot = { 0.0f, 0.0f, 0.0f };
 	g_Player.scl = { 1.0f, 1.0f, 1.0f };
 
-	g_Player.spd = 0.0f;			// ˆÚ“®ƒXƒs[ƒhƒNƒŠƒA
-	g_Player.size = PLAYER_SIZE;	// “–‚½‚è”»’è‚Ì‘å‚«‚³
+	g_Player.spd = 0.0f;			// ç§»å‹•ã‚¹ãƒ”ãƒ¼ãƒ‰ã‚¯ãƒªã‚¢
+	g_Player.size = PLAYER_SIZE;	// å½“ãŸã‚Šåˆ¤å®šã®å¤§ãã•
 
 	g_Player.ammor = 0.0f;
 
 	g_Player.use = TRUE;
 
-	// ‚±‚±‚ÅƒvƒŒƒCƒ„[—p‚Ì‰e‚ğì¬‚µ‚Ä‚¢‚é
+	// ã“ã“ã§ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ç”¨ã®å½±ã‚’ä½œæˆã—ã¦ã„ã‚‹
 	XMFLOAT3 pos = g_Player.pos;
 	pos.y -= (PLAYER_OFFSET_Y - 0.1f);
 	g_Player.shadowIdx = CreateShadow(pos, PLAYER_SHADOW_SIZE, PLAYER_SHADOW_SIZE);
-	//          ª
-	//        ‚±‚Ìƒƒ“ƒo[•Ï”‚ª¶¬‚µ‚½‰e‚ÌIndex”Ô†
+	//          â†‘
+	//        ã“ã®ãƒ¡ãƒ³ãƒãƒ¼å¤‰æ•°ãŒç”Ÿæˆã—ãŸå½±ã®Indexç•ªå·
 
 
 	return S_OK;
 }
 
 //=============================================================================
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 //=============================================================================
 void UninitPlayer(void)
 {
-	// ƒ‚ƒfƒ‹‚Ì‰ğ•úˆ—
+	// ãƒ¢ãƒ‡ãƒ«ã®è§£æ”¾å‡¦ç†
 	if (g_Player.load)
 	{
 		UnloadModel(&g_Player.model);
@@ -86,33 +86,44 @@ void UninitPlayer(void)
 }
 
 //=============================================================================
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 //=============================================================================
 void UpdatePlayer(void)
 {
 
-	// ˆÚ“®‚³‚¹‚¿‚á‚¤
-	if (GetKeyboardPress(DIK_A))
-	{	// ¶‚ÖˆÚ“®
-		g_Player.spd = VALUE_MOVE;
-		g_Player.dir = XM_PI / 2;
+	float inputX = 0.0f;
+	float inputY = 0.0f;
+
+	// ç§»åŠ¨è¾“å…¥
+	if (GetKeyboardPress(DIK_A)) inputX += 1.0f;
+	if (GetKeyboardPress(DIK_D)) inputX -= 1.0f;
+	if (GetKeyboardPress(DIK_W)) inputY -= 1.0f;
+	if (GetKeyboardPress(DIK_S)) inputY += 1.0f;
+
+	// åˆæˆè¾“å…¥å‘é‡çš„é•¿åº¦
+	float len = sqrtf(inputX * inputX + inputY * inputY);
+
+	// è‹¥æœ‰è¾“å…¥
+	if (len > 0.0f)
+	{
+		// å•ä½åŒ–å‘é‡
+		inputX /= len;
+		inputY /= len;
+
+		// è®¾ç½®æ–¹å‘(ä»¥æ‘„åƒæœºè§’åº¦ä¸ºåŸºå‡† + è¾“å…¥æ–¹å‘)
+		CAMERA* camera = GetCamera();
+		float cameraYaw = GetCameraYaw(camera->dir, camera->pos);
+		float inputDir = atan2f(inputX, inputY); // â† æ³¨æ„æ˜¯YXé¡ºåº
+
+		g_Player.dir = inputDir;
+		g_Player.rot.y = cameraYaw + inputDir;
+
+		// ç§»åŠ¨
+		float moveX = -sinf(g_Player.rot.y) * VALUE_MOVE;
+		float moveZ = -cosf(g_Player.rot.y) * VALUE_MOVE;
+		g_Player.pos.x += moveX;
+		g_Player.pos.z += moveZ;
 	}
-	if (GetKeyboardPress(DIK_D))
-	{	// ‰E‚ÖˆÚ“®
-		g_Player.spd = VALUE_MOVE;
-		g_Player.dir = -XM_PI / 2;
-	}
-	if (GetKeyboardPress(DIK_W))
-	{	// ã‚ÖˆÚ“®
-		g_Player.spd = VALUE_MOVE;
-		g_Player.dir = XM_PI;
-	}
-	if (GetKeyboardPress(DIK_S))
-	{	// ‰º‚ÖˆÚ“®
-		g_Player.spd = VALUE_MOVE;
-		g_Player.dir = 0.0f;
-	}
-	
 	
 #ifdef _DEBUG
 	if (GetKeyboardPress(DIK_R))
@@ -127,21 +138,21 @@ void UpdatePlayer(void)
 
 	CAMERA* camera = GetCamera();
 	g_Player.rot.y = GetCameraYaw(camera->dir, camera->pos)+ g_Player.dir;
-	//	// Key“ü—Í‚ª‚ ‚Á‚½‚çˆÚ“®ˆ—‚·‚é
+	//	// Keyå…¥åŠ›ãŒã‚ã£ãŸã‚‰ç§»å‹•å‡¦ç†ã™ã‚‹
 	if (g_Player.spd != 0.0f)
 	{
 		float moveX = -sinf(g_Player.rot.y) * g_Player.spd;
 		float moveY = -cosf(g_Player.rot.y) * g_Player.spd;
 		
 
-		// “ü—Í‚Ì‚ ‚Á‚½•ûŒü‚ÖƒvƒŒƒCƒ„[‚ğŒü‚©‚¹‚ÄˆÚ“®‚³‚¹‚é
+		// å…¥åŠ›ã®ã‚ã£ãŸæ–¹å‘ã¸ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å‘ã‹ã›ã¦ç§»å‹•ã•ã›ã‚‹
 		g_Player.pos.x += moveX;
 		g_Player.pos.z += moveY;
 
 		
 	}
 
-	// ‰e‚àƒvƒŒƒCƒ„[‚ÌˆÊ’u‚É‡‚í‚¹‚é
+	// å½±ã‚‚ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®ã«åˆã‚ã›ã‚‹
 	XMFLOAT3 pos = g_Player.pos;
 	pos.y -= (PLAYER_OFFSET_Y - 0.1f);
 	SetPositionShadow(g_Player.shadowIdx, pos);
@@ -151,7 +162,7 @@ void UpdatePlayer(void)
 
 
 
-	//{	// ƒ|ƒCƒ“ƒgƒ‰ƒCƒg‚ÌƒeƒXƒg
+	//{	// ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆã®ãƒ†ã‚¹ãƒˆ
 	//	LIGHT *light = GetLightData(1);
 	//	XMFLOAT3 pos = g_Player.pos;
 	//	pos.y += 20.0f;
@@ -170,54 +181,54 @@ void UpdatePlayer(void)
 
 	
 
-#ifdef _DEBUG	// ƒfƒoƒbƒOî•ñ‚ğ•\¦‚·‚é
-	PrintDebugProc("Player:ª ¨ « ©@Space\n");
+#ifdef _DEBUG	// ãƒ‡ãƒãƒƒã‚°æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
+	PrintDebugProc("Player:â†‘ â†’ â†“ â†ã€€Space\n");
 	PrintDebugProc("Player:X:%f Y:%f Z:%f\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 	PrintDebugProc("X:%d Y:%d Z:%d \n", X, Y, Z);
 #endif
 }
 
 //=============================================================================
-// •`‰æˆ—
+// æç”»å‡¦ç†
 //=============================================================================
 void DrawPlayer(void)
 {
-	// ƒJƒŠƒ“ƒO–³Œø
+	// ã‚«ãƒªãƒ³ã‚°ç„¡åŠ¹
 	SetCullingMode(CULL_MODE_NONE);
 
 	XMMATRIX mtxScl, mtxRot, mtxTranslate, mtxWorld;
 
-	// ƒ[ƒ‹ƒhƒ}ƒgƒŠƒbƒNƒX‚Ì‰Šú‰»
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã®åˆæœŸåŒ–
 	mtxWorld = XMMatrixIdentity();
 
-	// ƒXƒP[ƒ‹‚ğ”½‰f
+	// ã‚¹ã‚±ãƒ¼ãƒ«ã‚’åæ˜ 
 	mtxScl = XMMatrixScaling(g_Player.scl.x, g_Player.scl.y, g_Player.scl.z);
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxScl);
 
-	// ‰ñ“]‚ğ”½‰f
+	// å›è»¢ã‚’åæ˜ 
 	mtxRot = XMMatrixRotationRollPitchYaw(g_Player.rot.x, g_Player.rot.y + XM_PI, g_Player.rot.z);
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
 
-	// ˆÚ“®‚ğ”½‰f
+	// ç§»å‹•ã‚’åæ˜ 
 	mtxTranslate = XMMatrixTranslation(g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
 	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
 
-	// ƒ[ƒ‹ƒhƒ}ƒgƒŠƒbƒNƒX‚Ìİ’è
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒãƒˆãƒªãƒƒã‚¯ã‚¹ã®è¨­å®š
 	SetWorldMatrix(&mtxWorld);
 
 	XMStoreFloat4x4(&g_Player.mtxWorld, mtxWorld);
 
 
-	// ƒ‚ƒfƒ‹•`‰æ
+	// ãƒ¢ãƒ‡ãƒ«æç”»
 	DrawModel(&g_Player.model);
 
-	// ƒJƒŠƒ“ƒOİ’è‚ğ–ß‚·
+	// ã‚«ãƒªãƒ³ã‚°è¨­å®šã‚’æˆ»ã™
 	SetCullingMode(CULL_MODE_BACK);
 }
 
 
 //=============================================================================
-// ƒvƒŒƒCƒ„[î•ñ‚ğæ“¾
+// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æƒ…å ±ã‚’å–å¾—
 //=============================================================================
 PLAYER *GetPlayer(void)
 {
