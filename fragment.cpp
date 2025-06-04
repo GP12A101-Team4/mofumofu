@@ -38,6 +38,9 @@ static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テク�
 static FRAGMENT						g_Fragment[TEXTURE_MAX];				// ポリゴンデータ
 static int							g_TexNo;				// テクスチャ番号
 
+static XMFLOAT2 g_TargetScreenPos[TEXTURE_MAX];  // 记录正确屏幕位置
+static bool g_HasRecordedTarget = false;         // 是否记录过目标位置
+
 static char* g_TextureName[] = {
 	"data/TEXTURE/cat_01.png",
 	"data/TEXTURE/cat_02.png",
@@ -307,6 +310,7 @@ void UpdateFragment(void)
 		g_Fragment[3].scl.y += 0.01f;
 	}
 
+
 #endif
 
 
@@ -323,7 +327,32 @@ void UpdateFragment(void)
 	PrintDebugProc("cat scale head: X:%f Y:%f Z:%f\n", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
 	PrintDebugProc("cat scale tail: X:%f Y:%f Z:%f\n", g_Fragment[3].scl.x, g_Fragment[3].scl.y);*/
 
+	if (GetKeyboardTrigger(DIK_F1)) {
+		D3D11_VIEWPORT vp;
+		UINT num = 1;
+		GetDeviceContext()->RSGetViewports(&num, &vp);
 
+		CAMERA* cam = GetCamera();
+
+		for (int i = 0; i < TEXTURE_MAX; i++) {
+			XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
+			XMVECTOR screen = XMVector3Project(
+				world,
+				0, 0,
+				vp.Width, vp.Height,
+				0.0f, 1.0f,
+				XMLoadFloat4x4(&cam->mtxProjection),
+				XMLoadFloat4x4(&cam->mtxView),
+				XMMatrixIdentity()
+			);
+
+			g_TargetScreenPos[i].x = XMVectorGetX(screen);
+			g_TargetScreenPos[i].y = XMVectorGetY(screen);
+		}
+
+		g_HasRecordedTarget = true;
+		OutputDebugStringA("✨ 已记录当前碎片的投影坐标作为正确答案\n");
+	}
 
 #endif
 }
@@ -433,6 +462,45 @@ HRESULT MakeVertexFragment(void)
 	return S_OK;
 }
 
+
+bool CheckPuzzleRestored()
+{
+	if (!g_HasRecordedTarget) return false;
+
+	D3D11_VIEWPORT vp;
+	UINT num = 1;
+	GetDeviceContext()->RSGetViewports(&num, &vp);
+
+	CAMERA* cam = GetCamera();
+
+	float tolerance = 45.0f;  // 可接受误差范围
+
+	for (int i = 0; i < TEXTURE_MAX; i++) {
+		XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
+		XMVECTOR screen = XMVector3Project(
+			world,
+			0, 0,
+			vp.Width, vp.Height,
+			0.0f, 1.0f,
+			XMLoadFloat4x4(&cam->mtxProjection),
+			XMLoadFloat4x4(&cam->mtxView),
+			XMMatrixIdentity()
+		);
+
+		float x = XMVectorGetX(screen);
+		float y = XMVectorGetY(screen);
+
+		float dx = fabsf(x - g_TargetScreenPos[i].x);
+		float dy = fabsf(y - g_TargetScreenPos[i].y);
+
+		if (dx > tolerance || dy > tolerance)
+			return false;  // 有任何一个碎片没对准，就不是成功状态
+	}
+
+	return true;
+}
+
+
 void DrawPartDebugUI()
 {
 	ImGui::Begin("Part Debug");
@@ -445,4 +513,19 @@ void DrawPartDebugUI()
 	ImGui::Text("Scl Hand Part: (%.2f, %.2f, %.2f)", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
 	ImGui::Text("Scl Tail Part: (%.2f, %.2f, %.2f)", g_Fragment[3].scl.x, g_Fragment[3].scl.y);
 	ImGui::End();
+
+	if (g_HasRecordedTarget) {
+		ImGui::Text("=== Target Screen Positions ===");
+		for (int i = 0; i < TEXTURE_MAX; i++) {
+			ImGui::Text("Part %d: (%.1f, %.1f)", i, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y);
+		}
+	}
+
+	if (CheckPuzzleRestored()) {
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Restore Success!");
+	}
+	else if (g_HasRecordedTarget) {
+		ImGui::Text("Not yet aligned");
+	}
+
 }
