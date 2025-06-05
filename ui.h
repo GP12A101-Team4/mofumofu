@@ -1,40 +1,25 @@
 //=============================================================================
 //
-// 地面処理 [fragment.h]
+// スコア処理 [ui.h]
 // Author : 
 //
 //=============================================================================
 #pragma once
 
-#include "renderer.h"
-
-#define MAX_HISTORY_SIZE 100
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-struct FRAGMENT
-{
-	XMFLOAT3		pos;		// ポリゴンの位置
-	XMFLOAT3		rot;		// ポリゴンの向き(回転)
-	XMFLOAT3		scl;		// ポリゴンの大きさ(スケール)
 
-	XMFLOAT4X4		mtxWorld;	// ワールドマトリックス
-	XMFLOAT3 overallPos;
-	
-	XMFLOAT3 history[MAX_HISTORY_SIZE];
-	
-};
+
 
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitFragment(void);
-void UninitFragment(void);
-void UpdateFragment(void);
-void DrawFragment(void);
+HRESULT InitUI(void);
+void UninitUI(void);
+void UpdateUI(void);
+void DrawUI(void);
 
-void DrawPartDebugUI();
 
-extern bool g_ShowFullImage;
 

@@ -17,10 +17,12 @@
 #include "meshfield.h"
 #include "shadow.h"
 #include "score.h"
+#include "ui.h"
 #include "collision.h"
 #include "debugproc.h"
 #include "meshwall.h"
 #include "fragment.h"
+
 
 //*****************************************************************************
 // マクロ定義
@@ -78,6 +80,9 @@ HRESULT InitGame(void)
 	// スコアの初期化
 	InitScore();
 
+	// スコアの初期化
+	InitUI();
+
 	// BGM再生
 	//PlaySound(SOUND_LABEL_BGM_game);
 
@@ -91,6 +96,8 @@ void UninitGame(void)
 {
 	// スコアの終了処理
 	UninitScore();
+
+	UninitUI();
 
 	// 地面の終了処理
 	UninitMeshField();
@@ -140,12 +147,13 @@ void UpdateGame(void)
 	//欠片の更新処理
 	UpdateFragment();
 
-
 	// 影の更新処理
 	//UpdateShadow();
 
 	// スコアの更新処理
 	UpdateScore();
+
+	UpdateUI();
 
 }
 
@@ -180,6 +188,8 @@ void DrawGame0(void)
 
 	// スコアの描画処理
 	DrawScore();
+
+	DrawUI();
 
 	
 	/*if(g_Ui.pause == TRUE)

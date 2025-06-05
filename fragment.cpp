@@ -41,7 +41,7 @@ static int							g_TexNo;				// テクスチャ番号
 
 static XMFLOAT2 g_TargetScreenPos[TEXTURE_MAX];  // 记录正确屏幕位置
 static bool g_HasRecordedTarget = false;         // 是否记录过目标位置
-static bool g_ShowFullImage = false;
+bool g_ShowFullImage = false;
 
 static char* g_TextureName[] = {
 	"data/TEXTURE/cat_01.png",
@@ -119,7 +119,7 @@ HRESULT InitFragment(void)
 			NULL);
 	}
 
-	for (int i = 0; i < TEXTURE_MAX; i++)
+	for (int i = 0; i < TEXTURE_MAX-1; i++)
 	{
 		// 位置・回転・スケールの初期設定
 		g_Fragment[i].pos = XMFLOAT3(0.0f, 0.0f, 0.0f); // 配置座標
@@ -127,12 +127,7 @@ HRESULT InitFragment(void)
 		g_Fragment[i].scl = XMFLOAT3(1.0f, 1.0f, 1.0f); // 拡大縮小率 X,Y,Z
 		g_Fragment[i].overallPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	}
-
-		
 	
-	
-	
-
 	g_TexNo = 0;
 
 	return S_OK;
