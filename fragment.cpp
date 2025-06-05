@@ -38,11 +38,11 @@ bool CheckPuzzleRestored(void);
 
 
 
-static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
+static ID3D11Buffer			*g_VertexBuffer = NULL;	// 頂点情報
 static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
-static FRAGMENT						g_Fragment[TEXTURE_MAX];				// ポリゴンデータ
-static int							g_TexNo;				// テクスチャ番号
+static FRAGMENT				g_Fragment[TEXTURE_MAX];				// ポリゴンデータ
+static int				g_TexNo;				// テクスチャ番号
 
 
 static XMFLOAT2 g_TargetScreenPos[TEXTURE_MAX] = {
@@ -56,8 +56,7 @@ static XMFLOAT2 g_TargetScreenPos[TEXTURE_MAX] = {
 //static bool g_HasRecordedTarget = false;  // ← 直接设为 true
 
 
-static bool g_ShowFullImage = false;
-
+bool g_ShowFullImage = false;
 
 static char* g_TextureName[] = {
 	"data/TEXTURE/cat_01.png",
