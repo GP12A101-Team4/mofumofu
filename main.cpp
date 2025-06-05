@@ -18,6 +18,7 @@
 #include "meshwall.h"
 #include "sound.h"
 #include "score.h"
+#include "ui.h"
 #include "sprite.h"
 #include "fade.h"
 #include "game.h"
@@ -288,7 +289,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	InitScore();
 
-
+	InitUI();
 
 	// 入力処理の初期化
 	InitInput(hInstance, hWnd);
@@ -368,6 +369,8 @@ void Uninit(void)
 	UninitSound();
 
 	UninitScore();
+
+	UninitUI();
 
 	//入力の終了処理
 	UninitInput();
