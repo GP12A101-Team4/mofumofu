@@ -26,6 +26,8 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
+
+
 HRESULT MakeVertexFragment(void);
 
 bool CheckPuzzleRestored(void);
@@ -33,15 +35,29 @@ bool CheckPuzzleRestored(void);
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
+
+
+
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
 static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
 static FRAGMENT						g_Fragment[TEXTURE_MAX];				// ポリゴンデータ
 static int							g_TexNo;				// テクスチャ番号
 
-static XMFLOAT2 g_TargetScreenPos[TEXTURE_MAX];  // 记录正确屏幕位置
-static bool g_HasRecordedTarget = false;         // 是否记录过目标位置
+static XMFLOAT2 g_TargetScreenPos[TEXTURE_MAX] = {
+	{554.8f, 397.2f},
+	{554.7f, 466.5f},
+	{530.2f, 476.7f},
+	{514.9f, 567.5f},
+	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
+};
+
+//static bool g_HasRecordedTarget = false;  // ← 直接设为 true
+
+
 static bool g_ShowFullImage = false;
+
+
 
 static char* g_TextureName[] = {
 	"data/TEXTURE/cat_01.png",
@@ -65,41 +81,39 @@ static VERTEX_3D g_VertexArray[4 * MAX_POLYGON] = {
 
 };
 
-XMFLOAT3 ComputePuzzleCenter()
+void ComputePuzzleCenterAndScale(XMFLOAT3* outCenter, XMFLOAT3* outScale)
 {
 	XMFLOAT3 center = { 0.0f, 0.0f, 0.0f };
-	for (int i = 0; i < TEXTURE_MAX - 1; i++)  
-	{
-		center.x += g_Fragment[i].overallPos.x;
-		center.y += g_Fragment[i].overallPos.y;
-		center.z += g_Fragment[i].overallPos.z;
-	}
-	center.x /= (TEXTURE_MAX - 1);
-	center.y /= (TEXTURE_MAX - 1);
-	center.z /= (TEXTURE_MAX - 1);
-	return center;
-}
-
-XMFLOAT3 ComputeAverageScale()
-{
-	XMFLOAT3 avg = { 0.0f, 0.0f, 0.0f };
+	XMFLOAT3 scale = { 0.0f, 0.0f, 0.0f };
 
 	int count = TEXTURE_MAX - 1;
 
 	for (int i = 0; i < count; i++)
 	{
-		avg.x += g_Fragment[i].scl.x;
-		avg.y += g_Fragment[i].scl.y;
-		avg.z += g_Fragment[i].scl.z;
+		center.x += g_Fragment[i].overallPos.x;
+		center.y += g_Fragment[i].overallPos.y;
+		center.z += g_Fragment[i].overallPos.z;
+
+		scale.x += g_Fragment[i].scl.x;
+		scale.y += g_Fragment[i].scl.y;
+		scale.z += g_Fragment[i].scl.z;
 	}
 
-	avg.x /= (float)count;
-	avg.y /= (float)count;
-	avg.z = 1.0f;
+	float inv = 1.0f / count;
 
-	return avg;
+	if (outCenter)
+	{
+		outCenter->x = center.x * inv;
+		outCenter->y = center.y * inv;
+		outCenter->z = center.z * inv;
+	}
+	if (outScale)
+	{
+		outScale->x = scale.x * inv;
+		outScale->y = scale.y * inv;
+		outScale->z = 1.0f;  // 固定Z轴缩放
+	}
 }
-
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -119,7 +133,7 @@ HRESULT InitFragment(void)
 			NULL);
 	}
 
-	for (int i = 0; i < TEXTURE_MAX; i++)
+	for (int i = 0; i < TEXTURE_MAX - 1; i++)
 	{
 		// 位置・回転・スケールの初期設定
 		g_Fragment[i].pos = XMFLOAT3(0.0f, 0.0f, 0.0f); // 配置座標
@@ -169,191 +183,17 @@ void UpdateFragment(void)
 {
 	CAMERA *cam = GetCamera();
 	
-	XMFLOAT3 center = ComputePuzzleCenter();
+	XMFLOAT3 center;
+	ComputePuzzleCenterAndScale(&center, nullptr);
 
 	if (!g_ShowFullImage && CheckPuzzleRestored())
 	{
 		g_ShowFullImage = true;
-		
+		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
 	}
-
+		
 #ifdef _DEBUG
 	
-	////猫の頭
-	//if (GetKeyboardPress(DIK_LEFT))
-	//{
-	//	g_Fragment[0].overallPos.x -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_RIGHT))
-	//{
-	//	g_Fragment[0].overallPos.x += 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_UP))
-	//{
-	//	g_Fragment[0].overallPos.y += 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_DOWN))
-	//{
-	//	g_Fragment[0].overallPos.y -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_M))
-	//{
-	//	g_Fragment[0].overallPos.z -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_N))
-	//{
-	//	g_Fragment[0].overallPos.z += 1.0f;
-	//}
-
-	////猫の体
-	//if (GetKeyboardPress(DIK_LEFT))
-	//{
-	//	g_Fragment[0].overallPos.x -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_RIGHT))
-	//{
-	//	g_Fragment[0].overallPos.x += 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_UP))
-	//{
-	//	g_Fragment[0].overallPos.y += 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_DOWN))
-	//{
-	//	g_Fragment[0].overallPos.y -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_M))
-	//{
-	//	g_Fragment[0].overallPos.z -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_N))
-	//{
-	//	g_Fragment[0].overallPos.z += 1.0f;
-	//}
-
-	////猫の手
-	//if (GetKeyboardPress(DIK_LEFT))
-	//{
-	//	g_Fragment[2].overallPos.x -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_RIGHT))
-	//{
-	//	g_Fragment[2].overallPos.x += 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_UP))
-	//{
-	//	g_Fragment[2].overallPos.y += 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_DOWN))
-	//{
-	//	g_Fragment[2].overallPos.y -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_M))
-	//{
-	//	g_Fragment[2].overallPos.z -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_N))
-	//{
-	//	g_Fragment[2].overallPos.z += 1.0f;
-	//}
-
-	////猫の尻尾
-	//if (GetKeyboardPress(DIK_LEFT))
-	//{
-	//	g_Fragment[0].overallPos.x -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_RIGHT))
-	//{
-	//	g_Fragment[0].overallPos.x += 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_UP))
-	//{
-	//	g_Fragment[0].overallPos.y += 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_DOWN))
-	//{
-	//	g_Fragment[0].overallPos.y -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_M))
-	//{
-	//	g_Fragment[0].overallPos.z -= 1.0f;
-	//}
-	//if (GetKeyboardPress(DIK_N))
-	//{
-	//	g_Fragment[0].overallPos.z += 1.0f;
-	//}
-
-	////猫の頭
-	//if (GetKeyboardPress(DIK_O))
-	//{
-	//	g_Fragment[0].scl.x -= 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_P))
-	//{
-	//	g_Fragment[0].scl.x += 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_O))
-	//{
-	//	g_Fragment[0].scl.y -= 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_P))
-	//{
-	//	g_Fragment[0].scl.y += 0.01f;
-	//}
-
-	////猫の体
-	//if (GetKeyboardPress(DIK_U))
-	//{
-	//	g_Fragment[1].scl.x -= 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_I))
-	//{
-	//	g_Fragment[1].scl.x += 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_U))
-	//{
-	//	g_Fragment[1].scl.y -= 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_I))
-	//{
-	//	g_Fragment[1].scl.y += 0.01f;
-	//}
-
-	////猫の手
-	//if (GetKeyboardPress(DIK_H))
-	//{
-	//	g_Fragment[2].scl.x -= 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_J))
-	//{
-	//	g_Fragment[2].scl.x += 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_H))
-	//{
-	//	g_Fragment[2].scl.y -= 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_J))
-	//{
-	//	g_Fragment[2].scl.y += 0.01f;
-	//}
-
-	////猫の尻尾
-	//if (GetKeyboardPress(DIK_K))
-	//{
-	//	g_Fragment[3].scl.x -= 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_L))
-	//{
-	//	g_Fragment[3].scl.x += 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_K))
-	//{
-	//	g_Fragment[3].scl.y -= 0.01f;
-	//}
-	//if (GetKeyboardPress(DIK_L))
-	//{
-	//	g_Fragment[3].scl.y += 0.01f;
-	//}
 
 //猫
 if (GetKeyboardPress(DIK_LEFT))
@@ -421,12 +261,13 @@ if (GetKeyboardPress(DIK_N))
 			g_TargetScreenPos[i].y = XMVectorGetY(screen);
 		}
 
-		g_HasRecordedTarget = true;
+		//g_HasRecordedTarget = true;
 		OutputDebugStringA("✨ 已记录当前碎片的投影坐标作为正确答案\n");
 	}
 
-#endif
+
 }
+#endif
 
 //=============================================================================
 // 描画処理
@@ -514,8 +355,8 @@ void DrawFragment(void)
 	if (g_ShowFullImage)
 	{
 		
-		XMFLOAT3 center = ComputePuzzleCenter();  // 或者指定碎片坐标
-		XMFLOAT3 scale = ComputeAverageScale();
+		XMFLOAT3 center, scale;
+		ComputePuzzleCenterAndScale(&center, &scale);
 
 
 		XMMATRIX mtxWorld = XMMatrixIdentity();
@@ -561,17 +402,15 @@ HRESULT MakeVertexFragment(void)
 
 bool CheckPuzzleRestored()
 {
-	if (!g_HasRecordedTarget) return false;
-
 	D3D11_VIEWPORT vp;
 	UINT num = 1;
 	GetDeviceContext()->RSGetViewports(&num, &vp);
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 45.0f;  // 可接受误差范围
+	float tolerance = 50.0f;  // 可接受誤差半徑
 
-	for (int i = 0; i < TEXTURE_MAX; i++) {
+	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
 		XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
 		XMVECTOR screen = XMVector3Project(
 			world,
@@ -586,11 +425,12 @@ bool CheckPuzzleRestored()
 		float x = XMVectorGetX(screen);
 		float y = XMVectorGetY(screen);
 
-		float dx = fabsf(x - g_TargetScreenPos[i].x);
-		float dy = fabsf(y - g_TargetScreenPos[i].y);
+		float dx = x - g_TargetScreenPos[i].x;
+		float dy = y - g_TargetScreenPos[i].y;
+		float distance = sqrtf(dx * dx + dy * dy);
 
-		if (dx > tolerance || dy > tolerance)
-			return false;  // 有任何一个碎片没对准，就不是成功状态
+		if (distance > tolerance)
+			return false;
 	}
 
 	return true;
@@ -610,18 +450,78 @@ void DrawPartDebugUI()
 	ImGui::Text("Scl Tail Part: (%.2f, %.2f, %.2f)", g_Fragment[3].scl.x, g_Fragment[3].scl.y);
 	ImGui::End();
 
-	if (g_HasRecordedTarget) {
-		ImGui::Text("=== Target Screen Positions ===");
-		for (int i = 0; i < TEXTURE_MAX; i++) {
-			ImGui::Text("Part %d: (%.1f, %.1f)", i, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y);
-		}
-	}
+	//if (g_HasRecordedTarget) {
+	//	ImGui::Text("=== Target Screen Positions ===");
+	//	for (int i = 0; i < TEXTURE_MAX; i++) {
+	//		ImGui::Text("Part %d: (%.1f, %.1f)", i, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y);
+	//	}
+	//}
 
-	if (CheckPuzzleRestored()) {
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Restore Success!");
-	}
-	else if (g_HasRecordedTarget) {
-		ImGui::Text("Not yet aligned");
+	//if (CheckPuzzleRestored()) {
+	//	ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Restore Success!");
+	//}
+	//else if (g_HasRecordedTarget) {
+	//	ImGui::Text("Not yet aligned");
+	//}
+
+	//ImGui::Separator();
+	//ImGui::Text("投影 vs 目標位置誤差 (CheckPuzzleRestored)");
+
+	//CAMERA* cam = GetCamera();
+	//D3D11_VIEWPORT vp;
+	//UINT num = 1;
+	//GetDeviceContext()->RSGetViewports(&num, &vp);
+
+	//for (int i = 0; i < TEXTURE_MAX - 1; i++) {
+	//	XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
+	//	XMVECTOR screen = XMVector3Project(
+	//		world,
+	//		0, 0,
+	//		vp.Width, vp.Height,
+	//		0.0f, 1.0f,
+	//		XMLoadFloat4x4(&cam->mtxProjection),
+	//		XMLoadFloat4x4(&cam->mtxView),
+	//		XMMatrixIdentity()
+	//	);
+
+	//	float x = XMVectorGetX(screen);
+	//	float y = XMVectorGetY(screen);
+	//	float dx = fabsf(x - g_TargetScreenPos[i].x);
+	//	float dy = fabsf(y - g_TargetScreenPos[i].y);
+
+	//	ImGui::Text("Part %d: (%.1f, %.1f) -> (%.1f, %.1f) | Δx=%.1f, Δy=%.1f",
+	//		i, x, y, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y, dx, dy);
+	//}
+
+	ImGui::Separator();
+	ImGui::Text("拼圖對齊誤差 (歐幾里得距離)");
+
+	CAMERA* cam = GetCamera();
+	D3D11_VIEWPORT vp;
+	UINT num = 1;
+	GetDeviceContext()->RSGetViewports(&num, &vp);
+
+	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
+		XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
+		XMVECTOR screen = XMVector3Project(
+			world,
+			0, 0,
+			vp.Width, vp.Height,
+			0.0f, 1.0f,
+			XMLoadFloat4x4(&cam->mtxProjection),
+			XMLoadFloat4x4(&cam->mtxView),
+			XMMatrixIdentity()
+		);
+
+		float x = XMVectorGetX(screen);
+		float y = XMVectorGetY(screen);
+		float dx = x - g_TargetScreenPos[i].x;
+		float dy = y - g_TargetScreenPos[i].y;
+		float distance = sqrtf(dx * dx + dy * dy);
+
+		ImGui::Text("Part %d: screen = (%.1f, %.1f) → target = (%.1f, %.1f) | distance = %.1f",
+			i, x, y, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y, distance);
 	}
 
 }
+
