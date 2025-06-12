@@ -31,3 +31,5 @@ void SetSpriteColorRotation(ID3D11Buffer *buf, float X, float Y, float Width, fl
 
 void SetSpriteLeftTop(ID3D11Buffer *buf, float X, float Y, float Width, float Height, float U, float V, float UW, float VH);
 
+void DrawGaugeBarSprite(ID3D11Buffer* buf,ID3D11ShaderResourceView* texBack,ID3D11ShaderResourceView* texFill,
+	float x, float y, float width, float height, float ratio);

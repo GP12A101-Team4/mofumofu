@@ -20,6 +20,7 @@ HRESULT InitUI(void);
 void UninitUI(void);
 void UpdateUI(void);
 void DrawUI(void);
+void DrawGaugeBars(void);
 
 
 

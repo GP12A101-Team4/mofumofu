@@ -191,6 +191,8 @@ void DrawGame0(void)
 
 	DrawUI();
 
+	DrawGaugeBars();
+
 	
 	/*if(g_Ui.pause == TRUE)
 	DrawUi();*/

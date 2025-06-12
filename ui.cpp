@@ -15,7 +15,7 @@
 //*****************************************************************************
 #define TEXTURE_WIDTH				(70)	// ƒLƒƒƒ‰ƒTƒCƒY
 #define TEXTURE_HEIGHT				(70)	// 
-#define TEXTURE_MAX					(2)		// ƒeƒNƒXƒ`ƒƒ‚Ì”
+#define TEXTURE_MAX					(4)		// ƒeƒNƒXƒ`ƒƒ‚Ì”
 
 
 //*****************************************************************************
@@ -32,6 +32,8 @@ static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// ƒeƒNƒXƒ`ƒ
 static char *g_TexturName[] = {
 	"data/TEXTURE/UI_black.png",
 	"data/TEXTURE/UI_normal.png",
+	"data/TEXTURE/bar1.png",
+	"data/TEXTURE/bar2.png",
 };
 
 
@@ -155,6 +157,18 @@ void DrawUI(void)
 
 		// ƒ|ƒŠƒSƒ“•`‰æ
 		GetDeviceContext()->Draw(4, 0);
+}
+
+void DrawGaugeBars()
+{
+	float screenX   = 350.0f;
+	float screenY   = 475.0f;
+	float barWidth  = 250.0f;
+	float barHeight = 20.0f;
+	float ratio = GetPuzzleAlignmentRatio();
+
+	DrawGaugeBarSprite(g_VertexBuffer, g_Texture[2], g_Texture[3],
+		screenX, screenY, barWidth, barHeight, ratio);
 }
 
 
