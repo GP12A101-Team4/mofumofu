@@ -405,6 +405,7 @@ bool CheckPuzzleRestored()
 
 	float tolerance = 50.0f;  // 可接受誤差半徑
 
+
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
 		XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
 		XMVECTOR screen = XMVector3Project(
@@ -431,6 +432,47 @@ bool CheckPuzzleRestored()
 	return true;
 }
 
+float GetPuzzleAlignmentRatio()
+{
+	D3D11_VIEWPORT vp;
+	UINT num = 1;
+	GetDeviceContext()->RSGetViewports(&num, &vp);
+
+	CAMERA* cam = GetCamera();
+
+	const float maxDistance = 200.0f;  // 误差最大可接受值（用于归一化）
+	float ratioSum = 0.0f;
+
+	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
+		XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
+		XMVECTOR screen = XMVector3Project(
+			world,
+			0, 0,
+			vp.Width, vp.Height,
+			0.0f, 1.0f,
+			XMLoadFloat4x4(&cam->mtxProjection),
+			XMLoadFloat4x4(&cam->mtxView),
+			XMMatrixIdentity()
+		);
+
+		float x = XMVectorGetX(screen);
+		float y = XMVectorGetY(screen);
+		float dx = x - g_TargetScreenPos[i].x;
+		float dy = y - g_TargetScreenPos[i].y;
+		float distance = sqrtf(dx * dx + dy * dy);
+
+		// 误差越小，比例越接近 1.0；误差 >= maxDistance 时，比例为 0
+		float normalized = distance / maxDistance;
+		if (normalized > 1.0f)
+			normalized = 1.0f;
+
+		float partRatio = 1.0f - normalized;
+		ratioSum += partRatio;
+	}
+
+	return ratioSum / (TEXTURE_MAX - 1);  // 返回0～1之间的平均完成度
+}
+
 
 void DrawPartDebugUI()
 {
@@ -443,6 +485,7 @@ void DrawPartDebugUI()
 	ImGui::Text("Scl Body Part: (%.2f, %.2f, %.2f)", g_Fragment[1].scl.x, g_Fragment[1].scl.y);
 	ImGui::Text("Scl Hand Part: (%.2f, %.2f, %.2f)", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
 	ImGui::Text("Scl Tail Part: (%.2f, %.2f, %.2f)", g_Fragment[3].scl.x, g_Fragment[3].scl.y);
+	
 	ImGui::End();
 
 	//if (g_HasRecordedTarget) {
@@ -490,6 +533,11 @@ void DrawPartDebugUI()
 
 	ImGui::Separator();
 	ImGui::Text("拼圖對齊誤差 (歐幾里得距離)");
+
+	ImGui::Separator();
+	float ratio = GetPuzzleAlignmentRatio();
+	ImGui::Text("拼圖完成度: %.1f%%", ratio * 100.0f);
+	ImGui::ProgressBar(ratio, ImVec2(200, 20));
 
 	CAMERA* cam = GetCamera();
 	D3D11_VIEWPORT vp;
