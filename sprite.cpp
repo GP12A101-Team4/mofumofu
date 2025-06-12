@@ -1,7 +1,7 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒXƒvƒ‰ƒCƒgˆ— [sprite.cpp]
-// Author : GP11B132 99 ŠO‰ª‚–¾
+// ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆå‡¦ç† [sprite.cpp]
+// Author : GP11B132 99 å¤–å²¡é«˜æ˜Ž
 //
 //=============================================================================
 #include "main.h"
@@ -9,23 +9,23 @@
 #include "sprite.h"
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒžã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
 
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //*****************************************************************************
 
 
 
 //=============================================================================
-// ’¸“_ƒf[ƒ^Ý’è
+// é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿è¨­å®š
 //=============================================================================
 void SetSprite(ID3D11Buffer *buf, float X, float Y, float Width, float Height, float U, float V, float UW, float VH)
 {
@@ -35,32 +35,32 @@ void SetSprite(ID3D11Buffer *buf, float X, float Y, float Width, float Height, f
 	VERTEX_3D *vertex = (VERTEX_3D*)msr.pData;
 
 	float hw, hh;
-	hw = Width * 0.5f;		// ƒRƒ“ƒsƒ…[ƒ^[‚ÍŠ„‚èŽZ‚ª‹êŽè
-	hh = Height * 0.5f;		// Š|‚¯ŽZ‚Ì•û‚ªˆ—‚ª‘¬‚¢
+	hw = Width * 0.5f;		// ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã¯å‰²ã‚Šç®—ãŒè‹¦æ‰‹
+	hh = Height * 0.5f;		// æŽ›ã‘ç®—ã®æ–¹ãŒå‡¦ç†ãŒé€Ÿã„
 
-	// Žw’è‚³‚ê‚½À•W‚ð’†S‚ÉÝ’è‚·‚éƒvƒƒOƒ‰ƒ€
+	// æŒ‡å®šã•ã‚ŒãŸåº§æ¨™ã‚’ä¸­å¿ƒã«è¨­å®šã™ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 
-	// ’¸“_‚O”Ôi¶ã‚Ì’¸“_j
+	// é ‚ç‚¹ï¼ç•ªï¼ˆå·¦ä¸Šã®é ‚ç‚¹ï¼‰
 	vertex[0].Position = XMFLOAT3(X - hw, Y - hh, 0.0f);
 	vertex[0].Diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(U, V);
 
-	// ’¸“_‚P”Ôi‰Eã‚Ì’¸“_j
+	// é ‚ç‚¹ï¼‘ç•ªï¼ˆå³ä¸Šã®é ‚ç‚¹ï¼‰
 	vertex[1].Position = XMFLOAT3(X + hw, Y - hh, 0.0f);
 	vertex[1].Diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[1].TexCoord = XMFLOAT2(U + UW, V);
 
-	// ’¸“_‚Q”Ôi¶‰º‚Ì’¸“_j
+	// é ‚ç‚¹ï¼’ç•ªï¼ˆå·¦ä¸‹ã®é ‚ç‚¹ï¼‰
 	vertex[2].Position = XMFLOAT3(X - hw, Y + hh, 0.0f);
 	vertex[2].Diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[2].TexCoord = XMFLOAT2(U, V + VH);
 
-	// ’¸“_‚R”Ôi‰E‰º‚Ì’¸“_j
+	// é ‚ç‚¹ï¼“ç•ªï¼ˆå³ä¸‹ã®é ‚ç‚¹ï¼‰
 	vertex[3].Position = XMFLOAT3(X + hw, Y + hh, 0.0f);
 	vertex[3].Diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[3].TexCoord = XMFLOAT2(U + UW, V + VH);
 
-	// ¶ã‚ðŒ´“_‚Æ‚µ‚ÄÝ’è‚·‚éƒvƒƒOƒ‰ƒ€
+	// å·¦ä¸Šã‚’åŽŸç‚¹ã¨ã—ã¦è¨­å®šã™ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 	//vertex[0].Position = XMFLOAT3(X, Y, 0.0f);
 	//vertex[0].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	//vertex[0].TexCoord = D3DXVECTOR2(U, V);
@@ -91,7 +91,7 @@ void SetSpriteLeftTop(ID3D11Buffer *buf, float X, float Y, float Width, float He
 
 	VERTEX_3D *vertex = (VERTEX_3D*)msr.pData;
 
-	// ¶ã‚ðŒ´“_‚Æ‚µ‚ÄÝ’è‚·‚éƒvƒƒOƒ‰ƒ€
+	// å·¦ä¸Šã‚’åŽŸç‚¹ã¨ã—ã¦è¨­å®šã™ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 	vertex[0].Position = XMFLOAT3(X, Y, 0.0f);
 	vertex[0].Diffuse  = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	vertex[0].TexCoord = XMFLOAT2(U, V);
@@ -114,7 +114,7 @@ void SetSpriteLeftTop(ID3D11Buffer *buf, float X, float Y, float Width, float He
 
 }
 
-// Žw’èÀ•W‚ð¶ã‚Æ‚µ‚Ä•`‰æ‚·‚é
+// æŒ‡å®šåº§æ¨™ã‚’å·¦ä¸Šã¨ã—ã¦æç”»ã™ã‚‹
 void SetSpriteLTColor(ID3D11Buffer* buf,
 	float X, float Y, float Width, float Height,
 	float U, float V, float UW, float VH,
@@ -125,7 +125,7 @@ void SetSpriteLTColor(ID3D11Buffer* buf,
 
 	VERTEX_3D* vertex = (VERTEX_3D*)msr.pData;
 
-	// ¶ã‚ðŒ´“_‚Æ‚µ‚ÄÝ’è‚·‚éƒvƒƒOƒ‰ƒ€
+	// å·¦ä¸Šã‚’åŽŸç‚¹ã¨ã—ã¦è¨­å®šã™ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 	vertex[0].Position = XMFLOAT3(X, Y, 0.0f);
 	vertex[0].Diffuse = color;
 	vertex[0].TexCoord = XMFLOAT2(U, V);
@@ -156,27 +156,27 @@ void SetSpriteColor(ID3D11Buffer *buf, float X, float Y, float Width, float Heig
 	VERTEX_3D *vertex = (VERTEX_3D*)msr.pData;
 
 	float hw, hh;
-	hw = Width * 0.5f;		// ƒRƒ“ƒsƒ…[ƒ^[‚ÍŠ„‚èŽZ‚ª‹êŽè
-	hh = Height * 0.5f;		// Š|‚¯ŽZ‚Ì•û‚ªˆ—‚ª‘¬‚¢
+	hw = Width * 0.5f;		// ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã¯å‰²ã‚Šç®—ãŒè‹¦æ‰‹
+	hh = Height * 0.5f;		// æŽ›ã‘ç®—ã®æ–¹ãŒå‡¦ç†ãŒé€Ÿã„
 
-	// Žw’è‚³‚ê‚½À•W‚ð’†S‚ÉÝ’è‚·‚éƒvƒƒOƒ‰ƒ€
+	// æŒ‡å®šã•ã‚ŒãŸåº§æ¨™ã‚’ä¸­å¿ƒã«è¨­å®šã™ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 
-	// ’¸“_‚O”Ôi¶ã‚Ì’¸“_j
+	// é ‚ç‚¹ï¼ç•ªï¼ˆå·¦ä¸Šã®é ‚ç‚¹ï¼‰
 	vertex[0].Position = XMFLOAT3(X - hw, Y - hh, 0.0f);
 	vertex[0].Diffuse  = color;
 	vertex[0].TexCoord = XMFLOAT2(U, V);
 
-	// ’¸“_‚P”Ôi‰Eã‚Ì’¸“_j
+	// é ‚ç‚¹ï¼‘ç•ªï¼ˆå³ä¸Šã®é ‚ç‚¹ï¼‰
 	vertex[1].Position = XMFLOAT3(X + hw, Y - hh, 0.0f);
 	vertex[1].Diffuse  = color;
 	vertex[1].TexCoord = XMFLOAT2(U + UW, V);
 
-	// ’¸“_‚Q”Ôi¶‰º‚Ì’¸“_j
+	// é ‚ç‚¹ï¼’ç•ªï¼ˆå·¦ä¸‹ã®é ‚ç‚¹ï¼‰
 	vertex[2].Position = XMFLOAT3(X - hw, Y + hh, 0.0f);
 	vertex[2].Diffuse  = color;
 	vertex[2].TexCoord = XMFLOAT2(U, V + VH);
 
-	// ’¸“_‚R”Ôi‰E‰º‚Ì’¸“_j
+	// é ‚ç‚¹ï¼“ç•ªï¼ˆå³ä¸‹ã®é ‚ç‚¹ï¼‰
 	vertex[3].Position = XMFLOAT3(X + hw, Y + hh, 0.0f);
 	vertex[3].Diffuse  = color;
 	vertex[3].TexCoord = XMFLOAT2(U + UW, V + VH);
@@ -196,17 +196,17 @@ void SetSpriteColorRotation(ID3D11Buffer *buf, float X, float Y, float Width, fl
 	VERTEX_3D *vertex = (VERTEX_3D*)msr.pData;
 
 	float hw, hh;
-	hw = Width * 0.5f;		// ƒRƒ“ƒsƒ…[ƒ^[‚ÍŠ„‚èŽZ‚ª‹êŽè
-	hh = Height * 0.5f;		// Š|‚¯ŽZ‚Ì•û‚ªˆ—‚ª‘¬‚¢
+	hw = Width * 0.5f;		// ã‚³ãƒ³ãƒ”ãƒ¥ãƒ¼ã‚¿ãƒ¼ã¯å‰²ã‚Šç®—ãŒè‹¦æ‰‹
+	hh = Height * 0.5f;		// æŽ›ã‘ç®—ã®æ–¹ãŒå‡¦ç†ãŒé€Ÿã„
 
-	// Žw’è‚³‚ê‚½À•W‚ð’†S‚É‰ñ“]‚·‚éƒvƒƒOƒ‰ƒ€
-	float BaseAngle = atan2f(hh, hw);			// ’†S“_‚©‚ç’¸“_‚É‘Î‚·‚éŠp“x
+	// æŒ‡å®šã•ã‚ŒãŸåº§æ¨™ã‚’ä¸­å¿ƒã«å›žè»¢ã™ã‚‹ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+	float BaseAngle = atan2f(hh, hw);			// ä¸­å¿ƒç‚¹ã‹ã‚‰é ‚ç‚¹ã«å¯¾ã™ã‚‹è§’åº¦
 	XMVECTOR temp = { hw, hh, 0.0f, 0.0f };
-	temp = XMVector2Length(temp);				// ’†S“_‚©‚ç’¸“_‚É‘Î‚·‚é‹——£
+	temp = XMVector2Length(temp);				// ä¸­å¿ƒç‚¹ã‹ã‚‰é ‚ç‚¹ã«å¯¾ã™ã‚‹è·é›¢
 	float Radius = 0.0f;
 	XMStoreFloat(&Radius, temp);
 
-	// ‚±‚±‚ÅƒAƒtƒBƒ“•ÏŠ·isincos‚Ì‚â‚Âj‚ðŽg‚Á‚Ä4’¸“_‚ð‰ñ“]‚³‚¹‚é
+	// ã“ã“ã§ã‚¢ãƒ•ã‚£ãƒ³å¤‰æ›ï¼ˆsincosã®ã‚„ã¤ï¼‰ã‚’ä½¿ã£ã¦4é ‚ç‚¹ã‚’å›žè»¢ã•ã›ã‚‹
 	float x = X - cosf(BaseAngle + Rot) * Radius;
 	float y = Y - sinf(BaseAngle + Rot) * Radius;
 	vertex[0].Position = XMFLOAT3(x, y, 0.0f);
@@ -235,5 +235,24 @@ void SetSpriteColorRotation(ID3D11Buffer *buf, float X, float Y, float Width, fl
 
 	GetDeviceContext()->Unmap(buf, 0);
 
+}
+
+void DrawGaugeBarSprite(ID3D11Buffer* buf, ID3D11ShaderResourceView* texBack, ID3D11ShaderResourceView* texFill,
+	float x, float y, float width, float height, float ratio)
+{
+	// === èƒŒæ™¯æ¡ï¼ˆbar1ï¼‰===
+	SetSpriteLeftTop(buf, x, y, width, height,
+		0.0f, 0.0f, 1.0f, 1.0f);
+	GetDeviceContext()->PSSetShaderResources(0, 1, &texBack);
+	GetDeviceContext()->Draw(4, 0);
+
+	// === å¡«å……æ¡ï¼ˆbar2ï¼‰===
+	float fillWidth = width * ratio;
+	float uvWidth = ratio;  // UV æ¨ªå‘æ¯”ä¾‹è£å‰ª
+
+	SetSpriteLeftTop(buf, x, y, fillWidth, height,
+		0.0f, 0.0f, uvWidth, 1.0f);
+	GetDeviceContext()->PSSetShaderResources(0, 1, &texFill);
+	GetDeviceContext()->Draw(4, 0);
 }
 

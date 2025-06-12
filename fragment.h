@@ -36,5 +36,7 @@ void DrawFragment(void);
 
 void DrawPartDebugUI();
 
+float GetPuzzleAlignmentRatio();
+
 extern bool g_ShowFullImage;
 
