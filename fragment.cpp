@@ -14,14 +14,20 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define TEXTURE_MAX		(5)						// テクスチャの数
+#define TEXTURE_MAX				(5)						// テクスチャの数
 
-#define MAX_POLYGON		(6)						// キューブ１個あたりの面数
+#define MAX_POLYGON				(6)						// キューブ１個あたりの面数
 
-#define	VALUE_MOVE		(5.0f)					// 移動量
-#define	VALUE_ROTATE	(XM_PI * 0.02f)			// 回転量
+#define	VALUE_MOVE				(5.0f)					// 移動量
+#define	VALUE_ROTATE			(XM_PI * 0.02f)			// 回転量
 
-#define	SIZE_WH			(100.0f)				// 地面のサイズ
+#define	SIZE_WH					(100.0f)				// 地面のサイズ
+
+#define ANIM_SPEED				(10.0f)					//アニメーション速度
+
+#define FRAGMENT_ROT_AMPLITUDE	(XM_PI / 10)
+#define FRAGMENT_ANIM_TIME		(30)
+
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -36,7 +42,9 @@ bool CheckPuzzleRestored(void);
 static ID3D11Buffer					*g_VertexBuffer = NULL;	// 頂点情報
 static ID3D11ShaderResourceView		*g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
-static FRAGMENT						g_Fragment[TEXTURE_MAX];				// ポリゴンデータ
+static FRAGMENT						g_Fragment[TEXTURE_MAX];						// ポリゴンデータ
+static FRAGMENT_RESTORED			g_FragmentRestored[TEXTURE_MAX];				// ポリゴンデータ
+
 static int							g_TexNo;				// テクスチャ番号
 
 static XMFLOAT2 g_TargetScreenPos[TEXTURE_MAX];  // 记录正确屏幕位置
@@ -126,6 +134,12 @@ HRESULT InitFragment(void)
 		g_Fragment[i].rot = XMFLOAT3(0.0f, 0.0f, 0.0f); // 回転
 		g_Fragment[i].scl = XMFLOAT3(1.0f, 1.0f, 1.0f); // 拡大縮小率 X,Y,Z
 		g_Fragment[i].overallPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+		//---------------------------------------------------------------------
+		g_FragmentRestored[i].use = FALSE;
+		g_FragmentRestored[i].AnimCnt = 0;
+		g_FragmentRestored[i].alpha = 1.0f;
+		g_FragmentRestored[i].Initialized = FALSE;
 	}
 
 		
@@ -175,6 +189,36 @@ void UpdateFragment(void)
 	{
 		g_ShowFullImage = true;
 		
+	}
+
+	if (g_ShowFullImage && !g_FragmentRestored[0].Initialized) {
+		g_FragmentRestored[0].use = TRUE;
+		g_FragmentRestored[0].pos = ComputePuzzleCenter();
+		g_FragmentRestored[0].scl = ComputeAverageScale();
+
+		g_FragmentRestored[0].Initialized = TRUE;
+	}
+
+	if (g_FragmentRestored[0].use) {
+		g_FragmentRestored[0].pos.x -= 1.0f;
+
+		float angle = (XM_PI / FRAGMENT_ANIM_TIME) * g_FragmentRestored[0].AnimCnt;
+
+		g_FragmentRestored[0].AnimCnt++;
+
+		float rot = FRAGMENT_ROT_AMPLITUDE * -cosf(angle);
+
+		g_FragmentRestored[0].rot.z = rot;
+
+		if (g_FragmentRestored[0].AnimCnt >= 2 * FRAGMENT_ANIM_TIME) {
+			g_FragmentRestored[0].AnimCnt = 0;
+		}
+
+		//g_FragmentRestored[0].alpha -= 0.005f;
+	}
+
+	if (g_FragmentRestored[0].alpha < 0) {
+		g_FragmentRestored[0].use = FALSE;
 	}
 
 #ifdef _DEBUG
@@ -511,7 +555,7 @@ void DrawFragment(void)
 	}
 	
 
-	if (g_ShowFullImage)
+	if (g_FragmentRestored[0].use)
 	{
 		
 		XMFLOAT3 center = ComputePuzzleCenter();  // 或者指定碎片坐标
@@ -519,11 +563,15 @@ void DrawFragment(void)
 
 
 		XMMATRIX mtxWorld = XMMatrixIdentity();
-		XMMATRIX mtxScl = XMMatrixScaling(scale.x, scale.y, scale.z);  // 你可以调整缩放
-		XMMATRIX mtxTranslate = XMMatrixTranslation(center.x, center.y + 60.0f, center.z + 200.0f);
-		mtxWorld = mtxScl * mtxTranslate;
+		XMMATRIX mtxScl = XMMatrixScaling(g_FragmentRestored[0].scl.x, g_FragmentRestored[0].scl.y, g_FragmentRestored[0].scl.z);  // 你可以调整缩放
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_FragmentRestored[0].rot.x, g_FragmentRestored[0].rot.y, g_FragmentRestored[0].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_FragmentRestored[0].pos.x, g_FragmentRestored[0].pos.y + 60.0f, g_FragmentRestored[0].pos.z + 200.0f);
+		mtxWorld = mtxScl * mtxRot * mtxTranslate;
 
 		SetWorldMatrix(&mtxWorld);
+
+		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, g_FragmentRestored[0].alpha);
+		SetMaterial(material);
 		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[4]);  // 最后一张完整图
 
 		GetDeviceContext()->Draw(4, 0);
