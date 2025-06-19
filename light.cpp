@@ -55,6 +55,13 @@ void InitLight(void)
 	g_Light[0].Enable = TRUE;									// このライトをON
 	SetLight(0, &g_Light[0]);									// これで設定している
 
+	// 並行光源の設定（世界を照らす光）
+	g_Light[1].Direction = XMFLOAT3(0.0f, -1.0f, 0.0f);		// 光の向き
+	g_Light[1].Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);	// 光の色
+	g_Light[1].Type = LIGHT_TYPE_DIRECTIONAL;					// 並行光源
+	g_Light[1].Enable = TRUE;									// このライトをON
+	SetLight(1, &g_Light[1]);									// これで設定している
+
 
 
 	// フォグの初期化（霧の効果）
@@ -72,7 +79,6 @@ void InitLight(void)
 //=============================================================================
 void UpdateLight(void)
 {
-
 
 
 }
