@@ -34,6 +34,10 @@
 static ID3D11Buffer* g_VertexBuffer = NULL;		// 頂点情報
 static ID3D11ShaderResourceView* g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
+static bool wasHoveringStart = false;
+static bool wasHoveringExit = false;
+
+
 XMFLOAT3 MousePos;
 XMFLOAT3 StartButtonPos;
 XMFLOAT3 ExitButtonPos;
@@ -58,6 +62,7 @@ static BOOL						g_Use;						// TRUE:使っている  FALSE:未使用
 static float					g_w, g_h;					// 幅と高さ
 static XMFLOAT3					g_Pos;						// ポリゴンの座標
 static int						g_TexNo;					// テクスチャ番号
+static bool						isAudioPlayed;
 
 static BOOL						g_Load = FALSE;
 
@@ -150,7 +155,6 @@ void UninitTitle(void)
 void UpdateTitle(void)
 {
 
-	
 	//// ゲームパッドで入力処理
 	//else if (IsButtonTriggered(0, BUTTON_START))
 	//{
@@ -171,16 +175,54 @@ void UpdateTitle(void)
 		menu = -1;
 	}
 
-	if (CollisionBB(MousePos, 1.0f, 1.0f, StartButtonPos, 240.0f, 80.0f) && inputMode == 0) {
+	//if (CollisionBB(MousePos, 0.1f, 0.1f, StartButtonPos, 240.0f, 80.0f) && inputMode == 0) {
+	//	menu = MENU_START;
+	//	if (!isAudioPlayed) {
+	//		PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
+	//		isAudioPlayed = true;
+	//	}
+
+
+	//}
+	//
+	//else if (CollisionBB(MousePos, 0.1f, 0.1f, ExitButtonPos , 240.0f, 80.0f) && inputMode == 0) {
+	//	menu = MENU_EXIT;
+	//	if (!isAudioPlayed) {
+	//		PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
+	//		isAudioPlayed = true;
+	//	}
+	//	
+	//}
+	//else {
+	//	isAudioPlayed = false;
+	//}
+	bool isHoveringStart = CollisionBB(MousePos, 1.0f, 1.0f, StartButtonPos, 240.0f, 80.0f);
+	bool isHoveringExit = CollisionBB(MousePos, 1.0f, 1.0f, ExitButtonPos, 240.0f, 80.0f);
+
+	if (isHoveringStart && inputMode == 0) {
 		menu = MENU_START;
+
+		// 從非 hover → hover 時播放
+		if (!wasHoveringStart) {
+			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
+		}
 	}
-	if (CollisionBB(MousePos, 1.0f, 1.0f, ExitButtonPos , 240.0f, 80.0f) && inputMode == 0) {
+	if (isHoveringExit && inputMode == 0) {
 		menu = MENU_EXIT;
+
+		// 從非 hover → hover 時播放
+		if (!wasHoveringExit) {
+			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
+		}
 	}
-	
+
+	//状態更新
+	wasHoveringStart = isHoveringStart;
+	wasHoveringExit = isHoveringExit;
 
 		if (GetKeyboardTrigger(DIK_UP))
 		{
+			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
 			if (inputMode == 0) {
 				menu = 1;
 				inputMode = 1;
@@ -194,6 +236,7 @@ void UpdateTitle(void)
 
 		if (GetKeyboardTrigger(DIK_DOWN))
 		{
+			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
 			if (inputMode == 0) {
 				menu = 1;
 				inputMode = 1;
@@ -216,20 +259,19 @@ void UpdateTitle(void)
 
 	if (GetKeyboardTrigger(DIK_RETURN)|| IsMouseLeftPressed())
 	{// Enter押したら、ステージを切り替える
+		
 		if (menu == MENU_START)
 		{
+			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
 			SetFade(FADE_OUT, MODE_GAME);
 		}
 		else if (menu == MENU_EXIT)
 		{
+			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
 			PostQuitMessage(0);
 		}
 	}
 
-	g_SNOW.old_pos = g_SNOW.pos;	// １フレ前の情報を保存
-
-
-	g_SNOW.scrl -= 0.005f;		// 0.005f;		// スクロール
 
 	
 
@@ -345,19 +387,19 @@ void DrawTitle(void)
 		GetDeviceContext()->Draw(4, 0);
 	}
 
-	// カーソル
-	{
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[9]);
+	//// カーソル
+	//{
+	//	// テクスチャ設定
+	//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[9]);
 
-		SetSpriteLTColor(g_VertexBuffer,
-			MousePos.x, MousePos.y, 40.0f, 40.0f,
-			0.0f, 0.0f, 1.0f, 1.0f,
-			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	//	SetSpriteLTColor(g_VertexBuffer,
+	//		MousePos.x, MousePos.y, 40.0f, 40.0f,
+	//		0.0f, 0.0f, 1.0f, 1.0f,
+	//		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
-		// ポリゴン描画
-		GetDeviceContext()->Draw(4, 0);
-	}
+	//	// ポリゴン描画
+	//	GetDeviceContext()->Draw(4, 0);
+	//}
 }
 
 

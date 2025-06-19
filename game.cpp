@@ -84,7 +84,7 @@ HRESULT InitGame(void)
 	InitUI();
 
 	// BGMçƒê∂
-	//PlaySound(SOUND_LABEL_BGM_game);
+	//PlaySound(SOUND_LABEL_BGM_GAME);
 
 	return S_OK;
 }
