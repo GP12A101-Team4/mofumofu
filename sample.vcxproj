@@ -170,6 +170,7 @@
     <ClInclude Include="ui.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bg.h" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="collision.cpp" />
     <ClCompile Include="cursor.cpp" />
