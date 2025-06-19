@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// ゲーム画面処理 [game.cpp]
+// 繧ｲ繝ｼ繝逕ｻ髱｢蜃ｦ逅 [game.cpp]
 // Author : 
 //
 //=============================================================================
@@ -26,13 +26,13 @@
 
 
 //*****************************************************************************
-// マクロ定義
+// 繝槭け繝ｭ螳夂ｾｩ
 //*****************************************************************************
 
 
 
 //*****************************************************************************
-// プロトタイプ宣言
+// 繝励Ο繝医ち繧､繝怜ｮ｣險
 //*****************************************************************************
 
 
@@ -40,12 +40,12 @@
 
 
 //*****************************************************************************
-// グローバル変数
+// 繧ｰ繝ｭ繝ｼ繝舌Ν螟画焚
 //*****************************************************************************
 static int	g_ViewPortType_Game = TYPE_FULL_SCREEN;
 
 
-//static BOOL	g_bPause = FALSE;	// ポーズON/OFF
+//static BOOL	g_bPause = FALSE;	// 繝昴�繧ｺON/OFF
 
 RANDOM	g_random;
 UI		g_Ui;
@@ -57,7 +57,7 @@ float pitch;
 
 
 //=============================================================================
-// 初期化処理
+// 蛻晄悄蛹門�逅
 //=============================================================================
 HRESULT InitGame(void)
 {
@@ -65,53 +65,54 @@ HRESULT InitGame(void)
 
 	g_ViewPortType_Game = TYPE_FULL_SCREEN;
 
-	// フィールドの初期化
+	// 繝輔ぅ繝ｼ繝ｫ繝峨�蛻晄悄蛹
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 100, 100, 13.0f, 13.0f);
 	InitBG();
-	// ライトを有効化	// 影の初期化処理
+
 	InitShadow();
 
-	// 欠片の初期処理
+	// 谺迚��蛻晄悄蜃ｦ逅
 	InitFragment();
 
-	// プレイヤーの初期化
+	// 繝励Ξ繧､繝､繝ｼ縺ｮ蛻晄悄蛹
 	InitPlayer();
 
 
-	// スコアの初期化
+	// 繧ｹ繧ｳ繧｢縺ｮ蛻晄悄蛹
 	InitScore();
 
-	// スコアの初期化
+	// 繧ｹ繧ｳ繧｢縺ｮ蛻晄悄蛹
 	InitUI();
 
-	// BGM再生
+	// BGM蜀咲函
 	//PlaySound(SOUND_LABEL_BGM_GAME);
 
 	return S_OK;
 }
 
 //=============================================================================
-// 終了処理
+// 邨ゆｺ��逅
 //=============================================================================
 void UninitGame(void)
 {
-	// スコアの終了処理
+	// 繧ｹ繧ｳ繧｢縺ｮ邨ゆｺ��逅
 	UninitScore();
 
 	UninitUI();
 
-	// 地面の終了処理
+	// 蝨ｰ髱｢縺ｮ邨ゆｺ��逅
 	UninitMeshField();
 	UninitBG();
+
 	// プレイヤーの終了処理
 	UninitPlayer();
 
-	// 影の終了処理
+	// 蠖ｱ縺ｮ邨ゆｺ��逅
 	UninitShadow();
 }
 
 //=============================================================================
-// 更新処理
+// 譖ｴ譁ｰ蜃ｦ逅
 //=============================================================================
 void UpdateGame(void)
 {
@@ -139,19 +140,20 @@ void UpdateGame(void)
 	
 	
 
-	// 地面処理の更新
+	// 蝨ｰ髱｢蜃ｦ逅��譖ｴ譁ｰ
 	UpdateMeshField();
 	UpdateBG();
+
 	// プレイヤーの更新処理
 	UpdatePlayer();
 
-	//欠片の更新処理
+	//谺迚��譖ｴ譁ｰ蜃ｦ逅
 	UpdateFragment();
 
-	// 影の更新処理
+	// 蠖ｱ縺ｮ譖ｴ譁ｰ蜃ｦ逅
 	//UpdateShadow();
 
-	// スコアの更新処理
+	// 繧ｹ繧ｳ繧｢縺ｮ譖ｴ譁ｰ蜃ｦ逅
 	UpdateScore();
 
 	UpdateUI();
@@ -159,35 +161,36 @@ void UpdateGame(void)
 }
 
 //=============================================================================
-// 描画処理
+// 謠冗判蜃ｦ逅
 //=============================================================================
 void DrawGame0(void)
 {
-	// 3Dの物を描画する処理
-	// 地面の描画処理
+	// 3D縺ｮ迚ｩ繧呈緒逕ｻ縺吶ｋ蜃ｦ逅
+	// 蝨ｰ髱｢縺ｮ謠冗判蜃ｦ逅
 	DrawMeshField();
 
-	// 影の描画処理
+	// 蠖ｱ縺ｮ謠冗判蜃ｦ逅
 	//DrawShadow();
 
-	// プレイヤーの描画処理
+	// 繝励Ξ繧､繝､繝ｼ縺ｮ謠冗判蜃ｦ逅
 	DrawPlayer();
 
 	
-	// 壁の描画処理
+	// 螢√�謠冗判蜃ｦ逅
 	DrawMeshWall();
 	DrawBG();
+
 	//欠片の描画処理
 	DrawFragment();
 	
-	// 2Dの物を描画する処理
-	// Z比較なし
+	// 2D縺ｮ迚ｩ繧呈緒逕ｻ縺吶ｋ蜃ｦ逅
+	// Z豈碑ｼ�↑縺
 	SetDepthEnable(FALSE);
 
-	// ライティングを無効
+	// 繝ｩ繧､繝�ぅ繝ｳ繧ｰ繧堤┌蜉ｹ
 	SetLightEnable(FALSE);
 
-	// スコアの描画処理
+	// 繧ｹ繧ｳ繧｢縺ｮ謠冗判蜃ｦ逅
 	DrawScore();
 
 	DrawUI();
@@ -198,10 +201,10 @@ void DrawGame0(void)
 	/*if(g_Ui.pause == TRUE)
 	DrawUi();*/
 
-	// ライティングを有効に
+	// 繝ｩ繧､繝�ぅ繝ｳ繧ｰ繧呈怏蜉ｹ縺ｫ
 	SetLightEnable(TRUE);
 
-	// Z比較あり
+	// Z豈碑ｼ�≠繧
 	SetDepthEnable(TRUE);
 }
 
@@ -210,7 +213,7 @@ void DrawGame(void)
 {
 
 #ifdef _DEBUG
-	// デバッグ表示
+	// 繝�ヰ繝�げ陦ｨ遉ｺ
 	/*PrintDebugProc("ViewPortType:%d\n", g_ViewPortType_Game);*/
 
 #endif
@@ -221,7 +224,7 @@ void DrawGame(void)
 		float dist = 10.0f;
 		XMFLOAT3 dir = GetCameraDir();
 		
-		//ベクトルを拡大する　Camera.atとCamera.posの値が同じになるバグを防ぐため 
+		//繝吶け繝医Ν繧呈僑螟ｧ縺吶ｋ縲Camera.at縺ｨCamera.pos縺ｮ蛟､縺悟酔縺倥↓縺ｪ繧九ヰ繧ｰ繧帝亟縺舌◆繧 
 		dir.x *= dist;
 		dir.y *= dist;
 		dir.z *= dist;
@@ -236,14 +239,14 @@ void DrawGame(void)
 
 
 		SetViewPort(TYPE_FULL_SCREEN);
-		DrawGame0();	//OBJ描画処理
+		DrawGame0();	//OBJ謠冗判蜃ｦ逅
 	}
 
 	
 
 }
 
-//回転平滑化
+//蝗櫁ｻ｢蟷ｳ貊大喧
 float turning(float target, float current) {
 	target = NormalizeAngle(target);
 	current = NormalizeAngle(current);
@@ -260,7 +263,7 @@ float NormalizeAngle(float angle) {
 	return angle;
 }
 
-//カメラ角度制御
+//繧ｫ繝｡繝ｩ隗貞ｺｦ蛻ｶ蠕｡
 XMFLOAT3 GetCameraDir() {
 
 	int deltaX = GetMouseX();
@@ -281,14 +284,14 @@ XMFLOAT3 GetCameraDir() {
 		sinf(pitchRad), 
 		cosf(yawRad) * cosf(pitchRad) };
 
-	//正規化
+	//豁｣隕丞喧
 	XMVECTOR v = XMVector3Normalize(XMLoadFloat3(&dir));
 	XMStoreFloat3(&dir, v);
 
 	return dir;
 }
 
-//カメラ上下角度計算
+//繧ｫ繝｡繝ｩ荳贋ｸ玖ｧ貞ｺｦ險育ｮ
 float GetCameraYaw(XMFLOAT3 dir, XMFLOAT3 pos) {
 	float deltaX = dir.x - pos.x;
 	float deltaZ = dir.z - pos.z;
@@ -298,7 +301,7 @@ float GetCameraYaw(XMFLOAT3 dir, XMFLOAT3 pos) {
 	return yaw;
 }
 
-////カメラ左右角度計算
+////繧ｫ繝｡繝ｩ蟾ｦ蜿ｳ隗貞ｺｦ險育ｮ
 float GetCameraPitch(XMFLOAT3 dir, XMFLOAT3 pos) {
 	float deltaY = dir.y - pos.y;
 	float deltaX = dir.x - pos.x;
