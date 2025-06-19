@@ -22,7 +22,7 @@
 #include "debugproc.h"
 #include "meshwall.h"
 #include "fragment.h"
-
+#include "bg.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -66,7 +66,7 @@ HRESULT InitGame(void)
 
 	// フィールドの初期化
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 100, 100, 13.0f, 13.0f);
-
+	InitBG();
 	// ライトを有効化	// 影の初期化処理
 	InitShadow();
 
@@ -101,7 +101,7 @@ void UninitGame(void)
 
 	// 地面の終了処理
 	UninitMeshField();
-
+	UninitBG();
 	// プレイヤーの終了処理
 	UninitPlayer();
 
@@ -140,7 +140,7 @@ void UpdateGame(void)
 
 	// 地面処理の更新
 	UpdateMeshField();
-
+	UpdateBG();
 	// プレイヤーの更新処理
 	UpdatePlayer();
 
@@ -175,7 +175,7 @@ void DrawGame0(void)
 	
 	// 壁の描画処理
 	DrawMeshWall();
-
+	DrawBG();
 	//欠片の描画処理
 	DrawFragment();
 	

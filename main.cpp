@@ -24,7 +24,7 @@
 #include "game.h"
 #include "title.h"
 #include "result.h"
-
+#include "bg.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -296,6 +296,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	// フィールドの初期化
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 100, 100, 13.0f, 13.0f);
+	InitBG();
 
 	// 壁の初期化
 	InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_TOP), XMFLOAT3(0.0f, 0.0f, 0.0f),
@@ -361,7 +362,7 @@ void Uninit(void)
 
 	// 地面の終了処理
 	UninitMeshField();
-
+	UninitBG();
 	// カメラの終了処理
 	UninitCamera();
 
@@ -396,6 +397,7 @@ void Update(void)
 
 	case MODE_GAME:			// ゲーム画面の更新
 		UpdateGame();
+		//UpdateBG();
 		break;
 
 	case MODE_RESULT:		// リザルト画面の更新
@@ -427,7 +429,7 @@ void Draw0(void)
 
 	// 壁の描画処理
 	DrawMeshWall();
-
+	//DrawBG();
 	
 }
 

@@ -251,52 +251,52 @@ void UpdateMeshWall(void)
 //=============================================================================
 void DrawMeshWall(void)
 {
-	MESH_WALL *pMesh;
-	int nCntMeshField;
-	
-	for(nCntMeshField = 0; nCntMeshField < g_nNumMeshField; nCntMeshField++)
-	{
-		pMesh = &g_aMeshWall[nCntMeshField];
+	//MESH_WALL *pMesh;
+	//int nCntMeshField;
+	//
+	//for(nCntMeshField = 0; nCntMeshField < g_nNumMeshField; nCntMeshField++)
+	//{
+	//	pMesh = &g_aMeshWall[nCntMeshField];
 
-		// 頂点バッファ設定
-		UINT stride = sizeof(VERTEX_3D);
-		UINT offset = 0;
-		GetDeviceContext()->IASetVertexBuffers(0, 1, &pMesh->vertexBuffer, &stride, &offset);
+	//	// 頂点バッファ設定
+	//	UINT stride = sizeof(VERTEX_3D);
+	//	UINT offset = 0;
+	//	GetDeviceContext()->IASetVertexBuffers(0, 1, &pMesh->vertexBuffer, &stride, &offset);
 
-		// インデックスバッファ設定
-		GetDeviceContext()->IASetIndexBuffer(pMesh->indexBuffer, DXGI_FORMAT_R16_UINT, 0);
+	//	// インデックスバッファ設定
+	//	GetDeviceContext()->IASetIndexBuffer(pMesh->indexBuffer, DXGI_FORMAT_R16_UINT, 0);
 
-		// プリミティブトポロジ設定
-		GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	//	// プリミティブトポロジ設定
+	//	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-		// マテリアル設定
-		SetMaterial(pMesh->material);
+	//	// マテリアル設定
+	//	SetMaterial(pMesh->material);
 
-		// テクスチャ設定
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
-
-
-
-		XMMATRIX mtxRot, mtxTranslate, mtxWorld;
-
-		// ワールドマトリックスの初期化
-		mtxWorld = XMMatrixIdentity();
-
-		// 回転を反映
-		mtxRot = XMMatrixRotationRollPitchYaw(pMesh->rot.x, pMesh->rot.y, pMesh->rot.z);
-		mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
-
-		// 移動を反映
-		mtxTranslate = XMMatrixTranslation(pMesh->pos.x, pMesh->pos.y, pMesh->pos.z);
-		mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
-
-		// ワールドマトリックスの設定
-		SetWorldMatrix(&mtxWorld);
+	//	// テクスチャ設定
+	//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
 
 
-		// ポリゴンの描画
-		GetDeviceContext()->DrawIndexed(pMesh->nNumVertexIndex, 0, 0);
-	}
+
+	//	XMMATRIX mtxRot, mtxTranslate, mtxWorld;
+
+	//	// ワールドマトリックスの初期化
+	//	mtxWorld = XMMatrixIdentity();
+
+	//	// 回転を反映
+	//	mtxRot = XMMatrixRotationRollPitchYaw(pMesh->rot.x, pMesh->rot.y, pMesh->rot.z);
+	//	mtxWorld = XMMatrixMultiply(mtxWorld, mtxRot);
+
+	//	// 移動を反映
+	//	mtxTranslate = XMMatrixTranslation(pMesh->pos.x, pMesh->pos.y, pMesh->pos.z);
+	//	mtxWorld = XMMatrixMultiply(mtxWorld, mtxTranslate);
+
+	//	// ワールドマトリックスの設定
+	//	SetWorldMatrix(&mtxWorld);
+
+
+	//	// ポリゴンの描画
+	//	GetDeviceContext()->DrawIndexed(pMesh->nNumVertexIndex, 0, 0);
+	//}
 
 }
 
