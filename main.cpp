@@ -24,6 +24,7 @@
 #include "game.h"
 #include "title.h"
 #include "result.h"
+#include "cursor.h"
 #include "bg.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -249,7 +250,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		if (wParam != WA_INACTIVE) {
 
-			ShowCursor(TRUE);
+			ShowCursor(FALSE);
 			RECT rect;
 			GetClientRect(hWnd, &rect);
 			MapWindowPoints(hWnd, nullptr, (POINT*)&rect, 2);
@@ -290,6 +291,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitScore();
 
 	InitUI();
+
+	InitCursor();
 
 	// 入力処理の初期化
 	InitInput(hInstance, hWnd);
@@ -336,6 +339,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// フェードの初期化
 	InitFade();
 
+	SetBGMVolume(0.5f);
+
 	// 最初のモードをセット
 	SetMode(g_Mode);	// ここはSetModeのままで！
 
@@ -359,7 +364,7 @@ void Uninit(void)
 
 	//欠片の終了処理
 	UninitFragment();
-
+	UninitBG();
 	// 地面の終了処理
 	UninitMeshField();
 	UninitBG();
@@ -373,6 +378,7 @@ void Uninit(void)
 
 	UninitUI();
 
+	UninitCursor();
 	//入力の終了処理
 	UninitInput();
 
@@ -393,6 +399,7 @@ void Update(void)
 	{
 	case MODE_TITLE:		// タイトル画面の更新
 		UpdateTitle();
+		UpdateCursor();
 		break;
 
 	case MODE_GAME:			// ゲーム画面の更新
@@ -456,6 +463,8 @@ void Draw(void)
 		SetLightEnable(FALSE);
 
 		DrawTitle();
+
+		DrawCursor();
 
 		// ライティングを有効に
 		SetLightEnable(TRUE);
@@ -581,7 +590,10 @@ void SetMode(int mode)
 	case MODE_TITLE:
 		//タイトル画面の初期化
 		InitTitle();
-		//PlaySound(SOUND_LABEL_BGM_bgm_title);
+		InitCursor();
+		PlaySound(SOUND_LABEL_BGM_TITLE);
+
+
 		break;
 
 	case MODE_GAME:
@@ -589,12 +601,12 @@ void SetMode(int mode)
 		InitPlayer();
 		InitScore();
 
-		//PlaySound(SOUND_LABEL_BGM_bgm);
+		PlaySound(SOUND_LABEL_BGM_GAME);
 		break;
 
 	case MODE_RESULT:
 		InitResult();
-		//PlaySound(SOUND_LABEL_BGM_sample002);
+		PlaySound(SOUND_LABEL_BGM_GAME);
 		break;
 
 	case MODE_MAX:

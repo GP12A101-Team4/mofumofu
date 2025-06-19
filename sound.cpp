@@ -29,14 +29,31 @@ IXAudio2SourceVoice *g_apSourceVoice[SOUND_LABEL_MAX] = {};	// ソースボイス
 BYTE *g_apDataAudio[SOUND_LABEL_MAX] = {};					// オーディオデータ
 DWORD g_aSizeAudio[SOUND_LABEL_MAX] = {};					// オーディオデータサイズ
 
+IXAudio2SubmixVoice* g_pSubmixBGM = nullptr;
+IXAudio2SubmixVoice* g_pSubmixSE = nullptr;
+
 // 各音素材のパラメータ
 SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 {
-	{ (char*)"data/SE/laser.wav", 0 },
-	{ (char*)"data/SE/ah.wav", 0 },
-	{ (char*)"data/SE/45.wav", 0 },
+	{ (char*)"data/BGM/bgm1.wav", -1 },
+	{ (char*)"data/BGM/title.wav", -1 },
 
-	
+
+	{ (char*)"data/SE/CAT/cat_2.wav", 0 },
+	{ (char*)"data/SE/DOG/dog_1.wav", 0 },
+	{ (char*)"data/SE/ELEPHANT/elephant_1.wav", 0 },
+	{ (char*)"data/SE/MOUSE/mouse_1.wav", 0 },
+	{ (char*)"data/SE/SHEEP/sheep_1.wav", 0 },
+
+	{ (char*)"data/SE/SYSTEM/countdown.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/discovered.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/losing.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/point.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/timesup.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/winning.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/Modern10.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/Modern11.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/Modern8.wav", 0 },
 
 };
 
@@ -78,6 +95,20 @@ bool InitSound(HWND hWnd)
 		// COMライブラリの終了処理
 		CoUninitialize();
 
+		return false;
+	}
+
+	// BGM用のSubmix
+	hr = g_pXAudio2->CreateSubmixVoice(&g_pSubmixBGM, 1, 44100);
+	if (FAILED(hr)) {
+		MessageBox(hWnd, "BGM SubmixVoice 生成失敗！", "警告！", MB_ICONWARNING);
+		return false;
+	}
+
+	// SE用のSubmix
+	hr = g_pXAudio2->CreateSubmixVoice(&g_pSubmixSE, 1, 44100);
+	if (FAILED(hr)) {
+		MessageBox(hWnd, "SE SubmixVoice 生成失敗！", "警告！", MB_ICONWARNING);
 		return false;
 	}
 
@@ -141,7 +172,7 @@ bool InitSound(HWND hWnd)
 			return false;
 		}
 
-		// オーディオデータ読み込み
+			
 		hr = CheckChunk(hFile, 'atad', &g_aSizeAudio[nCntSound], &dwChunkPosition);
 		if(FAILED(hr))
 		{
@@ -156,8 +187,28 @@ bool InitSound(HWND hWnd)
 			return false;
 		}
 	
+		XAUDIO2_SEND_DESCRIPTOR sendDesc = {};
+
+		if (g_aParam[nCntSound].nCntLoop == -1)
+			sendDesc.pOutputVoice = g_pSubmixBGM;
+		else
+			sendDesc.pOutputVoice = g_pSubmixSE;
+
+		XAUDIO2_VOICE_SENDS sendList = {};
+		sendList.SendCount = 1;
+		sendList.pSends = &sendDesc;	
+
 		// ソースボイスの生成
-		hr = g_pXAudio2->CreateSourceVoice(&g_apSourceVoice[nCntSound], &(wfx.Format));
+		//hr = g_pXAudio2->CreateSourceVoice(&g_apSourceVoice[nCntSound], &(wfx.Format));
+		hr = g_pXAudio2->CreateSourceVoice(
+			&g_apSourceVoice[nCntSound],
+			&(wfx.Format),
+			0,
+			XAUDIO2_DEFAULT_FREQ_RATIO,
+			nullptr,
+			&sendList
+		);
+
 		if(FAILED(hr))
 		{
 			MessageBox(hWnd, "ソースボイスの生成に失敗！", "警告！", MB_ICONWARNING);
@@ -373,3 +424,14 @@ HRESULT ReadChunkData(HANDLE hFile, void *pBuffer, DWORD dwBuffersize, DWORD dwB
 	return S_OK;
 }
 
+void SetBGMVolume(float volume)
+{
+	if (g_pSubmixBGM)
+		g_pSubmixBGM->SetVolume(volume);
+}
+
+void SetSEVolume(float volume)
+{
+	if (g_pSubmixBGM)
+		g_pSubmixBGM->SetVolume(volume);
+}
