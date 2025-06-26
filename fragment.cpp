@@ -278,32 +278,32 @@ if (GetKeyboardPress(DIK_N))
 	PrintDebugProc("cat scale head: X:%f Y:%f Z:%f\n", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
 	PrintDebugProc("cat scale tail: X:%f Y:%f Z:%f\n", g_Fragment[3].scl.x, g_Fragment[3].scl.y);*/
 
-	if (GetKeyboardTrigger(DIK_F1)) {
-		D3D11_VIEWPORT vp;
-		UINT num = 1;
-		GetDeviceContext()->RSGetViewports(&num, &vp);
+	//if (GetKeyboardTrigger(DIK_F1)) {
+	//	D3D11_VIEWPORT vp;
+	//	UINT num = 1;
+	//	GetDeviceContext()->RSGetViewports(&num, &vp);
 
-		CAMERA* cam = GetCamera();
+	//	CAMERA* cam = GetCamera();
 
-		for (int i = 0; i < TEXTURE_MAX; i++) {
-			XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
-			XMVECTOR screen = XMVector3Project(
-				world,
-				0, 0,
-				vp.Width, vp.Height,
-				0.0f, 1.0f,
-				XMLoadFloat4x4(&cam->mtxProjection),
-				XMLoadFloat4x4(&cam->mtxView),
-				XMMatrixIdentity()
-			);
+	//	for (int i = 0; i < TEXTURE_MAX; i++) {
+	//		XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
+	//		XMVECTOR screen = XMVector3Project(
+	//			world,
+	//			0, 0,
+	//			vp.Width, vp.Height,
+	//			0.0f, 1.0f,
+	//			XMLoadFloat4x4(&cam->mtxProjection),
+	//			XMLoadFloat4x4(&cam->mtxView),
+	//			XMMatrixIdentity()
+	//		);
 
-			g_TargetScreenPos[i].x = XMVectorGetX(screen);
-			g_TargetScreenPos[i].y = XMVectorGetY(screen);
-		}
+	//		g_TargetScreenPos[i].x = XMVectorGetX(screen);
+	//		g_TargetScreenPos[i].y = XMVectorGetY(screen);
+	//	}
 
-		//g_HasRecordedTarget = true;
-		OutputDebugStringA("✨ 已记录当前碎片的投影坐标作为正确答案\n");
-	}
+	//	//g_HasRecordedTarget = true;
+	//	OutputDebugStringA("✨ 已记录当前碎片的投影坐标作为正确答案\n");
+	//}
 
 
 }
