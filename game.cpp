@@ -237,22 +237,26 @@ void DrawGame(void)
 #endif
 	CAMERA* camera = GetCamera();
 	PLAYER* player = GetPlayer();
+	MENU* menu = GetMenu();
 
 	{
-		float dist = 10.0f;
-		XMFLOAT3 dir = GetCameraDir();
+		if(!menu->use)
+		{
+			float dist = 10.0f;
+			XMFLOAT3 dir = GetCameraDir();
 
-		//ベクトルを拡大する　Camera.atとCamera.posの値が同じになるバグを防ぐため 
-		dir.x *= dist;
-		dir.y *= dist;
-		dir.z *= dist;
+			//ベクトルを拡大する　Camera.atとCamera.posの値が同じになるバグを防ぐため 
+			dir.x *= dist;
+			dir.y *= dist;
+			dir.z *= dist;
 
-		camera->dir = { camera->pos.x + dir.x,
-						camera->pos.y + dir.y,
-						camera->pos.z + dir.z };
+			camera->dir = { camera->pos.x + dir.x,
+							camera->pos.y + dir.y,
+							camera->pos.z + dir.z };
 
-		SetCameraAT(camera->dir);
-		SetCamera();
+			SetCameraAT(camera->dir);
+			SetCamera();
+		}
 
 
 
