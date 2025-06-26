@@ -18,7 +18,7 @@
 //*****************************************************************************
 #define TEXTURE_WIDTH				(SCREEN_WIDTH)	// ”wŒiƒTƒCƒY
 #define TEXTURE_HEIGHT				(SCREEN_HEIGHT)	// 
-#define TEXTURE_MAX					(10)				// ƒeƒNƒXƒ`ƒƒ‚Ì”
+#define TEXTURE_MAX					(12)				// ƒeƒNƒXƒ`ƒƒ‚Ì”
 
 #define TEXTURE_WIDTH_LOGO			(480)			// ƒƒSƒTƒCƒY
 #define TEXTURE_HEIGHT_LOGO			(480)		
@@ -36,24 +36,25 @@ static ID3D11ShaderResourceView* g_Texture[TEXTURE_MAX] = { NULL };	// ƒeƒNƒXƒ`ƒ
 
 static bool wasHoveringStart = false;
 static bool wasHoveringExit = false;
+static bool wasHoveringSetting = false;
+
 
 
 XMFLOAT3 MousePos;
 XMFLOAT3 StartButtonPos;
 XMFLOAT3 ExitButtonPos;
+XMFLOAT3 SettingButtonPos;
 
 static char* g_TexturName[TEXTURE_MAX] = {
-	"data/TEXTURE/title.png",		//0
-	"data/TEXTURE/title_logo.png",	//1
-	"data/TEXTURE/effect000.jpg",	//2
-	"data/TEXTURE/start.png",		//3
-	"data/TEXTURE/start_selected.png",		//4
-	"data/TEXTURE/exit.png",		//5
-	"data/TEXTURE/exit_selected.png",		//6
-	"data/TEXTURE/yuki001.png",		//7
-	"data/TEXTURE/yuki002.png",		//8
-	"data/TEXTURE/cursor.png"		//9
-
+	"data/TEXTURE/title.png",						//0
+	"data/TEXTURE/title_logo.png",					//1
+	"data/TEXTURE/effect000.jpg",					//2
+	"data/TEXTURE/start.png",						//3
+	"data/TEXTURE/start_selected.png",				//4
+	"data/TEXTURE/exit.png",						//5
+	"data/TEXTURE/exit_selected.png",				//6
+	"data/TEXTURE/setting.png",						//7
+	"data/TEXTURE/setting_selected.png",			//8
 };
 
 
@@ -114,8 +115,10 @@ HRESULT InitTitle(void)
 	g_SNOW.scrl2 = 0.0f;		// TEXƒXƒNƒ[ƒ‹
 	g_SNOW.scrl2 = 0.0f;		// TEXƒXƒNƒ[ƒ‹
 
-	StartButtonPos = { SCREEN_CENTER_X ,360.0f,0.0f };
-	ExitButtonPos  = { SCREEN_CENTER_X ,450.0f,0.0f };
+	StartButtonPos		=	{ SCREEN_CENTER_X ,360.0f,0.0f };
+	ExitButtonPos		=	{ SCREEN_CENTER_X ,450.0f,0.0f };
+	SettingButtonPos	=	{ 900.0f ,500.0f,0.0f };
+
 
 	//PlaySound(SOUND_LABEL_BGM_title);
 
@@ -175,29 +178,9 @@ void UpdateTitle(void)
 		menu = -1;
 	}
 
-	//if (CollisionBB(MousePos, 0.1f, 0.1f, StartButtonPos, 240.0f, 80.0f) && inputMode == 0) {
-	//	menu = MENU_START;
-	//	if (!isAudioPlayed) {
-	//		PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
-	//		isAudioPlayed = true;
-	//	}
-
-
-	//}
-	//
-	//else if (CollisionBB(MousePos, 0.1f, 0.1f, ExitButtonPos , 240.0f, 80.0f) && inputMode == 0) {
-	//	menu = MENU_EXIT;
-	//	if (!isAudioPlayed) {
-	//		PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
-	//		isAudioPlayed = true;
-	//	}
-	//	
-	//}
-	//else {
-	//	isAudioPlayed = false;
-	//}
 	bool isHoveringStart = CollisionBB(MousePos, 1.0f, 1.0f, StartButtonPos, 240.0f, 80.0f);
 	bool isHoveringExit = CollisionBB(MousePos, 1.0f, 1.0f, ExitButtonPos, 240.0f, 80.0f);
+	bool isHoveringSetting = CollisionBB(MousePos, 1.0f, 1.0f, SettingButtonPos, 60.0f, 60.0f);
 
 	if (isHoveringStart && inputMode == 0) {
 		menu = MENU_START;
@@ -216,9 +199,20 @@ void UpdateTitle(void)
 		}
 	}
 
+	if (isHoveringSetting && inputMode == 0) {
+		menu = MENU_SETTING;
+
+		// œn”ñ hover ¨ hover Žž”d•ú
+		if (!wasHoveringSetting) {
+			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
+		}
+	}
+
 	//ó‘ÔXV
 	wasHoveringStart = isHoveringStart;
 	wasHoveringExit = isHoveringExit;
+	wasHoveringSetting = isHoveringSetting;
+
 
 		if (GetKeyboardTrigger(DIK_UP))
 		{
@@ -254,7 +248,7 @@ void UpdateTitle(void)
 		menu = MENU_START;
 	}
 	else if (menu == MENU_MIN) {
-		menu = MENU_EXIT;
+		menu = MENU_SETTING;
 	}
 
 	if (GetKeyboardTrigger(DIK_RETURN)|| IsMouseLeftPressed())
@@ -264,6 +258,9 @@ void UpdateTitle(void)
 		{
 			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
 			SetFade(FADE_OUT, MODE_GAME);
+		}
+		else if (menu == MENU_SETTING) {
+			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
 		}
 		else if (menu == MENU_EXIT)
 		{
@@ -353,53 +350,22 @@ void DrawTitle(void)
 		GetDeviceContext()->Draw(4, 0);
 	}
 
-	// ‹ó‚ð•`‰æ
+	//ƒZƒbƒeƒBƒ“ƒOƒ{ƒ^ƒ“‚ð•`‰æ
 	{
-		// ƒeƒNƒXƒ`ƒƒÝ’è
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[7]);
-
-		//‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ðÝ’è
-		g_SNOW.scrl3 -= 0.001f;
-
-		SetSpriteLTColor(g_VertexBuffer,
-			0.0f, 0.0f, SCREEN_WIDTH, 540.0f,
-			0.0f, g_SNOW.scrl3, 1.0f, 1.0f,
-			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+		
+		if (menu == MENU_SETTING) {
+			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[8]);
+		}
+		else {
+			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[7]);
+		}
+		
+		// ‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ðÝ’è
+		SetSprite(g_VertexBuffer, 900.0f, 500.0f, 60.0f, 60.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 
 		// ƒ|ƒŠƒSƒ“•`‰æ
 		GetDeviceContext()->Draw(4, 0);
 	}
-
-	// ‹ó‚ð•`‰æ
-	{
-		// ƒeƒNƒXƒ`ƒƒÝ’è
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[8]);
-
-		//‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ðÝ’è
-		g_SNOW.scrl += 0.001f;
-
-		SetSpriteLTColor(g_VertexBuffer,
-			0.0f, 0.0f, SCREEN_WIDTH, 540.0f,
-			0.0f, g_SNOW.scrl, 1.0f, 1.0f,
-			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-
-		// ƒ|ƒŠƒSƒ“•`‰æ
-		GetDeviceContext()->Draw(4, 0);
-	}
-
-	//// ƒJ[ƒ\ƒ‹
-	//{
-	//	// ƒeƒNƒXƒ`ƒƒÝ’è
-	//	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[9]);
-
-	//	SetSpriteLTColor(g_VertexBuffer,
-	//		MousePos.x, MousePos.y, 40.0f, 40.0f,
-	//		0.0f, 0.0f, 1.0f, 1.0f,
-	//		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-
-	//	// ƒ|ƒŠƒSƒ“•`‰æ
-	//	GetDeviceContext()->Draw(4, 0);
-	//}
 }
 
 
