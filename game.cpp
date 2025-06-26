@@ -1,6 +1,6 @@
 //=============================================================================
 //
-// ƒQ[ƒ€‰æ–Êˆ— [game.cpp]
+// ã‚²ãƒ¼ãƒ ç”»é¢å‡¦ç† [game.cpp]
 // Author : 
 //
 //=============================================================================
@@ -22,29 +22,29 @@
 #include "debugproc.h"
 #include "meshwall.h"
 #include "fragment.h"
-
-
-//*****************************************************************************
-// ƒ}ƒNƒ’è‹`
-//*****************************************************************************
-
-
+#include "bg.h"
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
 
 
 
+//*****************************************************************************
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
+//*****************************************************************************
+
+
+
 
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //*****************************************************************************
 static int	g_ViewPortType_Game = TYPE_FULL_SCREEN;
 
 
-//static BOOL	g_bPause = FALSE;	// ƒ|[ƒYON/OFF
+//static BOOL	g_bPause = FALSE;	// ãƒãƒ¼ã‚ºON/OFF
 
 RANDOM	g_random;
 UI		g_Ui;
@@ -56,7 +56,7 @@ float pitch;
 
 
 //=============================================================================
-// ‰Šú‰»ˆ—
+// åˆæœŸåŒ–å‡¦ç†
 //=============================================================================
 HRESULT InitGame(void)
 {
@@ -64,53 +64,53 @@ HRESULT InitGame(void)
 
 	g_ViewPortType_Game = TYPE_FULL_SCREEN;
 
-	// ƒtƒB[ƒ‹ƒh‚Ì‰Šú‰»
+	// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®åˆæœŸåŒ–
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 100, 100, 13.0f, 13.0f);
-
-	// ƒ‰ƒCƒg‚ğ—LŒø‰»	// ‰e‚Ì‰Šú‰»ˆ—
+	InitBG();
+	// ãƒ©ã‚¤ãƒˆã‚’æœ‰åŠ¹åŒ–	// å½±ã®åˆæœŸåŒ–å‡¦ç†
 	InitShadow();
 
-	// Œ‡•Ğ‚Ì‰Šúˆ—
+	// æ¬ ç‰‡ã®åˆæœŸå‡¦ç†
 	InitFragment();
 
-	// ƒvƒŒƒCƒ„[‚Ì‰Šú‰»
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸåŒ–
 	InitPlayer();
 
 
-	// ƒXƒRƒA‚Ì‰Šú‰»
+	// ã‚¹ã‚³ã‚¢ã®åˆæœŸåŒ–
 	InitScore();
 
-	// ƒXƒRƒA‚Ì‰Šú‰»
+	// ã‚¹ã‚³ã‚¢ã®åˆæœŸåŒ–
 	InitUI();
 
-	// BGMÄ¶
-	//PlaySound(SOUND_LABEL_BGM_GAME);
+	// BGMå†ç”Ÿ
+	//PlaySound(SOUND_LABEL_BGM_game);
 
 	return S_OK;
 }
 
 //=============================================================================
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 //=============================================================================
 void UninitGame(void)
 {
-	// ƒXƒRƒA‚ÌI—¹ˆ—
+	// ã‚¹ã‚³ã‚¢ã®çµ‚äº†å‡¦ç†
 	UninitScore();
 
 	UninitUI();
 
-	// ’n–Ê‚ÌI—¹ˆ—
+	// åœ°é¢ã®çµ‚äº†å‡¦ç†
 	UninitMeshField();
-
-	// ƒvƒŒƒCƒ„[‚ÌI—¹ˆ—
+	UninitBG();
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çµ‚äº†å‡¦ç†
 	UninitPlayer();
 
-	// ‰e‚ÌI—¹ˆ—
+	// å½±ã®çµ‚äº†å‡¦ç†
 	UninitShadow();
 }
 
 //=============================================================================
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 //=============================================================================
 void UpdateGame(void)
 {
@@ -129,28 +129,28 @@ void UpdateGame(void)
 	if (GetKeyboardTrigger(DIK_RETURN)) {
 		SetFade(FADE_OUT, MODE_RESULT);
 	}
-	
+
 
 	/*if (g_Ui.pause == TRUE) {
 		UpdateUi();
 		return;
 	}*/
-	
-	
 
-	// ’n–Êˆ—‚ÌXV
+
+
+	// åœ°é¢å‡¦ç†ã®æ›´æ–°
 	UpdateMeshField();
-
-	// ƒvƒŒƒCƒ„[‚ÌXVˆ—
+	UpdateBG();
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ›´æ–°å‡¦ç†
 	UpdatePlayer();
 
-	//Œ‡•Ğ‚ÌXVˆ—
+	//æ¬ ç‰‡ã®æ›´æ–°å‡¦ç†
 	UpdateFragment();
 
-	// ‰e‚ÌXVˆ—
+	// å½±ã®æ›´æ–°å‡¦ç†
 	//UpdateShadow();
 
-	// ƒXƒRƒA‚ÌXVˆ—
+	// ã‚¹ã‚³ã‚¢ã®æ›´æ–°å‡¦ç†
 	UpdateScore();
 
 	UpdateUI();
@@ -158,49 +158,49 @@ void UpdateGame(void)
 }
 
 //=============================================================================
-// •`‰æˆ—
+// æç”»å‡¦ç†
 //=============================================================================
 void DrawGame0(void)
 {
-	// 3D‚Ì•¨‚ğ•`‰æ‚·‚éˆ—
-	// ’n–Ê‚Ì•`‰æˆ—
+	// 3Dã®ç‰©ã‚’æç”»ã™ã‚‹å‡¦ç†
+	// åœ°é¢ã®æç”»å‡¦ç†
 	DrawMeshField();
 
-	// ‰e‚Ì•`‰æˆ—
+	// å½±ã®æç”»å‡¦ç†
 	//DrawShadow();
 
-	// ƒvƒŒƒCƒ„[‚Ì•`‰æˆ—
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æç”»å‡¦ç†
 	DrawPlayer();
 
-	
-	// •Ç‚Ì•`‰æˆ—
-	DrawMeshWall();
 
-	//Œ‡•Ğ‚Ì•`‰æˆ—
+	// å£ã®æç”»å‡¦ç†
+	DrawMeshWall();
+	DrawBG();
+	//æ¬ ç‰‡ã®æç”»å‡¦ç†
 	DrawFragment();
-	
-	// 2D‚Ì•¨‚ğ•`‰æ‚·‚éˆ—
-	// Z”äŠr‚È‚µ
+
+	// 2Dã®ç‰©ã‚’æç”»ã™ã‚‹å‡¦ç†
+	// Zæ¯”è¼ƒãªã—
 	SetDepthEnable(FALSE);
 
-	// ƒ‰ƒCƒeƒBƒ“ƒO‚ğ–³Œø
+	// ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã‚’ç„¡åŠ¹
 	SetLightEnable(FALSE);
 
-	// ƒXƒRƒA‚Ì•`‰æˆ—
+	// ã‚¹ã‚³ã‚¢ã®æç”»å‡¦ç†
 	DrawScore();
 
 	DrawUI();
 
 	DrawGaugeBars();
 
-	
+
 	/*if(g_Ui.pause == TRUE)
 	DrawUi();*/
 
-	// ƒ‰ƒCƒeƒBƒ“ƒO‚ğ—LŒø‚É
+	// ãƒ©ã‚¤ãƒ†ã‚£ãƒ³ã‚°ã‚’æœ‰åŠ¹ã«
 	SetLightEnable(TRUE);
 
-	// Z”äŠr‚ ‚è
+	// Zæ¯”è¼ƒã‚ã‚Š
 	SetDepthEnable(TRUE);
 }
 
@@ -209,7 +209,7 @@ void DrawGame(void)
 {
 
 #ifdef _DEBUG
-	// ƒfƒoƒbƒO•\¦
+	// ãƒ‡ãƒãƒƒã‚°è¡¨ç¤º
 	/*PrintDebugProc("ViewPortType:%d\n", g_ViewPortType_Game);*/
 
 #endif
@@ -219,8 +219,8 @@ void DrawGame(void)
 	{
 		float dist = 10.0f;
 		XMFLOAT3 dir = GetCameraDir();
-		
-		//ƒxƒNƒgƒ‹‚ğŠg‘å‚·‚é@Camera.at‚ÆCamera.pos‚Ì’l‚ª“¯‚¶‚É‚È‚éƒoƒO‚ğ–h‚®‚½‚ß 
+
+		//ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ‹¡å¤§ã™ã‚‹ã€€Camera.atã¨Camera.posã®å€¤ãŒåŒã˜ã«ãªã‚‹ãƒã‚°ã‚’é˜²ããŸã‚ 
 		dir.x *= dist;
 		dir.y *= dist;
 		dir.z *= dist;
@@ -231,18 +231,18 @@ void DrawGame(void)
 
 		SetCameraAT(camera->dir);
 		SetCamera();
-		
+
 
 
 		SetViewPort(TYPE_FULL_SCREEN);
-		DrawGame0();	//OBJ•`‰æˆ—
+		DrawGame0();	//OBJæç”»å‡¦ç†
 	}
 
-	
+
 
 }
 
-//‰ñ“]•½ŠŠ‰»
+//å›è»¢å¹³æ»‘åŒ–
 float turning(float target, float current) {
 	target = NormalizeAngle(target);
 	current = NormalizeAngle(current);
@@ -259,7 +259,7 @@ float NormalizeAngle(float angle) {
 	return angle;
 }
 
-//ƒJƒƒ‰Šp“x§Œä
+//ã‚«ãƒ¡ãƒ©è§’åº¦åˆ¶å¾¡
 XMFLOAT3 GetCameraDir() {
 
 	int deltaX = GetMouseX();
@@ -277,17 +277,17 @@ XMFLOAT3 GetCameraDir() {
 	float pitchRad = DirectX::XMConvertToRadians(pitch);
 
 	dir = { sinf(yawRad) * cosf((pitchRad)),
-		sinf(pitchRad), 
+		sinf(pitchRad),
 		cosf(yawRad) * cosf(pitchRad) };
 
-	//³‹K‰»
+	//æ­£è¦åŒ–
 	XMVECTOR v = XMVector3Normalize(XMLoadFloat3(&dir));
 	XMStoreFloat3(&dir, v);
 
 	return dir;
 }
 
-//ƒJƒƒ‰ã‰ºŠp“xŒvZ
+//ã‚«ãƒ¡ãƒ©ä¸Šä¸‹è§’åº¦è¨ˆç®—
 float GetCameraYaw(XMFLOAT3 dir, XMFLOAT3 pos) {
 	float deltaX = dir.x - pos.x;
 	float deltaZ = dir.z - pos.z;
@@ -297,7 +297,7 @@ float GetCameraYaw(XMFLOAT3 dir, XMFLOAT3 pos) {
 	return yaw;
 }
 
-////ƒJƒƒ‰¶‰EŠp“xŒvZ
+//ã‚«ãƒ¡ãƒ©å·¦å³è§’åº¦è¨ˆç®—
 float GetCameraPitch(XMFLOAT3 dir, XMFLOAT3 pos) {
 	float deltaY = dir.y - pos.y;
 	float deltaX = dir.x - pos.x;
