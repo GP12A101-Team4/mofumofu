@@ -22,7 +22,12 @@
 #include "debugproc.h"
 #include "meshwall.h"
 #include "fragment.h"
+#include "fragment_dog.h"
+#include "fragment_elephant.h"
+#include "fragment_mouse.h"
+#include "fragment_sheep.h"
 #include "bg.h"
+#include "menu.h"
 
 //*****************************************************************************
 // マクロ定義
@@ -65,13 +70,17 @@ HRESULT InitGame(void)
 	g_ViewPortType_Game = TYPE_FULL_SCREEN;
 
 	// フィールドの初期化
-	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 100, 100, 13.0f, 13.0f);
+	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 1, 1, 1500.0f, 1500.0f);
 	InitBG();
 	// ライトを有効化	// 影の初期化処理
 	InitShadow();
 
 	// 欠片の初期処理
 	InitFragment();
+	InitFragment_Dog();
+	InitFragment_Elph();
+	InitFragment_Mouse();
+	InitFragment_Sheep();
 
 	// プレイヤーの初期化
 	InitPlayer();
@@ -82,6 +91,8 @@ HRESULT InitGame(void)
 
 	// スコアの初期化
 	InitUI();
+
+	InitMenu();
 
 	// BGM再生
 	//PlaySound(SOUND_LABEL_BGM_game);
@@ -98,6 +109,8 @@ void UninitGame(void)
 	UninitScore();
 
 	UninitUI();
+
+	UninitMenu();
 
 	// 地面の終了処理
 	UninitMeshField();
@@ -131,12 +144,11 @@ void UpdateGame(void)
 	}
 
 
-	/*if (g_Ui.pause == TRUE) {
-		UpdateUi();
+	MENU* menu = GetMenu();
+	UpdateMenu();
+	if (menu->use == TRUE) {
 		return;
-	}*/
-
-
+	}
 
 	// 地面処理の更新
 	UpdateMeshField();
@@ -146,6 +158,10 @@ void UpdateGame(void)
 
 	//欠片の更新処理
 	UpdateFragment();
+	UpdateFragment_Dog();
+	UpdateFragment_Elph();
+	UpdateFragment_Mouse();
+	UpdateFragment_Sheep();
 
 	// 影の更新処理
 	//UpdateShadow();
@@ -178,6 +194,10 @@ void DrawGame0(void)
 	DrawBG();
 	//欠片の描画処理
 	DrawFragment();
+	DrawFragment_Dog();
+	//DrawFragment_Elph();
+	//DrawFragment_Mouse();
+	//DrawFragment_Sheep();
 
 	// 2Dの物を描画する処理
 	// Z比較なし
@@ -189,13 +209,15 @@ void DrawGame0(void)
 	// スコアの描画処理
 	DrawScore();
 
+	MENU* menu = GetMenu();
+	if (menu->use == TRUE) {
+		DrawMenu();
+	}
+
 	DrawUI();
 
 	DrawGaugeBars();
 
-
-	/*if(g_Ui.pause == TRUE)
-	DrawUi();*/
 
 	// ライティングを有効に
 	SetLightEnable(TRUE);
