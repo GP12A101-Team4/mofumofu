@@ -24,6 +24,7 @@ enum {
     MENU_MIN,
     MENU_START,
     MENU_EXIT,
+    MENU_SETTING,
     MENU_MAX,
 };
 
