@@ -106,7 +106,7 @@ void UninitMenu(void)
 //=============================================================================
 void UpdateMenu(void)
 {
-	if (GetKeyboardTrigger(DIK_P)) {
+	if (GetKeyboardTrigger(DIK_B)) {
 		g_menu.use = g_menu.use ? FALSE : TRUE;
 	}
 	

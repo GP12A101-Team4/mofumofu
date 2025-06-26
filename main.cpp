@@ -15,6 +15,10 @@
 #include "light.h"
 #include "meshfield.h"
 #include "fragment.h"
+#include "fragment_dog.h"
+#include "fragment_elephant.h"
+#include "fragment_mouse.h"
+#include "fragment_sheep.h"
 #include "meshwall.h"
 #include "sound.h"
 #include "score.h"
@@ -26,6 +30,7 @@
 #include "result.h"
 #include "cursor.h"
 #include "bg.h"
+#include "menu.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -292,13 +297,15 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	InitUI();
 
+	InitMenu();
+
 	InitCursor();
 
 	// 入力処理の初期化
 	InitInput(hInstance, hWnd);
 
 	// フィールドの初期化
-	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 100, 100, 13.0f, 13.0f);
+	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 1, 1, 1500.0f, 1500.0f);
 	InitBG();
 
 	// 壁の初期化
@@ -311,21 +318,25 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_DOWN), XMFLOAT3(0.0f, XM_PI, 0.0f),
 		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
 
-	// 壁(裏側用の半透明)
-	InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_TOP), XMFLOAT3(0.0f, XM_PI, 0.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(XMFLOAT3(MAP_LEFT, 0.0f, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.50f, 0.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(XMFLOAT3(MAP_RIGHT, 0.0f, 0.0f), XMFLOAT3(0.0f, -XM_PI * 0.50f, 0.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_DOWN), XMFLOAT3(0.0f, 0.0f, 0.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	//// 壁(裏側用の半透明)
+	//InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_TOP), XMFLOAT3(0.0f, XM_PI, 0.0f),
+	//	XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	//InitMeshWall(XMFLOAT3(MAP_LEFT, 0.0f, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.50f, 0.0f),
+	//	XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	//InitMeshWall(XMFLOAT3(MAP_RIGHT, 0.0f, 0.0f), XMFLOAT3(0.0f, -XM_PI * 0.50f, 0.0f),
+	//	XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
+	//InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_DOWN), XMFLOAT3(0.0f, 0.0f, 0.0f),
+	//	XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
 
 	// 影の初期化処理
 	InitShadow();
 
 	// 欠片の初期処理
 	InitFragment();
+	InitFragment_Dog();
+	InitFragment_Elph();
+	InitFragment_Mouse();
+	InitFragment_Sheep();
 
 	// プレイヤーの初期化
 	InitPlayer();
@@ -339,7 +350,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// フェードの初期化
 	InitFade();
 
-	SetBGMVolume(0.5f);
+	SetBGMVolume(0.3f);
 
 	// 最初のモードをセット
 	SetMode(g_Mode);	// ここはSetModeのままで！
@@ -364,6 +375,11 @@ void Uninit(void)
 
 	//欠片の終了処理
 	UninitFragment();
+	UpdateFragment_Dog();
+	UpdateFragment_Elph();
+	UpdateFragment_Mouse();
+	UpdateFragment_Sheep();
+
 	UninitBG();
 	// 地面の終了処理
 	UninitMeshField();
@@ -377,6 +393,8 @@ void Uninit(void)
 	UninitScore();
 
 	UninitUI();
+
+	UninitMenu();
 
 	UninitCursor();
 	//入力の終了処理
@@ -540,6 +558,9 @@ void Draw(void)
 	ImGui::End();
 
   DrawPartDebugUI();
+  DrawPartDebugUI_Dog();
+  DrawPartDebugUI_Elph();
+  DrawPartDebugUI_Mouse();
   
 	ImGui::ShowDemoWindow();
 
@@ -598,8 +619,9 @@ void SetMode(int mode)
 
 	case MODE_GAME:
 		// ゲーム画面の初期化
-		InitPlayer();
-		InitScore();
+		/*InitPlayer();
+		InitScore();*/
+		InitGame();
 
 		PlaySound(SOUND_LABEL_BGM_GAME);
 		break;

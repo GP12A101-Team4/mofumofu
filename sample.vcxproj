@@ -145,6 +145,10 @@
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="fade.h" />
     <ClInclude Include="fragment.h" />
+    <ClInclude Include="fragment_dog.h" />
+    <ClInclude Include="fragment_elephant.h" />
+    <ClInclude Include="fragment_mouse.h" />
+    <ClInclude Include="fragment_sheep.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="imgui-docking\backends\imgui_impl_dx11.h" />
     <ClInclude Include="imgui-docking\backends\imgui_impl_win32.h" />
@@ -157,6 +161,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="light.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="menu.h" />
     <ClInclude Include="meshfield.h" />
     <ClInclude Include="meshwall.h" />
     <ClInclude Include="model.h" />
@@ -178,6 +183,10 @@
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="fade.cpp" />
     <ClCompile Include="fragment.cpp" />
+    <ClCompile Include="fragment_dog.cpp" />
+    <ClCompile Include="fragment_elephant.cpp" />
+    <ClCompile Include="fragment_mouse.cpp" />
+    <ClCompile Include="fragment_sheep.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="imgui-docking\backends\imgui_impl_dx11.cpp" />
     <ClCompile Include="imgui-docking\backends\imgui_impl_win32.cpp" />
@@ -189,6 +198,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu.cpp" />
     <ClCompile Include="meshfield.cpp" />
     <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="model.cpp" />
