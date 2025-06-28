@@ -168,7 +168,7 @@ void UpdateCursor(void)
 #ifdef _DEBUG	// デバッグ情報を表示する
 	//char *str = GetDebugStr();
 	//sprintf(&str[strlen(str)], " PX:%.2f PY:%.2f", g_Pos.x, g_Pos.y);
-	PrintDebugProc("isF:%d \n", isF);
+	//PrintDebugProc("isF:%d \n", isF);
 #endif
 
 }

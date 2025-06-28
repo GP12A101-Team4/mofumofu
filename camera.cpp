@@ -173,7 +173,7 @@ void UpdateCamera(void)
 
 
 #ifdef _DEBUG	// デバッグ情報を表示する
-	PrintDebugProc("Camera:ZC QE TB YN UM R\n");
+	//PrintDebugProc("Camera:ZC QE TB YN UM R\n");
 #endif
 }
 

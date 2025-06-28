@@ -296,46 +296,46 @@ void UpdateFragment_Mouse(void)
 #ifdef _DEBUG
 	
 
-//Elephant
+//Mouse
 //if (GetKeyboardPress(DIK_LEFT))
 //{
-//	g_Fragment_Mouse[1].overallPos.x -= 1.0f;
+//	g_Fragment_Mouse[4].overallPos.x -= 1.0f;
 //}
 //if (GetKeyboardPress(DIK_RIGHT))
 //{
-//	g_Fragment_Mouse[1].overallPos.x += 1.0f;
+//	g_Fragment_Mouse[4].overallPos.x += 1.0f;
 //}
 //if (GetKeyboardPress(DIK_UP))
 //{
-//	g_Fragment_Mouse[1].overallPos.y += 1.0f;
+//	g_Fragment_Mouse[4].overallPos.y += 1.0f;
 //}
 //if (GetKeyboardPress(DIK_DOWN))
 //{
-//	g_Fragment_Mouse[1].overallPos.y -= 1.0f;
+//	g_Fragment_Mouse[4].overallPos.y -= 1.0f;
 //}
 //if (GetKeyboardPress(DIK_M))
 //{
-//	g_Fragment_Mouse[1].overallPos.z -= 1.0f;
+//	g_Fragment_Mouse[4].overallPos.z -= 1.0f;
 //}
 //if (GetKeyboardPress(DIK_N))
 //{
-//	g_Fragment_Mouse[1].overallPos.z += 1.0f;
+//	g_Fragment_Mouse[4].overallPos.z += 1.0f;
 //}
 //if (GetKeyboardPress(DIK_O))
 //{
-//	g_Fragment_Mouse[1].scl.x += 0.01f;
+//	g_Fragment_Mouse[4].scl.x += 0.01f;
 //}
 //if (GetKeyboardPress(DIK_P))
 //{
-//	g_Fragment_Mouse[1].scl.x -= 0.01f;
+//	g_Fragment_Mouse[4].scl.x -= 0.01f;
 //}
 //if (GetKeyboardPress(DIK_O))
 //{
-//	g_Fragment_Mouse[1].scl.y += 0.01f;
+//	g_Fragment_Mouse[4].scl.y += 0.01f;
 //}
 //if (GetKeyboardPress(DIK_P))
 //{
-//	g_Fragment_Mouse[1].scl.y -= 0.01f;
+//	g_Fragment_Mouse[4].scl.y -= 0.01f;
 //}
 
 
@@ -424,6 +424,30 @@ void DrawFragment_Mouse(void)
 			g_Fragment_Mouse[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
 			g_Fragment_Mouse[4].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);*/
 
+
+			g_Fragment_Mouse[0].overallPos = XMFLOAT3(-1.0f, -26.0f, -191.5f);
+			g_Fragment_Mouse[1].overallPos = XMFLOAT3(107.0f, -49.0f, -193.0f);
+			g_Fragment_Mouse[2].overallPos = XMFLOAT3(117.0f, -51.0f, -193.0f);
+			g_Fragment_Mouse[3].overallPos = XMFLOAT3(42.0f, -36.0f, -192.0f);
+			g_Fragment_Mouse[4].overallPos = XMFLOAT3(10.0f, -28.0f, -192.0f);
+
+
+			g_Fragment_Mouse[0].scl = XMFLOAT3(0.09f, 0.09f, 1.0f);
+			g_Fragment_Mouse[1].scl = XMFLOAT3(0.18f, 0.18f, 1.0f);
+			g_Fragment_Mouse[2].scl = XMFLOAT3(0.19f, 0.19f, 1.0f);
+			g_Fragment_Mouse[3].scl = XMFLOAT3(0.14f, 0.14f, 1.0f);
+			g_Fragment_Mouse[4].scl = XMFLOAT3(0.10f, 0.10f, 0.0f); 
+
+
+
+			g_Fragment_Mouse[0].rot = XMFLOAT3(0.0f, -4.75f, 0.0f);
+			g_Fragment_Mouse[1].rot = XMFLOAT3(0.0f, -4.75f, 0.0f);
+			g_Fragment_Mouse[2].rot = XMFLOAT3(0.0f, -4.75f, 0.0f);
+			g_Fragment_Mouse[3].rot = XMFLOAT3(0.0f, -4.75f, 0.0f);
+			g_Fragment_Mouse[4].rot = XMFLOAT3(0.0f, -4.75f, 0.0f);
+
+
+
 			// dogの正しい見つかり位置座標
 			// 
 
@@ -508,80 +532,33 @@ float GetPuzzleAlignmentRatio_Mouse()
 
 void DrawPartDebugUI_Mouse()
 {
-	ImGui::Begin("Part Debug");
-	ImGui::Text("Position mouse Head Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[0].overallPos.x, g_Fragment_Mouse[0].overallPos.y, g_Fragment_Mouse[0].overallPos.z);
-	ImGui::Text("Position mouse Body Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[1].overallPos.x, g_Fragment_Mouse[1].overallPos.y, g_Fragment_Mouse[1].overallPos.z);
-	ImGui::Text("Position mouse Hand Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[2].overallPos.x, g_Fragment_Mouse[2].overallPos.y, g_Fragment_Mouse[2].overallPos.z);
-	ImGui::Text("Position mouse Ear  Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[3].overallPos.x, g_Fragment_Mouse[3].overallPos.y, g_Fragment_Mouse[3].overallPos.z);
-	ImGui::Text("Position mouse Tail Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[4].overallPos.x, g_Fragment_Mouse[4].overallPos.y, g_Fragment_Mouse[4].overallPos.z);
-	ImGui::Text("Scl Head mouse Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[0].scl.x, g_Fragment_Mouse[0].scl.y);
-	ImGui::Text("Scl Body mouse Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[1].scl.x, g_Fragment_Mouse[1].scl.y);
-	ImGui::Text("Scl Hand mouse Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[2].scl.x, g_Fragment_Mouse[2].scl.y);
-	ImGui::Text("Scl Ear  mouse Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[3].scl.x, g_Fragment_Mouse[3].scl.y);
-	ImGui::Text("Scl Tail mouse Part: (%.2f, %.2f, %.2f)", g_Fragment_Mouse[4].scl.x, g_Fragment_Mouse[4].scl.y);
-	
-	ImGui::End();
-
-	//if (g_HasRecordedTarget) {
-	//	ImGui::Text("=== Target Screen Positions ===");
-	//	for (int i = 0; i < TEXTURE_MAX; i++) {
-	//		ImGui::Text("Part %d: (%.1f, %.1f)", i, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y);
-	//	}
-	//}
-
-	//if (CheckPuzzleRestored()) {
-	//	ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Restore Success!");
-	//}
-	//else if (g_HasRecordedTarget) {
-	//	ImGui::Text("Not yet aligned");
-	//}
-
-	//ImGui::Separator();
-	//ImGui::Text("投影 vs 目標位置誤差 (CheckPuzzleRestored)");
-
-	//CAMERA* cam = GetCamera();
-	//D3D11_VIEWPORT vp;
-	//UINT num = 1;
-	//GetDeviceContext()->RSGetViewports(&num, &vp);
-
-	//for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-	//	XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
-	//	XMVECTOR screen = XMVector3Project(
-	//		world,
-	//		0, 0,
-	//		vp.Width, vp.Height,
-	//		0.0f, 1.0f,
-	//		XMLoadFloat4x4(&cam->mtxProjection),
-	//		XMLoadFloat4x4(&cam->mtxView),
-	//		XMMatrixIdentity()
-	//	);
-
-	//	float x = XMVectorGetX(screen);
-	//	float y = XMVectorGetY(screen);
-	//	float dx = fabsf(x - g_TargetScreenPos[i].x);
-	//	float dy = fabsf(y - g_TargetScreenPos[i].y);
-
-	//	ImGui::Text("Part %d: (%.1f, %.1f) -> (%.1f, %.1f) | Δx=%.1f, Δy=%.1f",
-	//		i, x, y, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y, dx, dy);
-	//}
-
-	ImGui::Separator();
-	ImGui::Text("拼圖對齊誤差 (歐幾里得距離)");
-
-	ImGui::Separator();
-	float ratio = GetPuzzleAlignmentRatio_Mouse();
-	ImGui::Text("拼圖完成度: %.1f%%", ratio * 100.0f);
-	ImGui::ProgressBar(ratio, ImVec2(200, 20));
+	ImGui::Begin("Part Debug (Elph)");
 
 	CAMERA* cam = GetCamera();
 	D3D11_VIEWPORT vp;
 	UINT num = 1;
 	GetDeviceContext()->RSGetViewports(&num, &vp);
 
+	float ratio = GetPuzzleAlignmentRatio_Mouse();
+	ImGui::Text("拼图完成度: %.1f%%", ratio * 100.0f);
+	ImGui::ProgressBar(ratio, ImVec2(200, 20));
+
+	ImGui::Separator();
+	ImGui::Text("碎片中心位置（投影） vs 目标位置");
+
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Mouse[i].overallPos);
+		// 构建世界矩阵
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Mouse[i].scl.x, g_Fragment_Mouse[i].scl.y, g_Fragment_Mouse[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Mouse[i].rot.x, g_Fragment_Mouse[i].rot.y, g_Fragment_Mouse[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Mouse[i].overallPos.x, g_Fragment_Mouse[i].overallPos.y + 60.0f, g_Fragment_Mouse[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		// 世界中心点
+		XMVECTOR worldPos = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
+		// 投影到屏幕
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldPos,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -590,15 +567,26 @@ void DrawPartDebugUI_Mouse()
 			XMMatrixIdentity()
 		);
 
-		float x = XMVectorGetX(screen);
-		float y = XMVectorGetY(screen);
-		float dx = x - g_TargetScreenPos_Mouse[i].x;
-		float dy = y - g_TargetScreenPos_Mouse[i].y;
+		float sx = XMVectorGetX(screen);
+		float sy = XMVectorGetY(screen);
+		float dx = sx - g_TargetScreenPos_Mouse[i].x;
+		float dy = sy - g_TargetScreenPos_Mouse[i].y;
 		float distance = sqrtf(dx * dx + dy * dy);
 
-		ImGui::Text("Part %d: screen = (%.1f, %.1f) → target = (%.1f, %.1f) | distance = %.1f",
-			i, x, y, g_TargetScreenPos_Mouse[i].x, g_TargetScreenPos_Mouse[i].y, distance);
+		ImGui::Text("Part %d: screen = (%.1f, %.1f) → target = (%.1f, %.1f) | Δ=%.1f",
+			i, sx, sy, g_TargetScreenPos_Mouse[i].x, g_TargetScreenPos_Mouse[i].y, distance);
 	}
+
+	ImGui::Separator();
+	ImGui::Text("Raw 3D Data:");
+	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
+		ImGui::Text("Mouse Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Mouse[i].overallPos.x, g_Fragment_Mouse[i].overallPos.y, g_Fragment_Mouse[i].overallPos.z);
+		ImGui::Text("Mouse Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Mouse[i].scl.x, g_Fragment_Mouse[i].scl.y, g_Fragment_Mouse[i].scl.z);
+		ImGui::Text("Mouse Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Mouse[i].rot.x, g_Fragment_Mouse[i].rot.y, g_Fragment_Mouse[i].rot.z);
+	}
+
+	ImGui::End();
 
 }
 
+// right position of mouse -209. 57 , 5.54

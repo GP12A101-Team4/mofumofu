@@ -48,7 +48,7 @@ HRESULT InitPlayer(void)
 	LoadModel(MODEL_PLAYER, &g_Player.model);
 	g_Player.load = TRUE;
 
-	g_Player.pos = { 0.0f, PLAYER_OFFSET_Y + 50.0f, 0.0f };
+	g_Player.pos = { 0.0f +130.0f , PLAYER_OFFSET_Y + 50.0f, 0.0f -10.0f};
 	g_Player.rot = { 0.0f, 0.0f, 0.0f };
 	g_Player.scl = { 1.0f, 1.0f, 1.0f };
 
@@ -182,9 +182,9 @@ void UpdatePlayer(void)
 	
 
 #ifdef _DEBUG	// デバッグ情報を表示する
-	PrintDebugProc("Player:↑ → ↓ ←　Space\n");
-	PrintDebugProc("Player:X:%f Y:%f Z:%f\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
-	PrintDebugProc("X:%d Y:%d Z:%d \n", X, Y, Z);
+	//PrintDebugProc("Player:↑ → ↓ ←　Space\n");
+	//PrintDebugProc("Player:X:%f Y:%f Z:%f\n", g_Player.pos.x, g_Player.pos.y, g_Player.pos.z);
+	//PrintDebugProc("X:%d Y:%d Z:%d \n", X, Y, Z);
 #endif
 }
 
