@@ -589,14 +589,14 @@ void DrawPartDebugUI_Elph()
 
 	ImGui::Separator();
 	ImGui::Text("Raw 3D Data:");
-	//for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-	//	ImGui::Text("Elph Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].overallPos.x, g_Fragment_Elph[i].overallPos.y, g_Fragment_Elph[i].overallPos.z);
-	//	ImGui::Text("Elph Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);
-	//	ImGui::Text("Elph Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].rot.x, g_Fragment_Elph[i].rot.y, g_Fragment_Elph[i].rot.z);
-	//}
+	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
+		ImGui::Text("Elph Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].overallPos.x, g_Fragment_Elph[i].overallPos.y, g_Fragment_Elph[i].overallPos.z);
+		ImGui::Text("Elph Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);
+		ImGui::Text("Elph Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].rot.x, g_Fragment_Elph[i].rot.y, g_Fragment_Elph[i].rot.z);
+	}
 
 	ImGui::End();
 
 }
 
-// right position for elphant 200, 57 ,176
+// right position for elphant 200, 57 ,176 //

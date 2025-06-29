@@ -521,8 +521,6 @@ float GetPuzzleAlignmentRatio_Sheep()
 
 void DrawPartDebugUI_Sheep()
 {
-	ImGui::SetNextWindowPos(ImVec2(10, 10)); // 强制设置位置
-	ImGui::SetNextWindowSize(ImVec2(400, 600)); // 强制设置大小
 	ImGui::Begin("Part Debug (Sheep)");
 
 	CAMERA* cam = GetCamera();
@@ -571,9 +569,9 @@ void DrawPartDebugUI_Sheep()
 	ImGui::Separator();
 	ImGui::Text("Raw 3D Data:");
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		ImGui::Text("Sheep Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y, g_Fragment_Sheep[i].overallPos.z);
-		ImGui::Text("Sheep Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
-		ImGui::Text("Sheep Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
+		ImGui::Text("Elph Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y, g_Fragment_Sheep[i].overallPos.z);
+		ImGui::Text("Elph Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
+		ImGui::Text("Elph Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
 	}
 
 	ImGui::End();
