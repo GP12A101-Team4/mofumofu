@@ -404,8 +404,12 @@ void DrawFragment_Elph(void)
 
 	if (!g_ShowFullImage_Elph)
 	{
-		for (int i = 0; i < TEXTURE_MAX; i++)
+		//テクスチャー番号　自分調整できる
+		int drawOrder[] = { 4, 0, 1, 2, 3, 5, 6 }; 
+
+		for (int idx = 0; idx < TEXTURE_MAX - 1; idx++)
 		{
+			int i = drawOrder[idx];
 
 			XMMATRIX mtxWorld = XMMatrixIdentity();
 			XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);

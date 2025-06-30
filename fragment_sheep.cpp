@@ -295,54 +295,54 @@ void UpdateFragment_Sheep(void)
 	
 
 //Sheep
-if (GetKeyboardPress(DIK_LEFT))
-{
-	g_Fragment_Sheep[1].overallPos.x -= 1.0f;
-}
-if (GetKeyboardPress(DIK_RIGHT))
-{
-	g_Fragment_Sheep[1].overallPos.x += 1.0f;
-}
-if (GetKeyboardPress(DIK_UP))
-{
-	g_Fragment_Sheep[1].overallPos.y += 1.0f;
-}
-if (GetKeyboardPress(DIK_DOWN))
-{
-	g_Fragment_Sheep[1].overallPos.y -= 1.0f;
-}
-if (GetKeyboardPress(DIK_M))
-{
-	g_Fragment_Sheep[1].overallPos.z -= 1.0f;
-}
-if (GetKeyboardPress(DIK_N))
-{
-	g_Fragment_Sheep[1].overallPos.z += 1.0f;
-}
-if (GetKeyboardPress(DIK_O))
-{
-	g_Fragment_Sheep[1].scl.x += 0.01f;
-}
-if (GetKeyboardPress(DIK_P))
-{
-	g_Fragment_Sheep[1].scl.x -= 0.01f;
-}
-if (GetKeyboardPress(DIK_O))
-{
-	g_Fragment_Sheep[1].scl.y += 0.01f;
-}
-if (GetKeyboardPress(DIK_P))
-{
-	g_Fragment_Sheep[1].scl.y -= 0.01f;
-}
-if (GetKeyboardPress(DIK_Z))
-{
-	g_Fragment_Sheep[1].rot.y += 0.01f;
-}
-if (GetKeyboardPress(DIK_X))
-{
-	g_Fragment_Sheep[1].rot.y -= 0.01f;
-}
+//if (GetKeyboardPress(DIK_LEFT))
+//{
+//	g_Fragment_Sheep[1].overallPos.x -= 1.0f;
+//}
+//if (GetKeyboardPress(DIK_RIGHT))
+//{
+//	g_Fragment_Sheep[1].overallPos.x += 1.0f;
+//}
+//if (GetKeyboardPress(DIK_UP))
+//{
+//	g_Fragment_Sheep[1].overallPos.y += 1.0f;
+//}
+//if (GetKeyboardPress(DIK_DOWN))
+//{
+//	g_Fragment_Sheep[1].overallPos.y -= 1.0f;
+//}
+//if (GetKeyboardPress(DIK_M))
+//{
+//	g_Fragment_Sheep[1].overallPos.z -= 1.0f;
+//}
+//if (GetKeyboardPress(DIK_N))
+//{
+//	g_Fragment_Sheep[1].overallPos.z += 1.0f;
+//}
+//if (GetKeyboardPress(DIK_O))
+//{
+//	g_Fragment_Sheep[1].scl.x += 0.01f;
+//}
+//if (GetKeyboardPress(DIK_P))
+//{
+//	g_Fragment_Sheep[1].scl.x -= 0.01f;
+//}
+//if (GetKeyboardPress(DIK_O))
+//{
+//	g_Fragment_Sheep[1].scl.y += 0.01f;
+//}
+//if (GetKeyboardPress(DIK_P))
+//{
+//	g_Fragment_Sheep[1].scl.y -= 0.01f;
+//}
+//if (GetKeyboardPress(DIK_Z))
+//{
+//	g_Fragment_Sheep[1].rot.y += 0.01f;
+//}
+//if (GetKeyboardPress(DIK_X))
+//{
+//	g_Fragment_Sheep[1].rot.y -= 0.01f;
+//}
 
 #endif
 
@@ -407,8 +407,13 @@ void DrawFragment_Sheep(void)
 
 	if (!g_ShowFullImage_Sheep)
 	{
-		for (int i = 0; i < TEXTURE_MAX; i++)
+		//テクスチャー番号　自分調整できる
+		int drawOrder[] = { 0, 1, 2, 3, 4 };
+
+		for (int idx = 0; idx < TEXTURE_MAX - 1; idx++)
 		{
+
+			int i = drawOrder[idx];
 
 			XMMATRIX mtxWorld = XMMatrixIdentity();
 			XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
