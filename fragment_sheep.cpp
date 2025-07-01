@@ -168,6 +168,10 @@ HRESULT InitFragment_Sheep(void)
 		g_Fragment_Sheep[i].scl = XMFLOAT3(1.0f, 1.0f, 1.0f); // 拡大縮小率 X,Y,Z
 		g_Fragment_Sheep[i].overallPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
+		//g_Fragment_Sheep[3].overallPos = XMFLOAT3(503.0f, -3.0f, -634.0f);
+
+
+
 		//---------------------------------------------------------------------
 		g_FragmentRestored_Sheep[i].use = FALSE;
 		g_FragmentRestored_Sheep[i].AnimCnt = 0;
@@ -295,54 +299,54 @@ void UpdateFragment_Sheep(void)
 	
 
 //Sheep
-//if (GetKeyboardPress(DIK_LEFT))
-//{
-//	g_Fragment_Sheep[1].overallPos.x -= 1.0f;
-//}
-//if (GetKeyboardPress(DIK_RIGHT))
-//{
-//	g_Fragment_Sheep[1].overallPos.x += 1.0f;
-//}
-//if (GetKeyboardPress(DIK_UP))
-//{
-//	g_Fragment_Sheep[1].overallPos.y += 1.0f;
-//}
-//if (GetKeyboardPress(DIK_DOWN))
-//{
-//	g_Fragment_Sheep[1].overallPos.y -= 1.0f;
-//}
-//if (GetKeyboardPress(DIK_M))
-//{
-//	g_Fragment_Sheep[1].overallPos.z -= 1.0f;
-//}
-//if (GetKeyboardPress(DIK_N))
-//{
-//	g_Fragment_Sheep[1].overallPos.z += 1.0f;
-//}
-//if (GetKeyboardPress(DIK_O))
-//{
-//	g_Fragment_Sheep[1].scl.x += 0.01f;
-//}
-//if (GetKeyboardPress(DIK_P))
-//{
-//	g_Fragment_Sheep[1].scl.x -= 0.01f;
-//}
-//if (GetKeyboardPress(DIK_O))
-//{
-//	g_Fragment_Sheep[1].scl.y += 0.01f;
-//}
-//if (GetKeyboardPress(DIK_P))
-//{
-//	g_Fragment_Sheep[1].scl.y -= 0.01f;
-//}
-//if (GetKeyboardPress(DIK_Z))
-//{
-//	g_Fragment_Sheep[1].rot.y += 0.01f;
-//}
-//if (GetKeyboardPress(DIK_X))
-//{
-//	g_Fragment_Sheep[1].rot.y -= 0.01f;
-//}
+if (GetKeyboardPress(DIK_LEFT))
+{
+	g_Fragment_Sheep[3].overallPos.x -= 1.0f;
+}
+if (GetKeyboardPress(DIK_RIGHT))
+{
+	g_Fragment_Sheep[3].overallPos.x += 1.0f;
+}
+if (GetKeyboardPress(DIK_UP))
+{
+	g_Fragment_Sheep[3].overallPos.y += 1.0f;
+}
+if (GetKeyboardPress(DIK_DOWN))
+{
+	g_Fragment_Sheep[3].overallPos.y -= 1.0f;
+}
+if (GetKeyboardPress(DIK_M))
+{
+	g_Fragment_Sheep[3].overallPos.z -= 1.0f;
+}
+if (GetKeyboardPress(DIK_N))
+{
+	g_Fragment_Sheep[3].overallPos.z += 1.0f;
+}
+if (GetKeyboardPress(DIK_O))
+{
+	g_Fragment_Sheep[3].scl.x += 0.01f;
+}
+if (GetKeyboardPress(DIK_P))
+{
+	g_Fragment_Sheep[3].scl.x -= 0.01f;
+}
+if (GetKeyboardPress(DIK_O))
+{
+	g_Fragment_Sheep[3].scl.y += 0.01f;
+}
+if (GetKeyboardPress(DIK_P))
+{
+	g_Fragment_Sheep[3].scl.y -= 0.01f;
+}
+if (GetKeyboardPress(DIK_Z))
+{
+	g_Fragment_Sheep[3].rot.y += 0.01f;
+}
+if (GetKeyboardPress(DIK_X))
+{
+	g_Fragment_Sheep[3].rot.y -= 0.01f;
+}
 
 #endif
 
@@ -408,7 +412,7 @@ void DrawFragment_Sheep(void)
 	if (!g_ShowFullImage_Sheep)
 	{
 		//テクスチャー番号　自分調整できる
-		int drawOrder[] = { 0, 1, 2, 3, 4 };
+		int drawOrder[] = { 1, 2, 0, 3 };
 
 		for (int idx = 0; idx < TEXTURE_MAX - 1; idx++)
 		{
@@ -434,12 +438,22 @@ void DrawFragment_Sheep(void)
 			g_Fragment_Sheep[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
 			*/
 
+			g_Fragment_Sheep[0].overallPos = XMFLOAT3(366.0f, -4.0f, -485.0f);
+			g_Fragment_Sheep[1].overallPos = XMFLOAT3(494.0f, -4.5f, -612.0f);
+			g_Fragment_Sheep[2].overallPos = XMFLOAT3(369.0f, -3.0f, -467.0f);
+			g_Fragment_Sheep[3].overallPos = XMFLOAT3(443.0f, -4.0f, -555.0f);
 
-			//g_Fragment_Sheep[0].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
-			//g_Fragment_Sheep[1].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
-			//g_Fragment_Sheep[2].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
-			//g_Fragment_Sheep[3].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
-			//g_Fragment_Sheep[4].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
+			g_Fragment_Sheep[0].scl = XMFLOAT3(0.30f, 0.30f, 1.0f);
+			g_Fragment_Sheep[1].scl = XMFLOAT3(0.70f, 0.70f, 0.0f);
+			g_Fragment_Sheep[2].scl = XMFLOAT3(0.50f, 0.50f, 0.0f);
+			g_Fragment_Sheep[3].scl = XMFLOAT3(0.56f, 0.56f, 0.0f);
+
+
+			g_Fragment_Sheep[0].rot = XMFLOAT3(0.0f, 2.5f, 0.0f);
+			g_Fragment_Sheep[1].rot = XMFLOAT3(0.0f, 2.5f, 0.0f);
+			g_Fragment_Sheep[2].rot = XMFLOAT3(0.0f, 2.5f, 0.0f);
+			g_Fragment_Sheep[3].rot = XMFLOAT3(0.0f, 2.5f, 0.0f);
 
 
 			// dogの正しい見つかり位置座標

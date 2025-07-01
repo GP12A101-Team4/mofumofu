@@ -170,7 +170,7 @@ HRESULT InitFragment_Mouse(void)
 		g_Fragment_Mouse[i].scl = XMFLOAT3(1.0f, 1.0f, 1.0f); // 拡大縮小率 X,Y,Z
 		g_Fragment_Mouse[i].overallPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
-		//g_Fragment_Mouse[4].overallPos = XMFLOAT3(10.0f, -28.0f, -192.0f);
+		//g_Fragment_Mouse[4].overallPos = XMFLOAT3(12.0f, -29.0f, -192.0f);
 
 		//---------------------------------------------------------------------
 		g_FragmentRestored_Mouse[i].use = FALSE;
@@ -299,46 +299,46 @@ void UpdateFragment_Mouse(void)
 	
 
 //Mouse
-if (GetKeyboardPress(DIK_LEFT))
-{
-	g_Fragment_Mouse[4].overallPos.x -= 1.0f;
-}
-if (GetKeyboardPress(DIK_RIGHT))
-{
-	g_Fragment_Mouse[4].overallPos.x += 1.0f;
-}
-if (GetKeyboardPress(DIK_UP))
-{
-	g_Fragment_Mouse[4].overallPos.y += 1.0f;
-}
-if (GetKeyboardPress(DIK_DOWN))
-{
-	g_Fragment_Mouse[4].overallPos.y -= 1.0f;
-}
-if (GetKeyboardPress(DIK_M))
-{
-	g_Fragment_Mouse[4].overallPos.z -= 1.0f;
-}
-if (GetKeyboardPress(DIK_N))
-{
-	g_Fragment_Mouse[4].overallPos.z += 1.0f;
-}
-if (GetKeyboardPress(DIK_O))
-{
-	g_Fragment_Mouse[4].scl.x += 0.01f;
-}
-if (GetKeyboardPress(DIK_P))
-{
-	g_Fragment_Mouse[4].scl.x -= 0.01f;
-}
-if (GetKeyboardPress(DIK_O))
-{
-	g_Fragment_Mouse[4].scl.y += 0.01f;
-}
-if (GetKeyboardPress(DIK_P))
-{
-	g_Fragment_Mouse[4].scl.y -= 0.01f;
-}
+//if (GetKeyboardPress(DIK_LEFT))
+//{
+//	g_Fragment_Mouse[4].overallPos.x -= 1.0f;
+//}
+//if (GetKeyboardPress(DIK_RIGHT))
+//{
+//	g_Fragment_Mouse[4].overallPos.x += 1.0f;
+//}
+//if (GetKeyboardPress(DIK_UP))
+//{
+//	g_Fragment_Mouse[4].overallPos.y += 1.0f;
+//}
+//if (GetKeyboardPress(DIK_DOWN))
+//{
+//	g_Fragment_Mouse[4].overallPos.y -= 1.0f;
+//}
+//if (GetKeyboardPress(DIK_M))
+//{
+//	g_Fragment_Mouse[4].overallPos.z -= 1.0f;
+//}
+//if (GetKeyboardPress(DIK_N))
+//{
+//	g_Fragment_Mouse[4].overallPos.z += 1.0f;
+//}
+//if (GetKeyboardPress(DIK_O))
+//{
+//	g_Fragment_Mouse[4].scl.x += 0.01f;
+//}
+//if (GetKeyboardPress(DIK_P))
+//{
+//	g_Fragment_Mouse[4].scl.x -= 0.01f;
+//}
+//if (GetKeyboardPress(DIK_O))
+//{
+//	g_Fragment_Mouse[4].scl.y += 0.01f;
+//}
+//if (GetKeyboardPress(DIK_P))
+//{
+//	g_Fragment_Mouse[4].scl.y -= 0.01f;
+//}
 
 
 #endif
@@ -431,7 +431,7 @@ void DrawFragment_Mouse(void)
 			g_Fragment_Mouse[1].overallPos = XMFLOAT3(107.0f, -49.0f, -193.0f);
 			g_Fragment_Mouse[2].overallPos = XMFLOAT3(117.0f, -51.0f, -193.0f);
 			g_Fragment_Mouse[3].overallPos = XMFLOAT3(42.0f, -36.0f, -192.0f);
-			g_Fragment_Mouse[4].overallPos = XMFLOAT3(-77.0f, -29.0f, -196.0f);
+			g_Fragment_Mouse[4].overallPos = XMFLOAT3(-85.0f, -29.0f, -196.0f);
 
 
 			g_Fragment_Mouse[0].scl = XMFLOAT3(0.09f, 0.09f, 1.0f);
