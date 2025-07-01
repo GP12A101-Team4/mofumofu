@@ -197,7 +197,7 @@ void DrawGame0(void)
 	DrawFragment_Dog();
 	DrawFragment_Elph();
 	DrawFragment_Mouse();
-	//DrawFragment_Sheep();
+	DrawFragment_Sheep();
 
 	// 2Dの物を描画する処理
 	// Z比較なし
