@@ -335,7 +335,14 @@ void UpdateFragment_Sheep(void)
 //{
 //	g_Fragment_Sheep[1].scl.y -= 0.01f;
 //}
-
+//if (GetKeyboardPress(DIK_Z))
+//{
+//	g_Fragment_Sheep[1].rot.y += 0.01f;
+//}
+//if (GetKeyboardPress(DIK_X))
+//{
+//	g_Fragment_Sheep[1].rot.y -= 0.01f;
+//}
 
 #endif
 
@@ -400,8 +407,13 @@ void DrawFragment_Sheep(void)
 
 	if (!g_ShowFullImage_Sheep)
 	{
-		for (int i = 0; i < TEXTURE_MAX; i++)
+		//テクスチャー番号　自分調整できる
+		int drawOrder[] = { 0, 1, 2, 3, 4 };
+
+		for (int idx = 0; idx < TEXTURE_MAX - 1; idx++)
 		{
+
+			int i = drawOrder[idx];
 
 			XMMATRIX mtxWorld = XMMatrixIdentity();
 			XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
@@ -421,6 +433,14 @@ void DrawFragment_Sheep(void)
 			g_Fragment_Sheep[2].scl = XMFLOAT3(0.84f, 0.84f, 0.0f);
 			g_Fragment_Sheep[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
 			*/
+
+
+			//g_Fragment_Sheep[0].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
+			//g_Fragment_Sheep[1].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
+			//g_Fragment_Sheep[2].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
+			//g_Fragment_Sheep[3].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
+			//g_Fragment_Sheep[4].rot = XMFLOAT3(0.0f, 0.0f, 0.0f);
+
 
 			// dogの正しい見つかり位置座標
 			// 
@@ -506,79 +526,33 @@ float GetPuzzleAlignmentRatio_Sheep()
 
 void DrawPartDebugUI_Sheep()
 {
-	ImGui::Begin("Part Debug");
-	ImGui::Text("Position sheep Head Part: (%.2f, %.2f, %.2f)", g_Fragment_Sheep[3].overallPos.x, g_Fragment_Sheep[3].overallPos.y, g_Fragment_Sheep[3].overallPos.z);
-	ImGui::Text("Position sheep Body Part: (%.2f, %.2f, %.2f)", g_Fragment_Sheep[0].overallPos.x, g_Fragment_Sheep[0].overallPos.y, g_Fragment_Sheep[0].overallPos.z);
-	ImGui::Text("Position sheep Hand Part: (%.2f, %.2f, %.2f)", g_Fragment_Sheep[1].overallPos.x, g_Fragment_Sheep[1].overallPos.y, g_Fragment_Sheep[1].overallPos.z);
-	ImGui::Text("Position sheep Foot Part: (%.2f, %.2f, %.2f)", g_Fragment_Sheep[2].overallPos.x, g_Fragment_Sheep[2].overallPos.y, g_Fragment_Sheep[2].overallPos.z);
-
-	ImGui::Text("Scl Head sheep Part: (%.2f, %.2f, %.2f)", g_Fragment_Sheep[3].scl.x, g_Fragment_Sheep[3].scl.y);
-	ImGui::Text("Scl Hand sheep Part: (%.2f, %.2f, %.2f)", g_Fragment_Sheep[1].scl.x, g_Fragment_Sheep[1].scl.y);
-	ImGui::Text("Scl Foot sheep Part: (%.2f, %.2f, %.2f)", g_Fragment_Sheep[2].scl.x, g_Fragment_Sheep[2].scl.y);
-	ImGui::Text("Scl Body sheep Part: (%.2f, %.2f, %.2f)", g_Fragment_Sheep[0].scl.x, g_Fragment_Sheep[0].scl.y);
-	
-	ImGui::End();
-
-	//if (g_HasRecordedTarget) {
-	//	ImGui::Text("=== Target Screen Positions ===");
-	//	for (int i = 0; i < TEXTURE_MAX; i++) {
-	//		ImGui::Text("Part %d: (%.1f, %.1f)", i, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y);
-	//	}
-	//}
-
-	//if (CheckPuzzleRestored()) {
-	//	ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Restore Success!");
-	//}
-	//else if (g_HasRecordedTarget) {
-	//	ImGui::Text("Not yet aligned");
-	//}
-
-	//ImGui::Separator();
-	//ImGui::Text("投影 vs 目標位置誤差 (CheckPuzzleRestored)");
-
-	//CAMERA* cam = GetCamera();
-	//D3D11_VIEWPORT vp;
-	//UINT num = 1;
-	//GetDeviceContext()->RSGetViewports(&num, &vp);
-
-	//for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-	//	XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
-	//	XMVECTOR screen = XMVector3Project(
-	//		world,
-	//		0, 0,
-	//		vp.Width, vp.Height,
-	//		0.0f, 1.0f,
-	//		XMLoadFloat4x4(&cam->mtxProjection),
-	//		XMLoadFloat4x4(&cam->mtxView),
-	//		XMMatrixIdentity()
-	//	);
-
-	//	float x = XMVectorGetX(screen);
-	//	float y = XMVectorGetY(screen);
-	//	float dx = fabsf(x - g_TargetScreenPos[i].x);
-	//	float dy = fabsf(y - g_TargetScreenPos[i].y);
-
-	//	ImGui::Text("Part %d: (%.1f, %.1f) -> (%.1f, %.1f) | Δx=%.1f, Δy=%.1f",
-	//		i, x, y, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y, dx, dy);
-	//}
-
-	ImGui::Separator();
-	ImGui::Text("拼圖對齊誤差 (歐幾里得距離)");
-
-	ImGui::Separator();
-	float ratio = GetPuzzleAlignmentRatio_Sheep();
-	ImGui::Text("拼圖完成度: %.1f%%", ratio * 100.0f);
-	ImGui::ProgressBar(ratio, ImVec2(200, 20));
+	ImGui::Begin("Part Debug (Sheep)");
 
 	CAMERA* cam = GetCamera();
 	D3D11_VIEWPORT vp;
 	UINT num = 1;
 	GetDeviceContext()->RSGetViewports(&num, &vp);
 
+	float ratio = GetPuzzleAlignmentRatio_Sheep();
+	ImGui::Text("拼图完成度: %.1f%%", ratio * 100.0f);
+	ImGui::ProgressBar(ratio, ImVec2(200, 20));
+
+	ImGui::Separator();
+	ImGui::Text("碎片中心位置（投影） vs 目标位置");
+
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Sheep[i].overallPos);
+		// 构建世界矩阵
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y + 60.0f, g_Fragment_Sheep[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		// 世界中心点
+		XMVECTOR worldPos = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
+		// 投影到屏幕
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldPos,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -587,15 +561,25 @@ void DrawPartDebugUI_Sheep()
 			XMMatrixIdentity()
 		);
 
-		float x = XMVectorGetX(screen);
-		float y = XMVectorGetY(screen);
-		float dx = x - g_TargetScreenPos_Sheep[i].x;
-		float dy = y - g_TargetScreenPos_Sheep[i].y;
+		float sx = XMVectorGetX(screen);
+		float sy = XMVectorGetY(screen);
+		float dx = sx - g_TargetScreenPos_Sheep[i].x;
+		float dy = sy - g_TargetScreenPos_Sheep[i].y;
 		float distance = sqrtf(dx * dx + dy * dy);
 
-		ImGui::Text("Part %d: screen = (%.1f, %.1f) → target = (%.1f, %.1f) | distance = %.1f",
-			i, x, y, g_TargetScreenPos_Sheep[i].x, g_TargetScreenPos_Sheep[i].y, distance);
+		ImGui::Text("Part %d: screen = (%.1f, %.1f) → target = (%.1f, %.1f) | Δ=%.1f",
+			i, sx, sy, g_TargetScreenPos_Sheep[i].x, g_TargetScreenPos_Sheep[i].y, distance);
 	}
+
+	ImGui::Separator();
+	ImGui::Text("Raw 3D Data:");
+	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
+		ImGui::Text("Elph Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y, g_Fragment_Sheep[i].overallPos.z);
+		ImGui::Text("Elph Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
+		ImGui::Text("Elph Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
+	}
+
+	ImGui::End();
 
 }
 

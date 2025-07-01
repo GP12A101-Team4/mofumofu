@@ -301,43 +301,43 @@ void UpdateFragment_Elph(void)
 //Elephant
 //if (GetKeyboardPress(DIK_LEFT))
 //{
-//	g_Fragment_Elph[1].overallPos.x -= 1.0f;
+//	g_Fragment_Elph[6].overallPos.x -= 1.0f;
 //}
 //if (GetKeyboardPress(DIK_RIGHT))
 //{
-//	g_Fragment_Elph[1].overallPos.x += 1.0f;
+//	g_Fragment_Elph[6].overallPos.x += 1.0f;
 //}
 //if (GetKeyboardPress(DIK_UP))
 //{
-//	g_Fragment_Elph[1].overallPos.y += 1.0f;
+//	g_Fragment_Elph[6].overallPos.y += 1.0f;
 //}
 //if (GetKeyboardPress(DIK_DOWN))
 //{
-//	g_Fragment_Elph[1].overallPos.y -= 1.0f;
+//	g_Fragment_Elph[6].overallPos.y -= 1.0f;
 //}
 //if (GetKeyboardPress(DIK_M))
 //{
-//	g_Fragment_Elph[1].overallPos.z -= 1.0f;
+//	g_Fragment_Elph[6].overallPos.z -= 1.0f;
 //}
 //if (GetKeyboardPress(DIK_N))
 //{
-//	g_Fragment_Elph[1].overallPos.z += 1.0f;
+//	g_Fragment_Elph[6].overallPos.z += 1.0f;
 //}
 //if (GetKeyboardPress(DIK_O))
 //{
-//	g_Fragment_Elph[1].scl.x += 0.01f;
+//	g_Fragment_Elph[6].scl.x += 0.01f;
 //}
 //if (GetKeyboardPress(DIK_P))
 //{
-//	g_Fragment_Elph[1].scl.x -= 0.01f;
+//	g_Fragment_Elph[6].scl.x -= 0.01f;
 //}
 //if (GetKeyboardPress(DIK_O))
 //{
-//	g_Fragment_Elph[1].scl.y += 0.01f;
+//	g_Fragment_Elph[6].scl.y += 0.01f;
 //}
 //if (GetKeyboardPress(DIK_P))
 //{
-//	g_Fragment_Elph[1].scl.y -= 0.01f;
+//	g_Fragment_Elph[6].scl.y -= 0.01f;
 //}
 
 
@@ -404,8 +404,12 @@ void DrawFragment_Elph(void)
 
 	if (!g_ShowFullImage_Elph)
 	{
-		for (int i = 0; i < TEXTURE_MAX; i++)
+		//テクスチャー番号　自分調整できる
+		int drawOrder[] = { 4, 0, 1, 2, 3, 5, 6 }; 
+
+		for (int idx = 0; idx < TEXTURE_MAX - 1; idx++)
 		{
+			int i = drawOrder[idx];
 
 			XMMATRIX mtxWorld = XMMatrixIdentity();
 			XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);
@@ -418,6 +422,8 @@ void DrawFragment_Elph(void)
 			g_Fragment_Elph[2].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
 			g_Fragment_Elph[3].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
 			g_Fragment_Elph[4].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
+			g_Fragment_Elph[5].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
+			g_Fragment_Elph[6].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
 
 
 			g_Fragment_Elph[0].scl = XMFLOAT3(1.21f, 1.21f, 0.0f);
@@ -425,14 +431,36 @@ void DrawFragment_Elph(void)
 			g_Fragment_Elph[2].scl = XMFLOAT3(0.84f, 0.84f, 0.0f);
 			g_Fragment_Elph[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
 			g_Fragment_Elph[4].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
-			
-			g_Fragment_Elph[0].rot = XMFLOAT3(0.0f, 0.5f, 0.0f);
-			g_Fragment_Elph[1].rot = XMFLOAT3(0.0f, 0.5f, 0.0f);
-			g_Fragment_Elph[2].rot = XMFLOAT3(0.0f, 0.5f, 0.0f);
-			g_Fragment_Elph[3].rot = XMFLOAT3(0.0f, 0.5f, 0.0f);
-			g_Fragment_Elph[4].rot = XMFLOAT3(0.0f, 0.5f, 0.0f);
-			
+			g_Fragment_Elph[5].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
+			g_Fragment_Elph[6].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
 			*/
+
+			g_Fragment_Elph[0].overallPos = XMFLOAT3(-504.0f, 117.0f, -726.0f);
+			g_Fragment_Elph[1].overallPos = XMFLOAT3(-413.0f, 91.0f, -613.0f);
+			g_Fragment_Elph[2].overallPos = XMFLOAT3(-756.0f, 128.0f, -901.0f);
+			g_Fragment_Elph[3].overallPos = XMFLOAT3(-147.0f, 47.0f, -358.0f);
+			g_Fragment_Elph[4].overallPos = XMFLOAT3(-161.0f, 54.0f, -370.0f);
+			g_Fragment_Elph[5].overallPos = XMFLOAT3(-236.0f, 59.0f, -446.0f);
+			g_Fragment_Elph[6].overallPos = XMFLOAT3(-335.0f, 92.0f, -560.0f);
+
+
+			g_Fragment_Elph[0].scl = XMFLOAT3(2.27f, 2.27f, 1.0f);
+			g_Fragment_Elph[1].scl = XMFLOAT3(2.17f, 2.17f, 1.0f);
+			g_Fragment_Elph[2].scl = XMFLOAT3(2.28f, 2.28f, 1.0f);
+			g_Fragment_Elph[3].scl = XMFLOAT3(1.0f, 1.0f, 1.0f);
+			g_Fragment_Elph[4].scl = XMFLOAT3(1.07f, 1.07f, 1.0f);
+			g_Fragment_Elph[5].scl = XMFLOAT3(1.31f, 1.31f, 1.0f);
+			g_Fragment_Elph[6].scl = XMFLOAT3(1.77f, 1.77f, 1.0f);
+			
+
+			g_Fragment_Elph[0].rot = XMFLOAT3(0.0f, -8.5f, 0.0f);
+			g_Fragment_Elph[1].rot = XMFLOAT3(0.0f, -8.5f, 0.0f);
+			g_Fragment_Elph[2].rot = XMFLOAT3(0.0f, -8.5f, 0.0f);
+			g_Fragment_Elph[3].rot = XMFLOAT3(0.0f, -8.5f, 0.0f);
+			g_Fragment_Elph[4].rot = XMFLOAT3(0.0f, -8.5f, 0.0f);
+			g_Fragment_Elph[5].rot = XMFLOAT3(0.0f, -8.5f, 0.0f);
+			g_Fragment_Elph[6].rot = XMFLOAT3(0.0f, -8.5f, 0.0f);
+
 
 			// elephantの正しい見つかり位置座標
 			// 
@@ -461,7 +489,7 @@ void DrawFragment_Elph(void)
 
 		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, g_FragmentRestored_Elph[0].alpha);
 		SetMaterial(material);
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture_Elph[5]);  // 最后一张完整图
+		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture_Elph[7]);  // 最后一张完整图
 
 		GetDeviceContext()->Draw(4, 0);
 
@@ -518,85 +546,33 @@ float GetPuzzleAlignmentRatio_Elph()
 
 void DrawPartDebugUI_Elph()
 {
-	ImGui::Begin("Part Debug");
-	ImGui::Text("Position elephant Body Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[0].overallPos.x, g_Fragment_Elph[0].overallPos.y, g_Fragment_Elph[0].overallPos.z);
-	ImGui::Text("Position elephant Nose Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[1].overallPos.x, g_Fragment_Elph[1].overallPos.y, g_Fragment_Elph[1].overallPos.z);
-	ImGui::Text("Position elephant Tail Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[2].overallPos.x, g_Fragment_Elph[2].overallPos.y, g_Fragment_Elph[2].overallPos.z);
-	ImGui::Text("Position elephant Tooth Part: (%.2f, %.2f, %.2f)", g_Fragment_Elph[3].overallPos.x, g_Fragment_Elph[3].overallPos.y, g_Fragment_Elph[3].overallPos.z);
-	ImGui::Text("Position elephant Hand Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[4].overallPos.x, g_Fragment_Elph[4].overallPos.y, g_Fragment_Elph[4].overallPos.z);
-	ImGui::Text("Position elephant Ear  Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[5].overallPos.x, g_Fragment_Elph[5].overallPos.y, g_Fragment_Elph[5].overallPos.z);
-	ImGui::Text("Position elephant Foot Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[6].overallPos.x, g_Fragment_Elph[6].overallPos.y, g_Fragment_Elph[6].overallPos.z);
-	ImGui::Text("Scl elephant Body Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[0].scl.x, g_Fragment_Elph[0].scl.y);
-	ImGui::Text("Scl elephant Nose Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[1].scl.x, g_Fragment_Elph[1].scl.y);
-	ImGui::Text("Scl elephant Tail Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[2].scl.x, g_Fragment_Elph[2].scl.y);
-	ImGui::Text("Scl elephant Tooth Part: (%.2f, %.2f, %.2f)", g_Fragment_Elph[3].scl.x, g_Fragment_Elph[3].scl.y);
-	ImGui::Text("Scl elephant Hand Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[4].scl.x, g_Fragment_Elph[4].scl.y);
-	ImGui::Text("Scl elephant Ear Part: (%.2f, %.2f, %.2f)",   g_Fragment_Elph[5].scl.x, g_Fragment_Elph[5].scl.y);
-	ImGui::Text("Scl elephant Foot Part: (%.2f, %.2f, %.2f)",  g_Fragment_Elph[6].scl.x, g_Fragment_Elph[6].scl.y);
-
-	
-	ImGui::End();
-
-	//if (g_HasRecordedTarget) {
-	//	ImGui::Text("=== Target Screen Positions ===");
-	//	for (int i = 0; i < TEXTURE_MAX; i++) {
-	//		ImGui::Text("Part %d: (%.1f, %.1f)", i, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y);
-	//	}
-	//}
-
-	//if (CheckPuzzleRestored()) {
-	//	ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "Restore Success!");
-	//}
-	//else if (g_HasRecordedTarget) {
-	//	ImGui::Text("Not yet aligned");
-	//}
-
-	//ImGui::Separator();
-	//ImGui::Text("投影 vs 目標位置誤差 (CheckPuzzleRestored)");
-
-	//CAMERA* cam = GetCamera();
-	//D3D11_VIEWPORT vp;
-	//UINT num = 1;
-	//GetDeviceContext()->RSGetViewports(&num, &vp);
-
-	//for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-	//	XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
-	//	XMVECTOR screen = XMVector3Project(
-	//		world,
-	//		0, 0,
-	//		vp.Width, vp.Height,
-	//		0.0f, 1.0f,
-	//		XMLoadFloat4x4(&cam->mtxProjection),
-	//		XMLoadFloat4x4(&cam->mtxView),
-	//		XMMatrixIdentity()
-	//	);
-
-	//	float x = XMVectorGetX(screen);
-	//	float y = XMVectorGetY(screen);
-	//	float dx = fabsf(x - g_TargetScreenPos[i].x);
-	//	float dy = fabsf(y - g_TargetScreenPos[i].y);
-
-	//	ImGui::Text("Part %d: (%.1f, %.1f) -> (%.1f, %.1f) | Δx=%.1f, Δy=%.1f",
-	//		i, x, y, g_TargetScreenPos[i].x, g_TargetScreenPos[i].y, dx, dy);
-	//}
-
-	ImGui::Separator();
-	ImGui::Text("拼圖對齊誤差 (歐幾里得距離)");
-
-	ImGui::Separator();
-	float ratio = GetPuzzleAlignmentRatio_Elph();
-	ImGui::Text("拼圖完成度: %.1f%%", ratio * 100.0f);
-	ImGui::ProgressBar(ratio, ImVec2(200, 20));
+	ImGui::Begin("Part Debug (Elph)");
 
 	CAMERA* cam = GetCamera();
 	D3D11_VIEWPORT vp;
 	UINT num = 1;
 	GetDeviceContext()->RSGetViewports(&num, &vp);
 
+	float ratio = GetPuzzleAlignmentRatio_Elph();
+	ImGui::Text("拼图完成度: %.1f%%", ratio * 100.0f);
+	ImGui::ProgressBar(ratio, ImVec2(200, 20));
+
+	ImGui::Separator();
+	ImGui::Text("碎片中心位置（投影） vs 目标位置");
+
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Elph[i].overallPos);
+		// 构建世界矩阵
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Elph[i].rot.x, g_Fragment_Elph[i].rot.y, g_Fragment_Elph[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Elph[i].overallPos.x, g_Fragment_Elph[i].overallPos.y + 60.0f, g_Fragment_Elph[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		// 世界中心点
+		XMVECTOR worldPos = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
+		// 投影到屏幕
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldPos,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -605,15 +581,26 @@ void DrawPartDebugUI_Elph()
 			XMMatrixIdentity()
 		);
 
-		float x = XMVectorGetX(screen);
-		float y = XMVectorGetY(screen);
-		float dx = x - g_TargetScreenPos_Elph[i].x;
-		float dy = y - g_TargetScreenPos_Elph[i].y;
+		float sx = XMVectorGetX(screen);
+		float sy = XMVectorGetY(screen);
+		float dx = sx - g_TargetScreenPos_Elph[i].x;
+		float dy = sy - g_TargetScreenPos_Elph[i].y;
 		float distance = sqrtf(dx * dx + dy * dy);
 
-		ImGui::Text("Part %d: screen = (%.1f, %.1f) → target = (%.1f, %.1f) | distance = %.1f",
-			i, x, y, g_TargetScreenPos_Elph[i].x, g_TargetScreenPos_Elph[i].y, distance);
+		ImGui::Text("Part %d: screen = (%.1f, %.1f) → target = (%.1f, %.1f) | Δ=%.1f",
+			i, sx, sy, g_TargetScreenPos_Elph[i].x, g_TargetScreenPos_Elph[i].y, distance);
 	}
+
+	ImGui::Separator();
+	ImGui::Text("Raw 3D Data:");
+	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
+		ImGui::Text("Elph Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].overallPos.x, g_Fragment_Elph[i].overallPos.y, g_Fragment_Elph[i].overallPos.z);
+		ImGui::Text("Elph Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);
+		ImGui::Text("Elph Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Elph[i].rot.x, g_Fragment_Elph[i].rot.y, g_Fragment_Elph[i].rot.z);
+	}
+
+	ImGui::End();
 
 }
 
+// right position for elphant 200, 57 ,176 //

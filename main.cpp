@@ -557,10 +557,11 @@ void Draw(void)
 	
 	ImGui::End();
 
-  DrawPartDebugUI();
-  DrawPartDebugUI_Dog();
-  DrawPartDebugUI_Elph();
-  DrawPartDebugUI_Mouse();
+	DrawPartDebugUI();
+	/* DrawPartDebugUI_Dog();
+	DrawPartDebugUI_Elph();*/
+	DrawPartDebugUI_Mouse();
+	DrawPartDebugUI_Sheep();
   
 	ImGui::ShowDemoWindow();
 

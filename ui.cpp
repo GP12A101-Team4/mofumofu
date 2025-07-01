@@ -15,7 +15,7 @@
 //*****************************************************************************
 #define TEXTURE_WIDTH				(70)	// ƒLƒƒƒ‰ƒTƒCƒY
 #define TEXTURE_HEIGHT				(70)	// 
-#define TEXTURE_MAX					(4)		// ƒeƒNƒXƒ`ƒƒ‚Ì”
+#define TEXTURE_MAX					(5)		// ƒeƒNƒXƒ`ƒƒ‚Ì”
 
 
 //*****************************************************************************
@@ -32,8 +32,9 @@ static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// ƒeƒNƒXƒ`ƒ
 static char *g_TexturName[] = {
 	"data/TEXTURE/UI_black.png",
 	"data/TEXTURE/UI_normal.png",
-	"data/TEXTURE/bar1.png",
-	"data/TEXTURE/bar2.png",
+	"data/TEXTURE/successbarbottom.png",
+	"data/TEXTURE/successbarcenter.png",
+	"data/TEXTURE/successbartop.png",
 };
 
 
@@ -161,14 +162,30 @@ void DrawUI(void)
 
 void DrawGaugeBars()
 {
-	float screenX   = 350.0f;
+	float screenX   = 480.0f;
 	float screenY   = 475.0f;
 	float barWidth  = 250.0f;
-	float barHeight = 20.0f;
+	float barHeight = 50.0f;
 	float ratio = GetPuzzleAlignmentRatio();
 
-	DrawGaugeBarSprite(g_VertexBuffer, g_Texture[2], g_Texture[3],
-		screenX, screenY, barWidth, barHeight, ratio);
+	// bottom layer (background)
+	SetSpriteColor(g_VertexBuffer, screenX, screenY, barWidth, barHeight,
+		0.0f, 0.0f, 1.0f, 1.0f, XMFLOAT4(1, 1, 1, 1));
+	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[2]);
+	GetDeviceContext()->Draw(4, 0);
+
+	// center layer (ratio-filled bar)
+	float filledWidth = barWidth * ratio;
+	SetSpriteColor(g_VertexBuffer, screenX - (barWidth - filledWidth) / 2.0f, screenY, filledWidth, barHeight,
+		0.0f, 0.0f, ratio, 1.0f, XMFLOAT4(1, 1, 1, 1));
+	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[3]);
+	GetDeviceContext()->Draw(4, 0);
+
+	// top layer (outline)
+	SetSpriteColor(g_VertexBuffer, screenX, screenY, barWidth, barHeight,
+		0.0f, 0.0f, 1.0f, 1.0f, XMFLOAT4(1, 1, 1, 1));
+	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[4]);
+	GetDeviceContext()->Draw(4, 0);
 }
 
 
