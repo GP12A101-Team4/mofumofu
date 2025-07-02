@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒ^ƒCƒgƒ‹‰æ–Êˆ— [title.cpp]
+// ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢å‡¦ç† [title.cpp]
 // Author : 
 //
 //=============================================================================
@@ -14,25 +14,25 @@
 #include "collision.h"
 #include "debugproc.h"
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
-#define TEXTURE_WIDTH				(SCREEN_WIDTH)	// ”wŒiƒTƒCƒY
+#define TEXTURE_WIDTH				(SCREEN_WIDTH)	// èƒŒæ™¯ã‚µã‚¤ã‚º
 #define TEXTURE_HEIGHT				(SCREEN_HEIGHT)	// 
-#define TEXTURE_MAX					(12)				// ƒeƒNƒXƒ`ƒƒ‚Ì”
+#define TEXTURE_MAX					(12)				// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ•°
 
-#define TEXTURE_WIDTH_LOGO			(480)			// ƒƒSƒTƒCƒY
+#define TEXTURE_WIDTH_LOGO			(480)			// ãƒ­ã‚´ã‚µã‚¤ã‚º
 #define TEXTURE_HEIGHT_LOGO			(480)		
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //*****************************************************************************
-static ID3D11Buffer* g_VertexBuffer = NULL;		// ’¸“_î•ñ
-static ID3D11ShaderResourceView* g_Texture[TEXTURE_MAX] = { NULL };	// ƒeƒNƒXƒ`ƒƒî•ñ
+static ID3D11Buffer* g_VertexBuffer = NULL;		// é ‚ç‚¹æƒ…å ±
+static ID3D11ShaderResourceView* g_Texture[TEXTURE_MAX] = { NULL };	// ãƒ†ã‚¯ã‚¹ãƒãƒ£æƒ…å ±
 
 static bool wasHoveringStart = false;
 static bool wasHoveringExit = false;
@@ -44,6 +44,8 @@ XMFLOAT3 MousePos;
 XMFLOAT3 StartButtonPos;
 XMFLOAT3 ExitButtonPos;
 XMFLOAT3 SettingButtonPos;
+XMFLOAT3 PawsPos;
+
 
 static char* g_TexturName[TEXTURE_MAX] = {
 	"data/TEXTURE/title.png",						//0
@@ -59,10 +61,10 @@ static char* g_TexturName[TEXTURE_MAX] = {
 
 
 
-static BOOL						g_Use;						// TRUE:g‚Á‚Ä‚¢‚é  FALSE:–¢g—p
-static float					g_w, g_h;					// •‚Æ‚‚³
-static XMFLOAT3					g_Pos;						// ƒ|ƒŠƒSƒ“‚ÌÀ•W
-static int						g_TexNo;					// ƒeƒNƒXƒ`ƒƒ”Ô†
+static BOOL						g_Use;						// TRUE:ä½¿ã£ã¦ã„ã‚‹  FALSE:æœªä½¿ç”¨
+static float					g_w, g_h;					// å¹…ã¨é«˜ã•
+static XMFLOAT3					g_Pos;						// ãƒãƒªã‚´ãƒ³ã®åº§æ¨™
+static int						g_TexNo;					// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·
 static bool						isAudioPlayed;
 
 static BOOL						g_Load = FALSE;
@@ -75,13 +77,13 @@ static SNOW	g_SNOW;
 
 
 //=============================================================================
-// ‰Šú‰»ˆ—
+// åˆæœŸåŒ–å‡¦ç†
 //=============================================================================
 HRESULT InitTitle(void)
 {
 	ID3D11Device* pDevice = GetDevice();
 
-	//ƒeƒNƒXƒ`ƒƒ¶¬
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ
 	for (int i = 0; i < TEXTURE_MAX; i++)
 	{
 		g_Texture[i] = NULL;
@@ -94,7 +96,7 @@ HRESULT InitTitle(void)
 	}
 
 
-	// ’¸“_ƒoƒbƒtƒ@¶¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -104,20 +106,17 @@ HRESULT InitTitle(void)
 	GetDevice()->CreateBuffer(&bd, NULL, &g_VertexBuffer);
 
 
-	// •Ï”‚Ì‰Šú‰»
+	// å¤‰æ•°ã®åˆæœŸåŒ–
 	g_Use = TRUE;
 	g_w = TEXTURE_WIDTH;
 	g_h = TEXTURE_HEIGHT;
 	g_Pos = XMFLOAT3(g_w / 2, g_h / 2, 0.0f);
 	g_TexNo = 0;
 
-	g_SNOW.scrl = 0.0f;			// TEXƒXƒNƒ[ƒ‹
-	g_SNOW.scrl2 = 0.0f;		// TEXƒXƒNƒ[ƒ‹
-	g_SNOW.scrl2 = 0.0f;		// TEXƒXƒNƒ[ƒ‹
-
 	StartButtonPos		=	{ SCREEN_CENTER_X ,360.0f,0.0f };
 	ExitButtonPos		=	{ SCREEN_CENTER_X ,450.0f,0.0f };
 	SettingButtonPos	=	{ 900.0f ,500.0f,0.0f };
+	PawsPos				=	{ 410.0f,220.0f,0.0f };
 
 
 	//PlaySound(SOUND_LABEL_BGM_title);
@@ -128,7 +127,7 @@ HRESULT InitTitle(void)
 }
 
 //=============================================================================
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 //=============================================================================
 void UninitTitle(void)
 {
@@ -153,12 +152,12 @@ void UninitTitle(void)
 }
 
 //=============================================================================
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 //=============================================================================
 void UpdateTitle(void)
 {
 
-	//// ƒQ[ƒ€ƒpƒbƒh‚Å“ü—Íˆ—
+	//// ã‚²ãƒ¼ãƒ ãƒ‘ãƒƒãƒ‰ã§å…¥åŠ›å‡¦ç†
 	//else if (IsButtonTriggered(0, BUTTON_START))
 	//{
 	//	SetFade(FADE_OUT, MODE_TUTORIAL);
@@ -182,10 +181,14 @@ void UpdateTitle(void)
 	bool isHoveringExit = CollisionBB(MousePos, 1.0f, 1.0f, ExitButtonPos, 240.0f, 80.0f);
 	bool isHoveringSetting = CollisionBB(MousePos, 1.0f, 1.0f, SettingButtonPos, 60.0f, 60.0f);
 
+	bool isPaws = CollisionBB(MousePos, 1.0f, 1.0f, PawsPos, 40.0f, 40.0f);
+
+
+
 	if (isHoveringStart && inputMode == 0) {
 		menu = MENU_START;
 
-		// œn”ñ hover ¨ hover ”d•ú
+		// å¾é hover â†’ hover æ™‚æ’­æ”¾
 		if (!wasHoveringStart) {
 			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
 		}
@@ -193,7 +196,7 @@ void UpdateTitle(void)
 	if (isHoveringExit && inputMode == 0) {
 		menu = MENU_EXIT;
 
-		// œn”ñ hover ¨ hover ”d•ú
+		// å¾é hover â†’ hover æ™‚æ’­æ”¾
 		if (!wasHoveringExit) {
 			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
 		}
@@ -202,13 +205,13 @@ void UpdateTitle(void)
 	if (isHoveringSetting && inputMode == 0) {
 		menu = MENU_SETTING;
 
-		// œn”ñ hover ¨ hover ”d•ú
+		// å¾é hover â†’ hover æ™‚æ’­æ”¾
 		if (!wasHoveringSetting) {
 			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
 		}
 	}
 
-	//ó‘ÔXV
+	//çŠ¶æ…‹æ›´æ–°
 	wasHoveringStart = isHoveringStart;
 	wasHoveringExit = isHoveringExit;
 	wasHoveringSetting = isHoveringSetting;
@@ -251,8 +254,13 @@ void UpdateTitle(void)
 		menu = MENU_SETTING;
 	}
 
+	if (IsMouseLeftTriggered()&& isPaws) {
+		PlaySound(SOUND_LABEL_EG_PAWS);
+	}
+
+
 	if (GetKeyboardTrigger(DIK_RETURN)|| IsMouseLeftPressed())
-	{// Enter‰Ÿ‚µ‚½‚çAƒXƒe[ƒW‚ğØ‚è‘Ö‚¦‚é
+	{// EnteræŠ¼ã—ãŸã‚‰ã€ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 		
 		if (menu == MENU_START)
 		{
@@ -273,7 +281,7 @@ void UpdateTitle(void)
 	
 
 
-#ifdef _DEBUG	// ƒfƒoƒbƒOî•ñ‚ğ•\¦‚·‚é
+#ifdef _DEBUG	// ãƒ‡ãƒãƒƒã‚°æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
 	//char *str = GetDebugStr();
 	//sprintf(&str[strlen(str)], " PX:%.2f PY:%.2f", g_Pos.x, g_Pos.y);
 	/*PrintDebugProc("menu:%d", menu);*/
@@ -282,43 +290,43 @@ void UpdateTitle(void)
 }
 
 //=============================================================================
-// •`‰æˆ—
+// æç”»å‡¦ç†
 //=============================================================================
 void DrawTitle(void)
 {
-	// ’¸“_ƒoƒbƒtƒ@İ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &g_VertexBuffer, &stride, &offset);
 
-	// ƒ}ƒgƒŠƒNƒXİ’è
+	// ãƒãƒˆãƒªã‚¯ã‚¹è¨­å®š
 	SetWorldViewProjection2D();
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	// ƒ}ƒeƒŠƒAƒ‹İ’è
+	// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 
-	// ƒ^ƒCƒgƒ‹‚Ì”wŒi‚ğ•`‰æ
+	// ã‚¿ã‚¤ãƒˆãƒ«ã®èƒŒæ™¯ã‚’æç”»
 	{
-		// ƒeƒNƒXƒ`ƒƒİ’è
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
 		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[0]);
 
-		// ‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ğİ’è
+		// ï¼‘æšã®ãƒãƒªã‚´ãƒ³ã®é ‚ç‚¹ã¨ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨­å®š
 		SetSprite(g_VertexBuffer, g_Pos.x, g_Pos.y, g_w, g_h, 0.0f, 0.0f, 1.0f, 1.0f);
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
+		// ãƒãƒªã‚´ãƒ³æç”»
 		GetDeviceContext()->Draw(4, 0);
 	}
 
 
-	// ƒXƒ^[ƒgƒ{ƒ^ƒ“•`‰æ
+	// ã‚¹ã‚¿ãƒ¼ãƒˆãƒœã‚¿ãƒ³æç”»
 	{
-		// ƒeƒNƒXƒ`ƒƒİ’è
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
 		if (menu == MENU_START) {
 			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[4]);
 		}
@@ -326,16 +334,16 @@ void DrawTitle(void)
 			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[3]);
 		}
 
-		// ‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ğİ’è
+		// ï¼‘æšã®ãƒãƒªã‚´ãƒ³ã®é ‚ç‚¹ã¨ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨­å®š
 		SetSprite(g_VertexBuffer, StartButtonPos.x, StartButtonPos.y, 240, 80, 0.0f, 0.0f, 1.0f, 1.0f);
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
+		// ãƒãƒªã‚´ãƒ³æç”»
 		GetDeviceContext()->Draw(4, 0);
 	}
 
-	// ƒGƒOƒWƒbƒgƒ{ƒ^ƒ“‚ğ•`‰æ
+	// ã‚¨ã‚°ã‚¸ãƒƒãƒˆãƒœã‚¿ãƒ³ã‚’æç”»
 	{
-		// ƒeƒNƒXƒ`ƒƒİ’è
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
 		if (menu == MENU_EXIT) {
 			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[6]);
 		}
@@ -343,14 +351,14 @@ void DrawTitle(void)
 			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[5]);
 		}
 
-		// ‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ğİ’è
+		// ï¼‘æšã®ãƒãƒªã‚´ãƒ³ã®é ‚ç‚¹ã¨ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨­å®š
 		SetSprite(g_VertexBuffer, ExitButtonPos.x, ExitButtonPos.y, 240, 80, 0.0f, 0.0f, 1.0f, 1.0);
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
+		// ãƒãƒªã‚´ãƒ³æç”»
 		GetDeviceContext()->Draw(4, 0);
 	}
 
-	//ƒZƒbƒeƒBƒ“ƒOƒ{ƒ^ƒ“‚ğ•`‰æ
+	//ã‚»ãƒƒãƒ†ã‚£ãƒ³ã‚°ãƒœã‚¿ãƒ³ã‚’æç”»
 	{
 		
 		if (menu == MENU_SETTING) {
@@ -360,10 +368,10 @@ void DrawTitle(void)
 			GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[7]);
 		}
 		
-		// ‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ğİ’è
+		// ï¼‘æšã®ãƒãƒªã‚´ãƒ³ã®é ‚ç‚¹ã¨ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨­å®š
 		SetSprite(g_VertexBuffer, 900.0f, 500.0f, 60.0f, 60.0f, 0.0f, 0.0f, 1.0f, 1.0f);
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
+		// ãƒãƒªã‚´ãƒ³æç”»
 		GetDeviceContext()->Draw(4, 0);
 	}
 }
