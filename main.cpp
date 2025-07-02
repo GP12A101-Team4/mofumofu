@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 //
 // メイン処理 [main.cpp]
 // Author : 
@@ -255,7 +255,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		if (wParam != WA_INACTIVE) {
 
-			ShowCursor(FALSE);
+			//ShowCursor(FALSE);
 			RECT rect;
 			GetClientRect(hWnd, &rect);
 			MapWindowPoints(hWnd, nullptr, (POINT*)&rect, 2);
@@ -418,6 +418,7 @@ void Update(void)
 	case MODE_TITLE:		// タイトル画面の更新
 		UpdateTitle();
 		UpdateCursor();
+		UpdateMenu();
 		break;
 
 	case MODE_GAME:			// ゲーム画面の更新
@@ -467,6 +468,7 @@ void Draw(void)
 
 
 	PLAYER* player = GetPlayer();
+	MENU* menu = GetMenu();
 
 	switch (g_Mode)
 	{
@@ -481,6 +483,10 @@ void Draw(void)
 		SetLightEnable(FALSE);
 
 		DrawTitle();
+
+		if (menu->use == TRUE) {
+			DrawMenu();
+		}
 
 		DrawCursor();
 
