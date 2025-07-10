@@ -52,11 +52,11 @@ static int				g_TexNo_Mouse;				// テクスチャ番号
 
 
 static XMFLOAT2 g_TargetScreenPos_Mouse[TEXTURE_MAX] = {
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
+	{438.8f, 342.2f},
+	{445.1f, 365.0f},
+	{445.2f, 366.1f},
+	{441.7f, 355.8f},
+	{456.2f, 406.8f},
 	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
 };
 
@@ -347,7 +347,7 @@ void UpdateFragment_Mouse(void)
 
 #ifdef _DEBUG	// デバッグ情報を表示する
 
-	if (GetKeyboardTrigger(DIK_F1)) {
+	if (GetKeyboardTrigger(DIK_F3)) {
 		D3D11_VIEWPORT vp;
 		UINT num = 1;
 		GetDeviceContext()->RSGetViewports(&num, &vp);
@@ -534,7 +534,7 @@ float GetPuzzleAlignmentRatio_Mouse()
 
 void DrawPartDebugUI_Mouse()
 {
-	ImGui::Begin("Part Debug (Elph)");
+	ImGui::Begin("Part Debug (Mouse)");
 
 	CAMERA* cam = GetCamera();
 	D3D11_VIEWPORT vp;

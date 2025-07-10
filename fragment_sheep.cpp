@@ -52,10 +52,10 @@ static int				g_TexNo_Sheep;				// テクスチャ番号
 
 
 static XMFLOAT2 g_TargetScreenPos_Sheep[TEXTURE_MAX] = {
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
+	{490.1f, 272.1f},
+	{471.1f, 272.0f},
+	{459.2f, 270.0f},
+	{469.9f, 271.6f},
 	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
 };
 
@@ -354,7 +354,7 @@ if (GetKeyboardPress(DIK_X))
 
 #ifdef _DEBUG	// デバッグ情報を表示する
 
-	if (GetKeyboardTrigger(DIK_F1)) {
+	if (GetKeyboardTrigger(DIK_F4)) {
 		D3D11_VIEWPORT vp;
 		UINT num = 1;
 		GetDeviceContext()->RSGetViewports(&num, &vp);

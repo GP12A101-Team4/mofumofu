@@ -52,11 +52,11 @@ static int				g_TexNo_Dog;				// テクスチャ番号
 
 
 static XMFLOAT2 g_TargetScreenPos_Dog[TEXTURE_MAX] = {
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
+	{473.1f, 214.9f},
+	{470.4f, 212.3f},
+	{485.2f, 206.9f},
+	{508.5f, 198.4f},
+	{442.7f, 232.4f},
 	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
 };
 
@@ -253,7 +253,7 @@ void UpdateFragment_Dog(void)
 	XMFLOAT3 center;
 	ComputePuzzleCenterAndScale_Dog(&center, nullptr);
 
-	/*if (!g_ShowFullImage_Dog && CheckPuzzleRestored_Dog())
+	if (!g_ShowFullImage_Dog && CheckPuzzleRestored_Dog())
 	{
 		g_ShowFullImage_Dog = true;
 		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
@@ -291,7 +291,7 @@ void UpdateFragment_Dog(void)
 
 	if (g_FragmentRestored_Dog[0].alpha < 0) {
 		g_FragmentRestored_Dog[0].use = FALSE;
-	}*/
+	}
 		
 #ifdef _DEBUG
 	
