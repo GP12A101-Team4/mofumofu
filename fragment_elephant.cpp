@@ -52,11 +52,13 @@ static int				g_TexNo_Elph;				// テクスチャ番号
 
 
 static XMFLOAT2 g_TargetScreenPos_Elph[TEXTURE_MAX] = {
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
-	{491.3f, 370.9f},
+	{510.5f, 191.2f},
+	{522.7f, 197.8f},
+	{537.8f, 203.9f},
+	{522.1f, 202.2f},
+	{523.5f, 195.5f},
+	{520.3f, 203.3f},
+	{509.0f, 188.2f},
 	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
 };
 
@@ -347,7 +349,7 @@ void UpdateFragment_Elph(void)
 
 #ifdef _DEBUG	// デバッグ情報を表示する
 
-	if (GetKeyboardTrigger(DIK_F1)) {
+	if (GetKeyboardTrigger(DIK_F2)) {
 		D3D11_VIEWPORT vp;
 		UINT num = 1;
 		GetDeviceContext()->RSGetViewports(&num, &vp);
