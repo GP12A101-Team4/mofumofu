@@ -48,14 +48,14 @@ static ID3D11ShaderResourceView		* g_Texture_Sheep[TEXTURE_MAX] = { NULL };	// �
 
 static FRAGMENT				g_Fragment_Sheep[TEXTURE_MAX];				// ポリゴンデータ
 static FRAGMENT_RESTORED	g_FragmentRestored_Sheep[TEXTURE_MAX];
-static int				g_TexNo_Sheep;				// テクスチャ番号
+static int					g_TexNo_Sheep;				// テクスチャ番号
 
 
 static XMFLOAT2 g_TargetScreenPos_Sheep[TEXTURE_MAX] = {
-	{490.1f, 272.1f},
-	{471.1f, 272.0f},
-	{459.2f, 270.0f},
-	{469.9f, 271.6f},
+	{612.8f, 272.3f},
+	{590.6f, 272.1f},
+	{575.8f, 270.0f},
+	{588.6f, 271.6f},
 	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
 };
 
@@ -69,20 +69,21 @@ static char* g_TextureName_Sheep[] = {
 	"data/TEXTURE/sheep_02.png",
 	"data/TEXTURE/sheep_03.png",
 	"data/TEXTURE/sheep_04.png",
+	"data/TEXTURE/sheep_05.png",
 	"data/TEXTURE/sheep.png",
 };
 
 // 頂点配列
 static VERTEX_3D g_VertexArray[4 * MAX_POLYGON] = {
-			// ３Ｄ座標							頂点の向き						ＲＧＢＡ					ＴＥＸ座標
-	
-   // 后面
-   {XMFLOAT3(-SIZE_WH,  SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f)},
-   {XMFLOAT3( SIZE_WH,  SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 0.0f)},
-   {XMFLOAT3(-SIZE_WH, -SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f)},
-   {XMFLOAT3( SIZE_WH, -SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f)},
-  
-   
+	// ３Ｄ座標							頂点の向き						ＲＧＢＡ					ＴＥＸ座標
+
+// 后面
+{XMFLOAT3(-SIZE_WH,  SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 0.0f)},
+{XMFLOAT3(SIZE_WH,  SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 0.0f)},
+{XMFLOAT3(-SIZE_WH, -SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(0.0f, 1.0f)},
+{XMFLOAT3(SIZE_WH, -SIZE_WH, -SIZE_WH), XMFLOAT3(0.0f, 0.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT2(1.0f, 1.0f)},
+
+
 
 };
 
@@ -168,9 +169,7 @@ HRESULT InitFragment_Sheep(void)
 		g_Fragment_Sheep[i].scl = XMFLOAT3(1.0f, 1.0f, 1.0f); // 拡大縮小率 X,Y,Z
 		g_Fragment_Sheep[i].overallPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
-		//g_Fragment_Sheep[3].overallPos = XMFLOAT3(503.0f, -3.0f, -634.0f);
-
-
+		//g_Fragment_Sheep[4].overallPos = XMFLOAT3(12.0f, -29.0f, -192.0f);
 
 		//---------------------------------------------------------------------
 		g_FragmentRestored_Sheep[i].use = FALSE;
@@ -178,7 +177,7 @@ HRESULT InitFragment_Sheep(void)
 		g_FragmentRestored_Sheep[i].alpha = 1.0f;
 		g_FragmentRestored_Sheep[i].Initialized = FALSE;
 	}
-	
+
 	g_TexNo_Sheep = 0;
 
 	return S_OK;
@@ -192,13 +191,19 @@ bool CheckPuzzleRestored_Sheep()
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 50.0f;  // 可接受誤差半徑
-
+	float tolerance = 10.0f;  // 可接受误差半径
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Sheep[i].overallPos);
+		// 考虑缩放、旋转、平移后的世界坐标中心点
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y + 60.0f, g_Fragment_Sheep[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		XMVECTOR worldCenter = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldCenter,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -250,14 +255,14 @@ void UninitFragment_Sheep(void)
 //=============================================================================
 void UpdateFragment_Sheep(void)
 {
-	CAMERA *cam = GetCamera();
-	
+	CAMERA* cam = GetCamera();
+
 	XMFLOAT3 center;
 	ComputePuzzleCenterAndScale_Sheep(&center, nullptr);
 
-	/*if (!g_ShowFullImage_Sheep && CheckPuzzleRestored_Sheep())
+	if (!g_ShowFullImage_Sheep && CheckPuzzleRestored_Sheep())
 	{
-		g_ShowFullImage_Sheep= true;
+		g_ShowFullImage_Sheep = true;
 		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
 	}
 
@@ -293,60 +298,53 @@ void UpdateFragment_Sheep(void)
 
 	if (g_FragmentRestored_Sheep[0].alpha < 0) {
 		g_FragmentRestored_Sheep[0].use = FALSE;
-	}*/
-		
-#ifdef _DEBUG
-	
+	}
 
-//Sheep
-if (GetKeyboardPress(DIK_LEFT))
-{
-	g_Fragment_Sheep[3].overallPos.x -= 1.0f;
-}
-if (GetKeyboardPress(DIK_RIGHT))
-{
-	g_Fragment_Sheep[3].overallPos.x += 1.0f;
-}
-if (GetKeyboardPress(DIK_UP))
-{
-	g_Fragment_Sheep[3].overallPos.y += 1.0f;
-}
-if (GetKeyboardPress(DIK_DOWN))
-{
-	g_Fragment_Sheep[3].overallPos.y -= 1.0f;
-}
-if (GetKeyboardPress(DIK_M))
-{
-	g_Fragment_Sheep[3].overallPos.z -= 1.0f;
-}
-if (GetKeyboardPress(DIK_N))
-{
-	g_Fragment_Sheep[3].overallPos.z += 1.0f;
-}
-if (GetKeyboardPress(DIK_O))
-{
-	g_Fragment_Sheep[3].scl.x += 0.01f;
-}
-if (GetKeyboardPress(DIK_P))
-{
-	g_Fragment_Sheep[3].scl.x -= 0.01f;
-}
-if (GetKeyboardPress(DIK_O))
-{
-	g_Fragment_Sheep[3].scl.y += 0.01f;
-}
-if (GetKeyboardPress(DIK_P))
-{
-	g_Fragment_Sheep[3].scl.y -= 0.01f;
-}
-if (GetKeyboardPress(DIK_Z))
-{
-	g_Fragment_Sheep[3].rot.y += 0.01f;
-}
-if (GetKeyboardPress(DIK_X))
-{
-	g_Fragment_Sheep[3].rot.y -= 0.01f;
-}
+#ifdef _DEBUG
+
+
+	//Sheep
+	//if (GetKeyboardPress(DIK_LEFT))
+	//{
+	//	g_Fragment_Sheep[4].overallPos.x -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_RIGHT))
+	//{
+	//	g_Fragment_Sheep[4].overallPos.x += 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_UP))
+	//{
+	//	g_Fragment_Sheep[4].overallPos.y += 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_DOWN))
+	//{
+	//	g_Fragment_Sheep[4].overallPos.y -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_M))
+	//{
+	//	g_Fragment_Sheep[4].overallPos.z -= 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_N))
+	//{
+	//	g_Fragment_Sheep[4].overallPos.z += 1.0f;
+	//}
+	//if (GetKeyboardPress(DIK_O))
+	//{
+	//	g_Fragment_Sheep[4].scl.x += 0.01f;
+	//}
+	//if (GetKeyboardPress(DIK_P))
+	//{
+	//	g_Fragment_Sheep[4].scl.x -= 0.01f;
+	//}
+	//if (GetKeyboardPress(DIK_O))
+	//{
+	//	g_Fragment_Sheep[4].scl.y += 0.01f;
+	//}
+	//if (GetKeyboardPress(DIK_P))
+	//{
+	//	g_Fragment_Sheep[4].scl.y -= 0.01f;
+	//}
+
 
 #endif
 
@@ -354,7 +352,7 @@ if (GetKeyboardPress(DIK_X))
 
 #ifdef _DEBUG	// デバッグ情報を表示する
 
-	if (GetKeyboardTrigger(DIK_F4)) {
+	if (GetKeyboardTrigger(DIK_F3)) {
 		D3D11_VIEWPORT vp;
 		UINT num = 1;
 		GetDeviceContext()->RSGetViewports(&num, &vp);
@@ -411,13 +409,8 @@ void DrawFragment_Sheep(void)
 
 	if (!g_ShowFullImage_Sheep)
 	{
-		//テクスチャー番号　自分調整できる
-		int drawOrder[] = { 1, 2, 0, 3 };
-
-		for (int idx = 0; idx < TEXTURE_MAX - 1; idx++)
+		for (int i = 0; i < TEXTURE_MAX; i++)
 		{
-
-			int i = drawOrder[idx];
 
 			XMMATRIX mtxWorld = XMMatrixIdentity();
 			XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
@@ -429,14 +422,15 @@ void DrawFragment_Sheep(void)
 			g_Fragment_Sheep[1].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
 			g_Fragment_Sheep[2].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
 			g_Fragment_Sheep[3].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			
+			g_Fragment_Sheep[4].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
 
 
 			g_Fragment_Sheep[0].scl = XMFLOAT3(1.21f, 1.21f, 0.0f);
 			g_Fragment_Sheep[1].scl = XMFLOAT3(0.87f, 0.87f, 0.0f);
 			g_Fragment_Sheep[2].scl = XMFLOAT3(0.84f, 0.84f, 0.0f);
 			g_Fragment_Sheep[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
-			*/
+			g_Fragment_Sheep[4].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);*/
+
 
 			g_Fragment_Sheep[0].overallPos = XMFLOAT3(366.0f, -4.0f, -485.0f);
 			g_Fragment_Sheep[1].overallPos = XMFLOAT3(494.0f, -4.5f, -612.0f);
@@ -456,6 +450,8 @@ void DrawFragment_Sheep(void)
 			g_Fragment_Sheep[3].rot = XMFLOAT3(0.0f, 2.5f, 0.0f);
 
 
+
+
 			// dogの正しい見つかり位置座標
 			// 
 
@@ -470,7 +466,7 @@ void DrawFragment_Sheep(void)
 			GetDeviceContext()->Draw(4, 0);
 		}
 	}
-	
+
 	if (g_FragmentRestored_Sheep[0].use)
 	{
 		XMMATRIX mtxWorld = XMMatrixIdentity();
@@ -492,8 +488,8 @@ void DrawFragment_Sheep(void)
 	SetLightEnable(TRUE);
 	SetDepthEnable(TRUE);
 
-	
-	
+
+
 }
 
 float GetPuzzleAlignmentRatio_Sheep()
@@ -504,13 +500,20 @@ float GetPuzzleAlignmentRatio_Sheep()
 
 	CAMERA* cam = GetCamera();
 
-	const float maxDistance = 200.0f;  // 误差最大可接受值（用于归一化）
+	const float maxDistance = 200.0f;  // 最大容忍误差
 	float ratioSum = 0.0f;
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Sheep[i].overallPos);
+		// 构建世界变换矩阵（缩放 → 旋转 → 平移）
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y + 60.0f, g_Fragment_Sheep[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		XMVECTOR worldCenter = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldCenter,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -525,7 +528,7 @@ float GetPuzzleAlignmentRatio_Sheep()
 		float dy = y - g_TargetScreenPos_Sheep[i].y;
 		float distance = sqrtf(dx * dx + dy * dy);
 
-		// 误差越小，比例越接近 1.0；误差 >= maxDistance 时，比例为 0
+		// 误差归一化处理
 		float normalized = distance / maxDistance;
 		if (normalized > 1.0f)
 			normalized = 1.0f;
@@ -534,8 +537,9 @@ float GetPuzzleAlignmentRatio_Sheep()
 		ratioSum += partRatio;
 	}
 
-	return ratioSum / (TEXTURE_MAX - 1);  // 返回0～1之间的平均完成度
+	return ratioSum / (TEXTURE_MAX - 1);  // 返回平均完成度 (0.0~1.0)
 }
+
 
 
 void DrawPartDebugUI_Sheep()
@@ -588,9 +592,9 @@ void DrawPartDebugUI_Sheep()
 	ImGui::Separator();
 	ImGui::Text("Raw 3D Data:");
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		ImGui::Text("Elph Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y, g_Fragment_Sheep[i].overallPos.z);
-		ImGui::Text("Elph Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
-		ImGui::Text("Elph Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
+		ImGui::Text("Sheep Part %d Pos: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y, g_Fragment_Sheep[i].overallPos.z);
+		ImGui::Text("Sheep Part %d Scl: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
+		ImGui::Text("Sheep Part %d Rot: (%.2f, %.2f, %.2f)", i, g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
 	}
 
 	ImGui::End();

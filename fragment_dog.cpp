@@ -48,16 +48,16 @@ static ID3D11ShaderResourceView		* g_Texture_Dog[TEXTURE_MAX] = { NULL };	// テ
 
 static FRAGMENT				g_Fragment_Dog[TEXTURE_MAX];				// ポリゴンデータ
 static FRAGMENT_RESTORED	g_FragmentRestored_Dog[TEXTURE_MAX];
-static int				g_TexNo_Dog;				// テクスチャ番号
+static int					g_TexNo_Dog;				// テクスチャ番号
 
 
 static XMFLOAT2 g_TargetScreenPos_Dog[TEXTURE_MAX] = {
-	{473.1f, 214.9f},
-	{470.4f, 212.3f},
-	{485.2f, 206.9f},
-	{508.5f, 198.4f},
-	{442.7f, 232.4f},
-	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
+	{447.2f, 214.1f},
+	{444.3f, 211.6f},
+	{459.3f, 206.2f},
+	{483.5f, 197.5f},
+	{417.3f, 231.4f},
+	{0.0f, 0.0f} // 第4张图是完整图，不需要判断
 };
 
 //static bool g_HasRecordedTarget = false;  // ← 直接设为 true
@@ -190,13 +190,19 @@ bool CheckPuzzleRestored_Dog()
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 50.0f;  // 可接受誤差半徑
-
+	float tolerance = 10.0f;  // 可接受误差半径
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Dog[i].overallPos);
+		// 考虑缩放、旋转、平移后的世界坐标中心点
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Dog[i].scl.x, g_Fragment_Dog[i].scl.y, g_Fragment_Dog[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Dog[i].rot.x, g_Fragment_Dog[i].rot.y, g_Fragment_Dog[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Dog[i].overallPos.x, g_Fragment_Dog[i].overallPos.y + 60.0f, g_Fragment_Dog[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		XMVECTOR worldCenter = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldCenter,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -506,13 +512,20 @@ float GetPuzzleAlignmentRatio_Dog()
 
 	CAMERA* cam = GetCamera();
 
-	const float maxDistance = 200.0f;  // 误差最大可接受值（用于归一化）
+	const float maxDistance = 200.0f;  // 最大容忍误差
 	float ratioSum = 0.0f;
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Dog[i].overallPos);
+		// 构建世界变换矩阵（缩放 → 旋转 → 平移）
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Dog[i].scl.x, g_Fragment_Dog[i].scl.y, g_Fragment_Dog[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Dog[i].rot.x, g_Fragment_Dog[i].rot.y, g_Fragment_Dog[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Dog[i].overallPos.x, g_Fragment_Dog[i].overallPos.y + 60.0f, g_Fragment_Dog[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		XMVECTOR worldCenter = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldCenter,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -527,7 +540,7 @@ float GetPuzzleAlignmentRatio_Dog()
 		float dy = y - g_TargetScreenPos_Dog[i].y;
 		float distance = sqrtf(dx * dx + dy * dy);
 
-		// 误差越小，比例越接近 1.0；误差 >= maxDistance 时，比例为 0
+		// 误差归一化处理
 		float normalized = distance / maxDistance;
 		if (normalized > 1.0f)
 			normalized = 1.0f;
@@ -536,7 +549,7 @@ float GetPuzzleAlignmentRatio_Dog()
 		ratioSum += partRatio;
 	}
 
-	return ratioSum / (TEXTURE_MAX - 1);  // 返回0～1之间的平均完成度
+	return ratioSum / (TEXTURE_MAX - 1);  // 返回平均完成度 (0.0~1.0)
 }
 
 
