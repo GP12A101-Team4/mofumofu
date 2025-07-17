@@ -26,6 +26,7 @@
 #include "fragment_elephant.h"
 #include "fragment_mouse.h"
 #include "fragment_sheep.h"
+#include "fragment_obstacle.h"
 #include "bg.h"
 #include "menu.h"
 
@@ -81,6 +82,7 @@ HRESULT InitGame(void)
 	InitFragment_Elph();
 	InitFragment_Mouse();
 	InitFragment_Sheep();
+	InitObstacleFragment();
 
 	// プレイヤーの初期化
 	InitPlayer();
@@ -162,6 +164,7 @@ void UpdateGame(void)
 	UpdateFragment_Elph();
 	UpdateFragment_Mouse();
 	UpdateFragment_Sheep();
+	UpdateObstacleFragment();
 
 	// 影の更新処理
 	//UpdateShadow();
@@ -198,6 +201,7 @@ void DrawGame0(void)
 	DrawFragment_Elph();
 	DrawFragment_Mouse();
 	DrawFragment_Sheep();
+	DrawObstacleFragment();
 
 	// 2Dの物を描画する処理
 	// Z比較なし

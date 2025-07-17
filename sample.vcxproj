@@ -148,6 +148,7 @@
     <ClInclude Include="fragment_dog.h" />
     <ClInclude Include="fragment_elephant.h" />
     <ClInclude Include="fragment_mouse.h" />
+    <ClInclude Include="fragment_obstacle.h" />
     <ClInclude Include="fragment_sheep.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="imgui-docking\backends\imgui_impl_dx11.h" />
@@ -186,6 +187,7 @@
     <ClCompile Include="fragment_dog.cpp" />
     <ClCompile Include="fragment_elephant.cpp" />
     <ClCompile Include="fragment_mouse.cpp" />
+    <ClCompile Include="fragment_obstacle.cpp" />
     <ClCompile Include="fragment_sheep.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="imgui-docking\backends\imgui_impl_dx11.cpp" />
