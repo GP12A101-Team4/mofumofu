@@ -69,7 +69,6 @@ static char* g_TextureName_Sheep[] = {
 	"data/TEXTURE/sheep_02.png",
 	"data/TEXTURE/sheep_03.png",
 	"data/TEXTURE/sheep_04.png",
-	"data/TEXTURE/sheep_05.png",
 	"data/TEXTURE/sheep.png",
 };
 
