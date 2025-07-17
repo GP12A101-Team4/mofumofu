@@ -7,6 +7,7 @@
 #include "main.h"
 #include "renderer.h"
 #include "fragment.h"
+#include "fragment_dog.h"
 #include "ui.h"
 #include "sprite.h"
 

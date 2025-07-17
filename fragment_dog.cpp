@@ -499,7 +499,7 @@ void DrawFragment_Dog(void)
 	}
 
 	SetLightEnable(TRUE);
-	SetDepthEnable(TRUE);
+
 
 	
 	

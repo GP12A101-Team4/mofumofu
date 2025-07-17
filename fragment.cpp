@@ -431,7 +431,6 @@ void DrawFragment(void)
 	}
 
 	SetLightEnable(TRUE);
-	SetDepthEnable(TRUE);
 
 	
 	

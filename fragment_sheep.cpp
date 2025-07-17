@@ -491,10 +491,8 @@ void DrawFragment_Sheep(void)
 	}
 
 	SetLightEnable(TRUE);
-	SetDepthEnable(TRUE);
+	
 
-	
-	
 }
 
 float GetPuzzleAlignmentRatio_Sheep()

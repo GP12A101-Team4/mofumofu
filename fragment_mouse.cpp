@@ -491,7 +491,6 @@ void DrawFragment_Mouse(void)
 	}
 
 	SetLightEnable(TRUE);
-	SetDepthEnable(TRUE);
 
 	
 	

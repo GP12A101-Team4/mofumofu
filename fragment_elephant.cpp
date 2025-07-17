@@ -505,7 +505,7 @@ void DrawFragment_Elph(void)
 	}
 
 	SetLightEnable(TRUE);
-	SetDepthEnable(TRUE);
+	
 
 	
 	
