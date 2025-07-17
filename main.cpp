@@ -19,6 +19,7 @@
 #include "fragment_elephant.h"
 #include "fragment_mouse.h"
 #include "fragment_sheep.h"
+#include "fragment_obstacle.h"
 #include "meshwall.h"
 #include "sound.h"
 #include "score.h"
@@ -337,6 +338,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitFragment_Elph();
 	InitFragment_Mouse();
 	InitFragment_Sheep();
+	InitObstacleFragment();
 
 	// プレイヤーの初期化
 	InitPlayer();
@@ -375,10 +377,11 @@ void Uninit(void)
 
 	//欠片の終了処理
 	UninitFragment();
-	UpdateFragment_Dog();
-	UpdateFragment_Elph();
-	UpdateFragment_Mouse();
-	UpdateFragment_Sheep();
+	UninitFragment_Dog();
+	UninitFragment_Elph();
+	UninitFragment_Mouse();
+	UninitFragment_Sheep();
+	UninitObstacleFragment();
 
 	UninitBG();
 	// 地面の終了処理
