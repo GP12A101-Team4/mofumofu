@@ -399,8 +399,9 @@ void DrawFragment_Mouse(void)
 
 	// テクスチャ設定
 	SetCullingMode(CULL_MODE_NONE);
+	SetAlphaTestEnable(BLEND_MODE_ALPHABLEND);
 	SetLightEnable(FALSE);
-	SetDepthEnable(FALSE);
+	SetDepthEnable(TRUE);
 
 	if (!g_ShowFullImage_Mouse)
 	{

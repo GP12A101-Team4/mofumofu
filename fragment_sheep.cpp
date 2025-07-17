@@ -406,13 +406,14 @@ void DrawFragment_Sheep(void)
 
 	// テクスチャ設定
 	SetCullingMode(CULL_MODE_NONE);
+	SetAlphaTestEnable(BLEND_MODE_ALPHABLEND);
 	SetLightEnable(FALSE);
-	SetDepthEnable(FALSE);
+	SetDepthEnable(TRUE);
 
 	if (!g_ShowFullImage_Sheep)
 	{
 		//テクスチャー番号　自分調整できる
-		int drawOrder[] = { 1, 2, 0, 3 };
+		int drawOrder[] = { 3,1,2,0 };
 
 		for (int idx = 0; idx < TEXTURE_MAX - 1; idx++)
 		{

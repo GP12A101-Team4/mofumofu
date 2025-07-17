@@ -155,9 +155,10 @@ void DrawObstacleFragment(void)
     GetDeviceContext()->IASetVertexBuffers(0, 1, &g_VertexBuffer, &stride, &offset);
     GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-    SetLightEnable(FALSE);
     SetCullingMode(CULL_MODE_NONE);
-    SetDepthEnable(FALSE);
+    SetAlphaTestEnable(BLEND_MODE_ALPHABLEND);
+    SetLightEnable(FALSE);
+    SetDepthEnable(TRUE);
 
     MATERIAL mat = {};
     mat.Diffuse = XMFLOAT4(1, 1, 1, 1);
