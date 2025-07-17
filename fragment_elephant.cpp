@@ -194,13 +194,19 @@ bool CheckPuzzleRestored_Elph()
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 50.0f;  // 可接受誤差半徑
-
+	float tolerance = 10.0f;  // 可接受误差半径
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Elph[i].overallPos);
+		// 考虑缩放、旋转、平移后的世界坐标中心点
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Elph[i].rot.x, g_Fragment_Elph[i].rot.y, g_Fragment_Elph[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Elph[i].overallPos.x, g_Fragment_Elph[i].overallPos.y + 60.0f, g_Fragment_Elph[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		XMVECTOR worldCenter = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldCenter,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -257,7 +263,7 @@ void UpdateFragment_Elph(void)
 	XMFLOAT3 center;
 	ComputePuzzleCenterAndScale_Elph(&center, nullptr);
 
-	/*if (!g_ShowFullImage_Elph && CheckPuzzleRestored_Elph())
+	if (!g_ShowFullImage_Elph && CheckPuzzleRestored_Elph())
 	{
 		g_ShowFullImage_Elph = true;
 		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
@@ -295,7 +301,7 @@ void UpdateFragment_Elph(void)
 
 	if (g_FragmentRestored_Elph[0].alpha < 0) {
 		g_FragmentRestored_Elph[0].use = FALSE;
-	}*/
+	}
 		
 #ifdef _DEBUG
 	
@@ -513,13 +519,20 @@ float GetPuzzleAlignmentRatio_Elph()
 
 	CAMERA* cam = GetCamera();
 
-	const float maxDistance = 200.0f;  // 误差最大可接受值（用于归一化）
+	const float maxDistance = 200.0f;  // 最大容忍误差
 	float ratioSum = 0.0f;
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		XMVECTOR world = XMLoadFloat3(&g_Fragment_Elph[i].overallPos);
+		// 构建世界变换矩阵（缩放 → 旋转 → 平移）
+		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);
+		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Elph[i].rot.x, g_Fragment_Elph[i].rot.y, g_Fragment_Elph[i].rot.z);
+		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Elph[i].overallPos.x, g_Fragment_Elph[i].overallPos.y + 60.0f, g_Fragment_Elph[i].overallPos.z + 200.0f);
+		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
+
+		XMVECTOR worldCenter = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
+
 		XMVECTOR screen = XMVector3Project(
-			world,
+			worldCenter,
 			0, 0,
 			vp.Width, vp.Height,
 			0.0f, 1.0f,
@@ -534,7 +547,7 @@ float GetPuzzleAlignmentRatio_Elph()
 		float dy = y - g_TargetScreenPos_Elph[i].y;
 		float distance = sqrtf(dx * dx + dy * dy);
 
-		// 误差越小，比例越接近 1.0；误差 >= maxDistance 时，比例为 0
+		// 误差归一化处理
 		float normalized = distance / maxDistance;
 		if (normalized > 1.0f)
 			normalized = 1.0f;
@@ -543,8 +556,9 @@ float GetPuzzleAlignmentRatio_Elph()
 		ratioSum += partRatio;
 	}
 
-	return ratioSum / (TEXTURE_MAX - 1);  // 返回0～1之间的平均完成度
+	return ratioSum / (TEXTURE_MAX - 1);  // 返回平均完成度 (0.0~1.0)
 }
+
 
 
 void DrawPartDebugUI_Elph()
