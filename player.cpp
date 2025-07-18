@@ -94,6 +94,9 @@ void UpdatePlayer(void)
 	float inputX = 0.0f;
 	float inputY = 0.0f;
 
+	bool isRunning = (GetKeyboardPress(DIK_LSHIFT) || GetKeyboardPress(DIK_RSHIFT));
+	float moveSpeed = isRunning ? VALUE_MOVE * 2.0f : VALUE_MOVE;
+
 	// 移动输入
 	if (GetKeyboardPress(DIK_A)) inputX += 1.0f;
 	if (GetKeyboardPress(DIK_D)) inputX -= 1.0f;
@@ -119,8 +122,8 @@ void UpdatePlayer(void)
 		g_Player.rot.y = cameraYaw + inputDir;
 
 		// 移动
-		float moveX = -sinf(g_Player.rot.y) * VALUE_MOVE;
-		float moveZ = -cosf(g_Player.rot.y) * VALUE_MOVE;
+		float moveX = -sinf(g_Player.rot.y) * moveSpeed;
+		float moveZ = -cosf(g_Player.rot.y) * moveSpeed;
 		g_Player.pos.x += moveX;
 		g_Player.pos.z += moveZ;
 	}

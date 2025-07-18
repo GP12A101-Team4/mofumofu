@@ -56,9 +56,9 @@ static XMFLOAT2 g_TargetScreenPos_Elph[TEXTURE_MAX] = {
 	{522.7f, 197.8f},
 	{537.8f, 203.9f},
 	{522.1f, 202.2f},
-	{523.5f, 195.5f},
+	{480.3f, 187.0f},
 	{520.3f, 203.3f},
-	{509.0f, 188.2f},
+	{481.0f, 191.7f},
 	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
 };
 
@@ -448,18 +448,18 @@ void DrawFragment_Elph(void)
 			g_Fragment_Elph[1].overallPos = XMFLOAT3(-413.0f, 91.0f, -613.0f);
 			g_Fragment_Elph[2].overallPos = XMFLOAT3(-756.0f, 128.0f, -901.0f);
 			g_Fragment_Elph[3].overallPos = XMFLOAT3(-147.0f, 47.0f, -358.0f);
-			g_Fragment_Elph[4].overallPos = XMFLOAT3(-161.0f, 54.0f, -370.0f);
+			g_Fragment_Elph[4].overallPos = XMFLOAT3(-597.0f, 141.0f, -818.0f);
 			g_Fragment_Elph[5].overallPos = XMFLOAT3(-236.0f, 59.0f, -446.0f);
-			g_Fragment_Elph[6].overallPos = XMFLOAT3(-335.0f, 92.0f, -560.0f);
+			g_Fragment_Elph[6].overallPos = XMFLOAT3(-623.0f, 137.0f, -842.0f);
 
 
 			g_Fragment_Elph[0].scl = XMFLOAT3(2.27f, 2.27f, 1.0f);
 			g_Fragment_Elph[1].scl = XMFLOAT3(2.17f, 2.17f, 1.0f);
 			g_Fragment_Elph[2].scl = XMFLOAT3(2.28f, 2.28f, 1.0f);
 			g_Fragment_Elph[3].scl = XMFLOAT3(1.0f, 1.0f, 1.0f);
-			g_Fragment_Elph[4].scl = XMFLOAT3(1.07f, 1.07f, 1.0f);
+			g_Fragment_Elph[4].scl = XMFLOAT3(2.69f, 2.69f, 1.0f);
 			g_Fragment_Elph[5].scl = XMFLOAT3(1.31f, 1.31f, 1.0f);
-			g_Fragment_Elph[6].scl = XMFLOAT3(1.77f, 1.77f, 1.0f);
+			g_Fragment_Elph[6].scl = XMFLOAT3(2.67f, 2.67f, 1.0f);
 			
 
 			g_Fragment_Elph[0].rot = XMFLOAT3(0.0f, -8.5f, 0.0f);

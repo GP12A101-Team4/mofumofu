@@ -81,15 +81,15 @@ HRESULT InitObstacleFragment(void)
     }
 
     // ランダム配置
-    srand((unsigned int)time(NULL));
-    for (int i = 0; i < OBSTACLE_MAX; i++) {
-        g_Obstacle[i].use = TRUE;
-        g_Obstacle[i].type = rand() % OBSTACLE_TYPES;
-        g_Obstacle[i].texIndex = rand() % TEXTURE_PER_TYPE;
-        g_Obstacle[i].pos = XMFLOAT3(rand() % 1000 - 500, 0.0f, rand() % 1000 - 500);
-        g_Obstacle[i].scl = XMFLOAT3(0.5f + (rand() % 100) / 100.0f, 0.5f + (rand() % 100) / 100.0f, 1.0f);
-        g_Obstacle[i].rot = XMFLOAT3(0.0f, XMConvertToRadians(rand() % 360), 0.0f);
-    }
+    //srand((unsigned int)time(NULL));
+    //for (int i = 0; i < OBSTACLE_MAX; i++) {
+    //    g_Obstacle[i].use = TRUE;
+    //    g_Obstacle[i].type = rand() % OBSTACLE_TYPES;
+    //    g_Obstacle[i].texIndex = rand() % TEXTURE_PER_TYPE;
+    //    g_Obstacle[i].pos = XMFLOAT3(rand() % 1000 - 500, 0.0f, rand() % 1000 - 500);
+    //    g_Obstacle[i].scl = XMFLOAT3(0.5f + (rand() % 100) / 100.0f, 0.5f + (rand() % 100) / 100.0f, 1.0f);
+    //    g_Obstacle[i].rot = XMFLOAT3(0.0f, XMConvertToRadians(rand() % 360), 0.0f);
+    //}
 
     //// 0番目の障害物を「猫」の0番テクスチャ（cat_01.png）として配置。位置は(-300, 0, 100)、スケールは(1,1,1)、回転なし。
     //SetObstacle(
