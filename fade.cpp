@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒtƒF[ƒhˆ— [fade.cpp]
+// ãƒ•ã‚§ãƒ¼ãƒ‰å‡¦ç† [fade.cpp]
 // Author : 
 //
 //=============================================================================
@@ -9,51 +9,69 @@
 #include "fade.h"
 #include "sound.h"
 #include "sprite.h"
+#include "input.h"
+#include "imgui.h"
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
-#define TEXTURE_WIDTH				(SCREEN_WIDTH)	// ”wŒiƒTƒCƒY
+#define TEXTURE_WIDTH				(SCREEN_WIDTH)	// èƒŒæ™¯ã‚µã‚¤ã‚º
 #define TEXTURE_HEIGHT				(SCREEN_HEIGHT)	// 
-#define TEXTURE_MAX					(1)				// ƒeƒNƒXƒ`ƒƒ‚Ì”
+#define TEXTURE_MAX					(2)				// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ•°
 
-#define	FADE_RATE					(0.02f)			// ƒtƒF[ƒhŒW”
-
-//*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
-//*****************************************************************************
-
+#define	FADE_RATE					(0.02f)			// ãƒ•ã‚§ãƒ¼ãƒ‰ä¿‚æ•°
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
-static ID3D11Buffer				*g_VertexBuffer = NULL;		// ’¸“_î•ñ
-static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// ƒeƒNƒXƒ`ƒƒî•ñ
+
+
+//*****************************************************************************
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
+//*****************************************************************************
+	
+
+static ID3D11Buffer				*g_VertexBuffer = NULL;		// é ‚ç‚¹æƒ…å ±
+static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// ãƒ†ã‚¯ã‚¹ãƒãƒ£æƒ…å ±
+
+static	ID3D11VertexShader* g_VertexShader;	//é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒã‚¤ãƒ³ã‚¿
+static	ID3D11PixelShader* g_PixelShader;	//ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒã‚¤ãƒ³ã‚¿
+static	ID3D11InputLayout* g_VertexLayout;	//é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãƒã‚¤ãƒ³ã‚¿
+
+
+static FADE		g_fade;
+static PAWFADE	g_pawfade;
+
 
 static char *g_TexturName[TEXTURE_MAX] = {
 	"data/TEXTURE/fade_black.png",
+	"data/TEXTURE/mask.png"
 };
 
 
-static BOOL						g_Use;						// TRUE:g‚Á‚Ä‚¢‚é  FALSE:–¢g—p
-static float					g_w, g_h;					// •‚Æ‚‚³
-static XMFLOAT3					g_Pos;						// ƒ|ƒŠƒSƒ“‚ÌÀ•W
-static int						g_TexNo;					// ƒeƒNƒXƒ`ƒƒ”Ô†
+static BOOL						g_Use;						// TRUE:ä½¿ã£ã¦ã„ã‚‹  FALSE:æœªä½¿ç”¨
+static float					g_w, g_h;					// å¹…ã¨é«˜ã•
+static XMFLOAT3					g_Pos;						// ãƒãƒªã‚´ãƒ³ã®åº§æ¨™
+static int						g_TexNo;					// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·
 
-int								g_Fade = FADE_IN;			// ƒtƒF[ƒh‚Ìó‘Ô
-int								g_ModeNext;					// Ÿ‚Ìƒ‚[ƒh
-XMFLOAT4						g_Color;					// ƒtƒF[ƒh‚ÌƒJƒ‰[iƒ¿’lj
+int								g_Fade = FADE_IN;			// ãƒ•ã‚§ãƒ¼ãƒ‰ã®çŠ¶æ…‹
+int								g_ModeNext;					// æ¬¡ã®ãƒ¢ãƒ¼ãƒ‰
+XMFLOAT4						g_Color;					// ãƒ•ã‚§ãƒ¼ãƒ‰ã®ã‚«ãƒ©ãƒ¼ï¼ˆÎ±å€¤ï¼‰
 
 static BOOL						g_Load = FALSE;
 
 //=============================================================================
-// ‰Šú‰»ˆ—
+// åˆæœŸåŒ–å‡¦ç†
 //=============================================================================
 HRESULT InitFade(void)
 {
+	//ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼èª­ã¿è¾¼ã¿
+	CreateVertexShader(&g_VertexShader, &g_VertexLayout, "FadeVS.cso");
+	CreatePixelShader(&g_PixelShader, "PawFadePS.cso");
+	
 	ID3D11Device *pDevice = GetDevice();
 
-	//ƒeƒNƒXƒ`ƒƒ¶¬
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ
 	for (int i = 0; i < TEXTURE_MAX; i++)
 	{
 		g_Texture[i] = NULL;
@@ -66,7 +84,7 @@ HRESULT InitFade(void)
 	}
 
 
-	// ’¸“_ƒoƒbƒtƒ@¶¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -76,22 +94,31 @@ HRESULT InitFade(void)
 	GetDevice()->CreateBuffer(&bd, NULL, &g_VertexBuffer);
 
 
-	// ƒvƒŒƒCƒ„[‚Ì‰Šú‰»
+
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸåŒ–
 	g_Use   = TRUE;
 	g_w     = TEXTURE_WIDTH;
 	g_h     = TEXTURE_HEIGHT;
 	g_Pos   = { 0.0f, 0.0f, 0.0f };
 	g_TexNo = 0;
 
-	g_Fade  = FADE_IN;
-	g_Color = { 1.0, 0.0, 0.0, 1.0 };
+	g_Fade  = FADE_NONE;
+	g_Color = { 0.0, 0.0, 0.0, 1.0 };	
+
+	g_fade.Enable = 1.0f;
+	g_fade.center = XMFLOAT2(0.5f,0.5f);
+	g_fade.radius = 1.0f;       // åŠå¾‘åœ¨ UV ç©ºé–“
+	g_fade.softness = 0.001f;     // é‚Šç·£æ¨¡ç³Šç¯„åœ (0~1)
+
+	g_pawfade.g_FadeAmount = 15.0f;
+	SetPawFadeBuffer(&g_pawfade);
 
 	g_Load = TRUE;
 	return S_OK;
 }
 
 //=============================================================================
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 //=============================================================================
 void UninitFade(void)
 {
@@ -112,104 +139,143 @@ void UninitFade(void)
 		}
 	}
 
+	g_VertexShader->Release();
+	g_VertexLayout->Release();
+	g_PixelShader->Release();
+
+
+
 	g_Load = FALSE;
 }
 
 //=============================================================================
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 //=============================================================================
 void UpdateFade(void)
 {
+	
 
 	if (g_Fade != FADE_NONE)
-	{// ƒtƒF[ƒhˆ—’†
+	{// ãƒ•ã‚§ãƒ¼ãƒ‰å‡¦ç†ä¸­
 		if (g_Fade == FADE_OUT)
-		{// ƒtƒF[ƒhƒAƒEƒgˆ—
-			g_Color.w += FADE_RATE;		// ƒ¿’l‚ğ‰ÁZ‚µ‚Ä‰æ–Ê‚ğÁ‚µ‚Ä‚¢‚­
-			if (g_Color.w >= 1.0f)
+		{// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¢ã‚¦ãƒˆå‡¦ç†
+			//g_fade.radius -= 0.01f;
+			g_pawfade.g_FadeAmount -= 0.1;
+			if (g_pawfade.g_FadeAmount < 0.0f)
 			{
-				// –Â‚Á‚Ä‚¢‚é‹È‚ğ‘S•”~‚ß‚é
+				// é³´ã£ã¦ã„ã‚‹æ›²ã‚’å…¨éƒ¨æ­¢ã‚ã‚‹
 				StopSound();
 
-				// ƒtƒF[ƒhƒCƒ“ˆ—‚ÉØ‚è‘Ö‚¦
-				g_Color.w = 1.0f;
 				SetFade(FADE_IN, g_ModeNext);
 
-				// ƒ‚[ƒh‚ğİ’è
+				// ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®š
 				SetMode(g_ModeNext);
 			}
 
 		}
 		else if (g_Fade == FADE_IN)
-		{// ƒtƒF[ƒhƒCƒ“ˆ—
-			g_Color.w -= FADE_RATE;		// ƒ¿’l‚ğŒ¸Z‚µ‚Ä‰æ–Ê‚ğ•‚‚«ã‚ª‚ç‚¹‚é
-			if (g_Color.w <= 0.0f)
+		{// ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³å‡¦ç†
+			g_pawfade.g_FadeAmount += 0.1f;		// Î±å€¤ã‚’æ¸›ç®—ã—ã¦ç”»é¢ã‚’æµ®ãä¸ŠãŒã‚‰ã›ã‚‹
+			if (g_pawfade.g_FadeAmount >= 15.0f)
 			{
-				// ƒtƒF[ƒhˆ—I—¹
-				g_Color.w = 0.0f;
+
+				// ãƒ•ã‚§ãƒ¼ãƒ‰å‡¦ç†çµ‚äº†
 				SetFade(FADE_NONE, g_ModeNext);
 			}
 
 		}
+		
 	}
 
+	
 
-#ifdef _DEBUG	// ƒfƒoƒbƒOî•ñ‚ğ•\¦‚·‚é
+	SetPawFadeBuffer(&g_pawfade);
+	
+
+#ifdef _DEBUG	// ãƒ‡ãƒãƒƒã‚°æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
 	// PrintDebugProc("\n");
+	if (GetKeyboardPress(DIK_ADD)) {
+		g_pawfade.g_FadeAmount += 0.02;
+
+	}
+	else if (GetKeyboardPress(DIK_SUBTRACT)) {
+		g_pawfade.g_FadeAmount -= 0.02;
+	}
+
+	if (GetKeyboardTrigger(DIK_F10)) {
+		g_Fade = FADE_OUT;
+	}
+	else if (GetKeyboardTrigger(DIK_F11)) {
+		g_Fade = FADE_NONE;
+	}
 
 #endif
 
 }
 
 //=============================================================================
-// •`‰æˆ—
+// æç”»å‡¦ç†
 //=============================================================================
 void DrawFade(void)
 {
-	if (g_Fade == FADE_NONE) return;	// ƒtƒF[ƒh‚µ‚È‚¢‚Ì‚È‚ç•`‰æ‚µ‚È‚¢
+	if (g_Fade == FADE_NONE) return;	// ãƒ•ã‚§ãƒ¼ãƒ‰ã—ãªã„ã®ãªã‚‰æç”»ã—ãªã„
 
-	// ‰ÁZ‡¬‚Éİ’è
-	//SetBlendState(BLEND_MODE_ADD);
+	
+	//SetPawFadeBuffer(&g_pawfade);
 
-	// ’¸“_ƒoƒbƒtƒ@İ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &g_VertexBuffer, &stride, &offset);
 
-	// ƒ}ƒgƒŠƒNƒXİ’è
+	//é ‚ç‚¹ãƒ¬ã‚¤ã‚¢ã‚¦ãƒˆã‚’è¨­å®š
+	GetDeviceContext()->IASetInputLayout(g_VertexLayout);
+	//é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
+	GetDeviceContext()->VSSetShader(g_VertexShader, nullptr, 0);
+	//ãƒ”ã‚¯ã‚»ãƒ«ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ã‚»ãƒƒãƒˆ
+	GetDeviceContext()->PSSetShader(g_PixelShader, nullptr, 0);
+
+	SetSamplerState_CLAMP();
+
+	// ãƒãƒˆãƒªã‚¯ã‚¹è¨­å®š
 	SetWorldViewProjection2D();
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	// ƒ}ƒeƒŠƒAƒ‹İ’è
+	// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 
+	ID3D11ShaderResourceView* textures[2] = { nullptr, nullptr };  // ç¢ºä¿å…ˆæ¸…ç©º
+	GetDeviceContext()->PSSetShaderResources(0, 2, textures);      // å…ˆè§£é™¤ç¶å®šå…¨éƒ¨è²¼åœ–
 
-	// ƒ^ƒCƒgƒ‹‚Ì”wŒi‚ğ•`‰æ
+	// ã‚¿ã‚¤ãƒˆãƒ«ã®èƒŒæ™¯ã‚’æç”»
 	{
-		// ƒeƒNƒXƒ`ƒƒİ’è
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
+		GetDeviceContext()->PSSetShaderResources(1, 1, &g_Texture[1]);
 
-		// ‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ğİ’è
+		// ï¼‘æšã®ãƒãƒªã‚´ãƒ³ã®é ‚ç‚¹ã¨ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨­å®š
 		//SetVertex(0.0f, 0.0f, SCREEN_WIDTH, TEXTURE_WIDTH, 0.0f, 0.0f, 1.0f, 1.0f);
-		SetSpriteColor(g_VertexBuffer, SCREEN_WIDTH/2, TEXTURE_WIDTH/2, SCREEN_WIDTH, TEXTURE_WIDTH, 0.0f, 0.0f, 1.0f, 1.0f,
+		SetSpriteColor(g_VertexBuffer, SCREEN_CENTER_X, SCREEN_CENTER_Y, SCREEN_WIDTH , SCREEN_WIDTH , 0.0f, 0.0f, 1.0f, 1.0f,
 			g_Color);
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
+		// ãƒãƒªã‚´ãƒ³æç”»
 		GetDeviceContext()->Draw(4, 0);
 	}
 
+	SetSamplerState_WRAP();
+	SetInputLayout();
+	SetVertexShader();
+	SetPixelShader();
 
-
-}
+}	
 
 
 //=============================================================================
-// ƒtƒF[ƒh‚Ìó‘Ôİ’è
+// ãƒ•ã‚§ãƒ¼ãƒ‰ã®çŠ¶æ…‹è¨­å®š
 //=============================================================================
 void SetFade(int fade, int modeNext)
 {
@@ -218,12 +284,20 @@ void SetFade(int fade, int modeNext)
 }
 
 //=============================================================================
-// ƒtƒF[ƒh‚Ìó‘Ôæ“¾
+// ãƒ•ã‚§ãƒ¼ãƒ‰ã®çŠ¶æ…‹å–å¾—
 //=============================================================================
 int GetFade(void)
 {
 	return g_Fade;
 }
 
+void DrawFadeDebugUI()
+{
+	ImGui::Begin("Player Debug");
+	ImGui::Text("Radius: (%.2f)", g_fade.radius);
+	ImGui::Text("FadeAmount: (%.2f)", g_pawfade.g_FadeAmount);
 
+
+	ImGui::End();
+}
 
