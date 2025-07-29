@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒŒƒ“ƒ_ƒŠƒ“ƒOˆ— [renderer.h]
+// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°å‡¦ç† [renderer.h]
 // Author : 
 //
 //=============================================================================
@@ -8,44 +8,44 @@
 
 
 //*********************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*********************************************************
 #define LIGHT_MAX		(5)
 
 enum LIGHT_TYPE
 {
-	LIGHT_TYPE_NONE,		//ƒ‰ƒCƒg–³‚µ
-	LIGHT_TYPE_DIRECTIONAL,	//ƒfƒBƒŒƒNƒVƒ‡ƒiƒ‹ƒ‰ƒCƒg
-	LIGHT_TYPE_POINT,		//ƒ|ƒCƒ“ƒgƒ‰ƒCƒg
+	LIGHT_TYPE_NONE,		//ãƒ©ã‚¤ãƒˆç„¡ã—
+	LIGHT_TYPE_DIRECTIONAL,	//ãƒ‡ã‚£ãƒ¬ã‚¯ã‚·ãƒ§ãƒŠãƒ«ãƒ©ã‚¤ãƒˆ
+	LIGHT_TYPE_POINT,		//ãƒã‚¤ãƒ³ãƒˆãƒ©ã‚¤ãƒˆ
 
 	LIGHT_TYPE_NUM
 };
 
 enum BLEND_MODE
 {
-	BLEND_MODE_NONE,		//ƒuƒŒƒ“ƒh–³‚µ
-	BLEND_MODE_ALPHABLEND,	//ƒ¿ƒuƒŒƒ“ƒh
-	BLEND_MODE_ADD,			//‰ÁZƒuƒŒƒ“ƒh
-	BLEND_MODE_SUBTRACT,	//Œ¸ZƒuƒŒƒ“ƒh
+	BLEND_MODE_NONE,		//ãƒ–ãƒ¬ãƒ³ãƒ‰ç„¡ã—
+	BLEND_MODE_ALPHABLEND,	//Î±ãƒ–ãƒ¬ãƒ³ãƒ‰
+	BLEND_MODE_ADD,			//åŠ ç®—ãƒ–ãƒ¬ãƒ³ãƒ‰
+	BLEND_MODE_SUBTRACT,	//æ¸›ç®—ãƒ–ãƒ¬ãƒ³ãƒ‰
 
 	BLEDD_MODE_NUM
 };
 
 enum CULL_MODE
 {
-	CULL_MODE_NONE,			//ƒJƒŠƒ“ƒO–³‚µ
-	CULL_MODE_FRONT,		//•\‚Ìƒ|ƒŠƒSƒ“‚ğ•`‰æ‚µ‚È‚¢(CW)
-	CULL_MODE_BACK,			//— ‚Ìƒ|ƒŠƒSƒ“‚ğ•`‰æ‚µ‚È‚¢(CCW)
+	CULL_MODE_NONE,			//ã‚«ãƒªãƒ³ã‚°ç„¡ã—
+	CULL_MODE_FRONT,		//è¡¨ã®ãƒãƒªã‚´ãƒ³ã‚’æç”»ã—ãªã„(CW)
+	CULL_MODE_BACK,			//è£ã®ãƒãƒªã‚´ãƒ³ã‚’æç”»ã—ãªã„(CCW)
 
 	CULL_MODE_NUM
 };
 
 
 //*********************************************************
-// \‘¢‘Ì
+// æ§‹é€ ä½“
 //*********************************************************
 
-// ’¸“_\‘¢‘Ì
+// é ‚ç‚¹æ§‹é€ ä½“
 struct VERTEX_3D
 {
     XMFLOAT3	Position;
@@ -54,7 +54,7 @@ struct VERTEX_3D
     XMFLOAT2	TexCoord;
 };
 
-// ƒ}ƒeƒŠƒAƒ‹\‘¢‘Ì
+// ãƒãƒ†ãƒªã‚¢ãƒ«æ§‹é€ ä½“
 struct MATERIAL
 {
 	XMFLOAT4	Ambient;
@@ -65,27 +65,39 @@ struct MATERIAL
 	int			noTexSampling;
 };
 
-// ƒ‰ƒCƒg\‘¢‘Ì
+// ãƒ©ã‚¤ãƒˆæ§‹é€ ä½“
 struct LIGHT {
-	XMFLOAT3	Direction;	// ƒ‰ƒCƒg‚Ì•ûŒü
-	XMFLOAT3	Position;	// ƒ‰ƒCƒg‚ÌˆÊ’u
-	XMFLOAT4	Diffuse;	// ŠgUŒõ‚ÌF
-	XMFLOAT4	Ambient;	// ŠÂ‹«Œõ‚ÌF
-	float		Attenuation;// Œ¸Š—¦
-	int			Type;		// ƒ‰ƒCƒgí•ÊE—LŒøƒtƒ‰ƒO
-	int			Enable;		// ƒ‰ƒCƒgí•ÊE—LŒøƒtƒ‰ƒO
+	XMFLOAT3	Direction;	// ãƒ©ã‚¤ãƒˆã®æ–¹å‘
+	XMFLOAT3	Position;	// ãƒ©ã‚¤ãƒˆã®ä½ç½®
+	XMFLOAT4	Diffuse;	// æ‹¡æ•£å…‰ã®è‰²
+	XMFLOAT4	Ambient;	// ç’°å¢ƒå…‰ã®è‰²
+	float		Attenuation;// æ¸›è¡°ç‡
+	int			Type;		// ãƒ©ã‚¤ãƒˆç¨®åˆ¥ãƒ»æœ‰åŠ¹ãƒ•ãƒ©ã‚°
+	int			Enable;		// ãƒ©ã‚¤ãƒˆç¨®åˆ¥ãƒ»æœ‰åŠ¹ãƒ•ãƒ©ã‚°
 };
 
-// ƒtƒHƒO\‘¢‘Ì
+// ãƒ•ã‚©ã‚°æ§‹é€ ä½“
 struct FOG {
-	float		FogStart;	// ƒtƒHƒO‚ÌŠJn‹——£
-	float		FogEnd;		// ƒtƒHƒO‚ÌÅ‘å‹——£
-	XMFLOAT4	FogColor;	// ƒtƒHƒO‚ÌF
+	float		FogStart;	// ãƒ•ã‚©ã‚°ã®é–‹å§‹è·é›¢
+	float		FogEnd;		// ãƒ•ã‚©ã‚°ã®æœ€å¤§è·é›¢
+	XMFLOAT4	FogColor;	// ãƒ•ã‚©ã‚°ã®è‰²
 };
 
+struct FADE {
+	int			Enable;
+	XMFLOAT2	center;    
+	float		radius;    
+	float		softness;
+	float		padding[3];
+};
+
+struct PAWFADE {
+	float		g_FadeAmount; 
+	float		Dummy[3];
+};
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 HRESULT InitRenderer(HINSTANCE hInstance, HWND hWnd, BOOL bWindow);
 void UninitRenderer(void);
@@ -114,6 +126,9 @@ void SetLight(int index, LIGHT* light);
 void SetFogEnable(BOOL flag);
 void SetFog(FOG* fog);
 
+void SetFadeBuffer(FADE* gFADE);
+void SetPawFadeBuffer(PAWFADE* g_pawfade);
+
 void DebugTextOut(char* text, int x, int y);
 
 void SetFuchi(int flag);
@@ -126,3 +141,15 @@ ID3D11DeviceContext* GetD3DDeviceContext();
 
 ID3D11RenderTargetView* GetRenderTargetView();
 ID3D11DepthStencilView* GetDepthStencilView();
+
+void CreateVertexShader(ID3D11VertexShader** VertexShader, ID3D11InputLayout** VertexLayout, const char* FileName);
+void CreatePixelShader(ID3D11PixelShader** PixelShader, const char* FileName);
+
+void SetInputLayout();
+
+void SetVertexShader();
+
+void SetPixelShader();
+
+void SetSamplerState_CLAMP();
+void SetSamplerState_WRAP();

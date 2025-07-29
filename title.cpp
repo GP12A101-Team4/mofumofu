@@ -34,13 +34,17 @@
 static ID3D11Buffer* g_VertexBuffer = NULL;		// 頂点情報
 static ID3D11ShaderResourceView* g_Texture[TEXTURE_MAX] = { NULL };	// テクスチャ情報
 
+bool isHoveringStart;
+bool isHoveringExit;
+bool isHoveringSetting;
+
 static bool wasHoveringStart = false;
 static bool wasHoveringExit = false;
 static bool wasHoveringSetting = false;
 
 
 
-XMFLOAT3 MousePos;
+
 XMFLOAT3 StartButtonPos;
 XMFLOAT3 ExitButtonPos;
 XMFLOAT3 SettingButtonPos;
@@ -169,6 +173,7 @@ void UpdateTitle(void)
 
 	long MouseDeltaX = GetMouseX();
 	long MouseDeltaY = GetMouseY();
+	XMFLOAT3 MousePos;
 	MousePos.x = float(GetMousePosX());
 	MousePos.y = float(GetMousePosY());
 
@@ -177,9 +182,9 @@ void UpdateTitle(void)
 		menu = -1;
 	}
 
-	bool isHoveringStart = CollisionBB(MousePos, 1.0f, 1.0f, StartButtonPos, 240.0f, 80.0f);
-	bool isHoveringExit = CollisionBB(MousePos, 1.0f, 1.0f, ExitButtonPos, 240.0f, 80.0f);
-	bool isHoveringSetting = CollisionBB(MousePos, 1.0f, 1.0f, SettingButtonPos, 60.0f, 60.0f);
+	isHoveringStart		= CollisionBB(MousePos, 1.0f, 1.0f, StartButtonPos, 240.0f, 80.0f);
+	isHoveringExit		= CollisionBB(MousePos, 1.0f, 1.0f, ExitButtonPos, 240.0f, 80.0f);
+	isHoveringSetting	= CollisionBB(MousePos, 1.0f, 1.0f, SettingButtonPos, 60.0f, 60.0f);
 
 	bool isPaws = CollisionBB(MousePos, 1.0f, 1.0f, PawsPos, 40.0f, 40.0f);
 
@@ -376,7 +381,14 @@ void DrawTitle(void)
 	}
 }
 
-
+bool GetIsHovering(MENU_BUTTON target) {
+	switch (target) {
+	case MENU_START		: return isHoveringStart;
+	case MENU_EXIT		: return isHoveringExit;
+	case MENU_SETTING	: return isHoveringSetting;
+	default: return false;
+	}
+}
 
 
 

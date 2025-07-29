@@ -436,6 +436,6 @@ void SetBGMVolume(float volume)
 
 void SetSEVolume(float volume)
 {
-	if (g_pSubmixBGM)
-		g_pSubmixBGM->SetVolume(volume);
+	if (g_pSubmixSE)
+		g_pSubmixSE->SetVolume(volume);
 }
