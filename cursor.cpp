@@ -13,6 +13,7 @@
 #include "sound.h"
 #include "sprite.h"
 #include "game.h"
+#include "menu.h"
 #include "debugproc.h"
 
 //*****************************************************************************
@@ -125,6 +126,7 @@ void UpdateCursor(void)
 	}
 
 	/*if (GetKeyboardTrigger(DIK_F)) {
+	* 
 		isF++ ;
 		if (isF > 2 ) {
 			isF = 0;
@@ -178,6 +180,17 @@ void UpdateCursor(void)
 //=============================================================================
 void DrawCursor(void)
 {
+
+	//タイトル画面とメニューが開いたとき描画する
+	int mode = GetMode();
+	MENU* menu = GetMenu();
+
+	if ((menu->use == FALSE) && (mode != MODE_TITLE)) {
+		return;
+	}
+
+
+
 	PLAYER* player = GetPlayer();
 	for (int i = 0; i < TEXTURE_MAX; i++) {
 		
@@ -204,7 +217,7 @@ void DrawCursor(void)
 				GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[1]);
 
 				SetSpriteLTColor(g_VertexBuffer,
-					float(GetMousePosX()), float(GetMousePosY()), 60.0f, 60.0f,
+					float(GetMousePosX()), float(GetMousePosY()), 45.0f, 60.0f,
 					cursorUV, 0.0f, TEXTURE_PATTERN_DIVIDE_X, TEXTURE_PATTERN_DIVIDE_Y,
 					XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 

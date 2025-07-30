@@ -32,6 +32,7 @@ DWORD g_aSizeAudio[SOUND_LABEL_MAX] = {};					// オーディオデータサイ�
 IXAudio2SubmixVoice* g_pSubmixBGM = nullptr;
 IXAudio2SubmixVoice* g_pSubmixSE = nullptr;
 
+
 // 各音素材のパラメータ
 SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 {
@@ -115,6 +116,7 @@ bool InitSound(HWND hWnd)
 		MessageBox(hWnd, "SE SubmixVoice 生成失敗！", "警告！", MB_ICONWARNING);
 		return false;
 	}
+
 
 	// サウンドデータの初期化
 	for(int nCntSound = 0; nCntSound < SOUND_LABEL_MAX; nCntSound++)
@@ -438,4 +440,21 @@ void SetSEVolume(float volume)
 {
 	if (g_pSubmixSE)
 		g_pSubmixSE->SetVolume(volume);
+}
+
+
+//マスター音量設定
+void SetMasterVolume(float volume)
+{
+	if (g_pMasteringVoice)
+		g_pMasteringVoice->SetVolume(volume);
+}
+
+//Submix ゲッター
+IXAudio2SubmixVoice* GetSubmixBGM() {
+	return g_pSubmixBGM;
+}
+
+IXAudio2SubmixVoice* GetSubmixSE() {
+	return g_pSubmixSE;
 }
