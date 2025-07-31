@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒƒCƒ“ˆ— [main.h]
+// ãƒ¡ã‚¤ãƒ³å‡¦ç† [main.h]
 // Author : 
 //
 //=============================================================================
@@ -10,7 +10,7 @@
 #pragma warning(push)
 #pragma warning(disable:4005)
 
-#define _CRT_SECURE_NO_WARNINGS			// scanf ‚Ìwarning–h~
+#define _CRT_SECURE_NO_WARNINGS			// scanf ã®warningé˜²æ­¢
 #include <stdio.h>
 
 #include <d3d11.h>
@@ -20,11 +20,11 @@
 #include <DirectXMath.h>
 
 
-// –{—ˆ‚Íƒwƒbƒ_‚É‘‚©‚È‚¢•û‚ª—Ç‚¢
+// æœ¬æ¥ã¯ãƒ˜ãƒƒãƒ€ã«æ›¸ã‹ãªã„æ–¹ãŒè‰¯ã„
 using namespace DirectX;
 
 
-#define DIRECTINPUT_VERSION 0x0800		// Œx‘Îˆ
+#define DIRECTINPUT_VERSION 0x0800		// è­¦å‘Šå¯¾å‡¦
 #include "dinput.h"
 #include "mmsystem.h"
 
@@ -32,7 +32,7 @@ using namespace DirectX;
 
 
 //*****************************************************************************
-// ƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒŠƒ“ƒN
+// ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ãƒªãƒ³ã‚¯
 //*****************************************************************************
 #pragma comment (lib, "d3d11.lib")		
 #pragma comment (lib, "d3dcompiler.lib")
@@ -45,43 +45,45 @@ using namespace DirectX;
 
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
-#define SCREEN_WIDTH	(960)			// ƒEƒCƒ“ƒhƒE‚Ì•
-#define SCREEN_HEIGHT	(540)			// ƒEƒCƒ“ƒhƒE‚Ì‚‚³
-#define SCREEN_CENTER_X	(SCREEN_WIDTH / 2)	// ƒEƒCƒ“ƒhƒE‚Ì’†S‚wÀ•W
-#define SCREEN_CENTER_Y	(SCREEN_HEIGHT / 2)	// ƒEƒCƒ“ƒhƒE‚Ì’†S‚xÀ•W
+#define SCREEN_WIDTH	(960)			// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®å¹…
+#define SCREEN_HEIGHT	(540)			// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®é«˜ã•
+#define SCREEN_CENTER_X	(SCREEN_WIDTH / 2)	// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ä¸­å¿ƒï¼¸åº§æ¨™
+#define SCREEN_CENTER_Y	(SCREEN_HEIGHT / 2)	// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ä¸­å¿ƒï¼¹åº§æ¨™
 
 
 struct delta {
 	float x, y;
 };
 
-// •âŠÔ—p‚Ìƒf[ƒ^\‘¢‘Ì‚ğ’è‹`
+// è£œé–“ç”¨ã®ãƒ‡ãƒ¼ã‚¿æ§‹é€ ä½“ã‚’å®šç¾©
 struct INTERPOLATION_DATA
 {
-	XMFLOAT3	pos;		// ’¸“_À•W
-	XMFLOAT3	rot;		// ‰ñ“]
-	XMFLOAT3	scl;		// Šg‘åk¬
-	float		frame;		// ÀsƒtƒŒ[ƒ€” ( dt = 1.0f/frame )
+	XMFLOAT3	pos;		// é ‚ç‚¹åº§æ¨™
+	XMFLOAT3	rot;		// å›è»¢
+	XMFLOAT3	scl;		// æ‹¡å¤§ç¸®å°
+	float		frame;		// å®Ÿè¡Œãƒ•ãƒ¬ãƒ¼ãƒ æ•° ( dt = 1.0f/frame )
 };
 
 enum
 {
-	MODE_TITLE = 0,			// ƒ^ƒCƒgƒ‹‰æ–Ê
-	MODE_TUTORIAL,			// ƒQ[ƒ€à–¾‰æ–Ê
-	MODE_GAME,				// ƒQ[ƒ€‰æ–Ê
-	MODE_RESULT,			// ƒŠƒUƒ‹ƒg‰æ–Ê
+	MODE_TITLE = 0,			// ã‚¿ã‚¤ãƒˆãƒ«ç”»é¢
+	MODE_TUTORIAL,			// ã‚²ãƒ¼ãƒ èª¬æ˜ç”»é¢
+	MODE_GAME,				// ã‚²ãƒ¼ãƒ ç”»é¢
+	MODE_RESULT,			// ãƒªã‚¶ãƒ«ãƒˆç”»é¢
 	MODE_MAX
 };
 
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 long GetMousePosX(void);
 long GetMousePosY(void);
 char* GetDebugStr(void);
+
+HWND GetHWND();
 
 void SetMode(int mode);
 int GetMode(void);

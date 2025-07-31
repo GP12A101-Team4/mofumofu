@@ -16,13 +16,14 @@
 #include "title.h"
 #include "collision.h"
 #include "debugproc.h"
+#include "imgui.h"
 
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 #define TEXTURE_WIDTH				(130)	// キャラサイズ
 #define TEXTURE_HEIGHT				(TEXTURE_WIDTH*0.8)	// 
-#define TEXTURE_MAX					(3)		// テクスチャの数
+#define TEXTURE_MAX					(5)		// テクスチャの数
 #define cnt_max						(5)
 #define OFFSET						(60)
 
@@ -41,6 +42,9 @@ static char *g_TexturName[] = {
 	"data/TEXTURE/menu.png",
 	"data/TEXTURE/bar1.png",
 	"data/TEXTURE/bar2.png",
+	"data/TEXTURE/mute_button.png",
+	"data/TEXTURE/mute_button_muted.png",
+	
 };
 
 static tex g_tex[TEXTURE_MAX];
@@ -49,10 +53,24 @@ static MENU g_menu;
 
 static SPRITE g_sprite[MAX];
 
-static float masterVolume;
+
+static float bgmVolume;
 static float seVolume;
 
+static float bgmVolume_org;
+static float seVolume_org;
 
+static bool muteBGM;
+static bool muteSE;
+
+bool isHoveringMuteBGM;
+bool isHoveringMuteSE;
+
+static bool wasHoveringMuteBGM = false;
+static bool wasHoveringMuteSE = false;
+
+XMFLOAT3 MuteBGMPos;
+XMFLOAT3 MuteSEPos;
 
 
 //=============================================================================
@@ -104,7 +122,7 @@ HRESULT InitMenu(void)
 										0.0f,				
 										0.0f};
 
-	g_sprite[BAR_SE] = { SCREEN_CENTER_X + 20,
+	g_sprite[BAR_SE] = {				SCREEN_CENTER_X + 20,
 										SCREEN_CENTER_Y - 80 + OFFSET,
 										300.0f,
 										20.0f,
@@ -114,7 +132,7 @@ HRESULT InitMenu(void)
 										0.0f,
 										0.0f };
 
-	g_sprite[BAR_SE_CURRENT] = { ((SCREEN_CENTER_X + 20) - g_sprite[BAR_MASTER].pw / 2),
+	g_sprite[BAR_SE_CURRENT] = { ((		SCREEN_CENTER_X + 20) - g_sprite[BAR_MASTER].pw / 2),
 										SCREEN_CENTER_Y - 80 + OFFSET,
 										5.0f,
 										20.0f,
@@ -123,6 +141,37 @@ HRESULT InitMenu(void)
 										1.0f,
 										0.0f,
 										0.0f };
+
+	g_sprite[BUTTON_BGM_MUTE] = {		SCREEN_CENTER_X + 30.0f,
+										SCREEN_CENTER_Y+ OFFSET,
+										90.0f,
+										90.0f,
+
+										1.0f/2,
+										1.0f/2,
+										0.5f,
+										0.0f };
+
+	g_sprite[BUTTON_SE_MUTE] = { 		SCREEN_CENTER_X + 90.0f,
+										SCREEN_CENTER_Y + OFFSET,
+										90.0f,
+										90.0f,
+
+										1.0f/2,
+										1.0f/2,
+										0.0f,
+										0.0f };
+
+	MuteBGMPos = { g_sprite[BUTTON_BGM_MUTE].px + g_sprite[BUTTON_BGM_MUTE].pw / 2, g_sprite[BUTTON_BGM_MUTE].py + g_sprite[BUTTON_BGM_MUTE].ph / 2 , 0 };
+	MuteSEPos = { g_sprite[BUTTON_SE_MUTE].px + g_sprite[BUTTON_SE_MUTE].pw / 2, g_sprite[BUTTON_SE_MUTE].py + g_sprite[BUTTON_SE_MUTE].ph / 2 , 0 };
+	
+	IXAudio2SubmixVoice* SubmixBGM = GetSubmixBGM();
+	IXAudio2SubmixVoice* SubmixSE = GetSubmixSE();
+	SubmixBGM->GetVolume(&bgmVolume);
+	SubmixSE->GetVolume(&seVolume);
+
+	muteBGM = false;
+	muteSE = false;
 
 	g_menu.use = FALSE;
 
@@ -168,24 +217,80 @@ void UpdateMenu(void)
 	if (!g_menu.use)return;
 
 	/*if (GetKeyboardTrigger(DIK_ADD)) {
-		masterVolume += 0.05f;
-		if (masterVolume > 1.0f) {
-			masterVolume = 1.0f;
+		bgmVolume += 0.05f;
+		if (bgmVolume > 1.0f) {
+			bgmVolume = 1.0f;
 		}
 	}
 	else if (GetKeyboardTrigger(DIK_SUBTRACT)) {
-		masterVolume -= 0.05f;
-		if (masterVolume < 0.0f) {
-			masterVolume = 0.0f;
+		bgmVolume -= 0.05f;
+		if (bgmVolume < 0.0f) {
+			bgmVolume = 0.0f;
 		}
 	}*/
 
-
+	
 
 
 	XMFLOAT3 MousePos;
 	MousePos.x = float(GetMousePosX());
 	MousePos.y = float(GetMousePosY());
+
+	//ボタン当たり判定
+	isHoveringMuteBGM = CollisionBB(MousePos, 1.0f, 1.0f, MuteBGMPos, 70.0f, 70.0f);
+	isHoveringMuteSE = CollisionBB(MousePos, 1.0f, 1.0f, MuteSEPos, 70.0f, 70.0f);
+
+	//当たったら
+	if (isHoveringMuteBGM) {
+
+		//左クリックしたらMute/Unmute
+		if (IsMouseLeftTriggered()) { 
+			muteBGM = muteBGM ? false : true; 
+			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
+
+			if(muteBGM){
+			bgmVolume_org = bgmVolume;
+			bgmVolume = 0.0f;
+			}
+			else {
+				bgmVolume = bgmVolume_org;
+			}
+
+		}
+
+		// !hover → hoverで流す 
+		if (!wasHoveringMuteBGM) {
+			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
+		}
+	}
+
+	//当たったら
+	if (isHoveringMuteSE) {
+
+		//左クリックしたらMute/Unmute
+		if (IsMouseLeftTriggered()) {
+			muteSE = muteSE ? false : true;
+			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
+
+			if (muteSE == true) {
+				seVolume_org = seVolume;
+				seVolume = 0.0f;
+			}
+			else if (muteSE == false){
+				seVolume = seVolume_org;
+			}
+		}
+
+		// !hover → hoverで流す 
+		if (!wasHoveringMuteSE) {
+			PlaySound(SOUND_LABEL_SE_SWITCHBOTTON);
+		}
+	}
+
+	//状態更新
+	wasHoveringMuteBGM = isHoveringMuteBGM;
+	wasHoveringMuteSE = isHoveringMuteSE;
+
 
 	//Master Volume Control
 	if (CollisionBB(MousePos, 1.0f, 1.0f, XMFLOAT3(g_sprite[BAR_MASTER].px, g_sprite[BAR_MASTER].py, 0.0f),
@@ -193,13 +298,13 @@ void UpdateMenu(void)
 		
 		g_sprite[BAR_MASTER_CURRENT].px = MousePos.x;
 
-		masterVolume = CordinateToVolume(g_sprite[BAR_MASTER_CURRENT].px,
+		bgmVolume = CordinateToVolume(g_sprite[BAR_MASTER_CURRENT].px,
 			g_sprite[BAR_MASTER].px - (g_sprite[BAR_MASTER].pw / 2),
 			g_sprite[BAR_MASTER].pw);
 
 	}
 
-	g_sprite[BAR_MASTER_CURRENT].px = VolumeToCordinate(masterVolume, 
+	g_sprite[BAR_MASTER_CURRENT].px = VolumeToCordinate(bgmVolume, 
 														g_sprite[BAR_MASTER].px - (g_sprite[BAR_MASTER].pw / 2), 
 														g_sprite[BAR_MASTER].pw);
 
@@ -220,14 +325,15 @@ void UpdateMenu(void)
 		g_sprite[BAR_SE].px - (g_sprite[BAR_SE].pw / 2),
 		g_sprite[BAR_SE].pw);
 	
-	SetBGMVolume(masterVolume);
+	SetBGMVolume(bgmVolume);
 	SetSEVolume(seVolume);
 
 #ifdef _DEBUG	// デバッグ情報を表示する
 	//char *str = GetDebugStr();
 	//sprintf(&str[strlen(str)], " PX:%.2f PY:%.2f", g_Pos.x, g_Pos.y);
-	PrintDebugProc("MasterVolume : %f", masterVolume);
+	PrintDebugProc("MasterVolume : %f", bgmVolume);
 	PrintDebugProc("SeVolume : %f", seVolume);
+	
 	
 #endif
 
@@ -375,6 +481,65 @@ void DrawMenu(void)
 				GetDeviceContext()->Draw(4, 0);
 			}
 
+			// BGM MUTE
+			{
+				// テクスチャ設定
+				if (!muteBGM) {
+					GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[3]);
+
+				}
+				else {
+					GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[4]);
+
+				}
+
+				float px = g_sprite[BUTTON_BGM_MUTE].px;
+				float py = g_sprite[BUTTON_BGM_MUTE].py;
+				float pw = g_sprite[BUTTON_BGM_MUTE].pw;	// スコアの表示幅
+				float ph = g_sprite[BUTTON_BGM_MUTE].ph;	// スコアの表示高さ
+
+				float tw = g_sprite[BUTTON_BGM_MUTE].tw;	// テクスチャの幅
+				float th = g_sprite[BUTTON_BGM_MUTE].th;	// テクスチャの高さ
+				float tx = g_sprite[BUTTON_BGM_MUTE].tx;	// テクスチャの左上X座標
+				float ty = g_sprite[BUTTON_BGM_MUTE].ty;	// テクスチャの左上Y座標
+
+				// １枚のポリゴンの頂点とテクスチャ座標を設定
+				SetSpriteLTColor(g_VertexBuffer, px, py, pw, ph, tx, ty, tw, th,
+					XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+				// ポリゴン描画
+				GetDeviceContext()->Draw(4, 0);
+			}
+
+			// SE MUTE
+			{
+				// テクスチャ設定
+				if (!muteSE) {
+					GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[3]);
+				}
+				else {
+					GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[4]);
+				}
+				
+
+				float px = g_sprite[BUTTON_SE_MUTE].px;
+				float py = g_sprite[BUTTON_SE_MUTE].py;
+				float pw = g_sprite[BUTTON_SE_MUTE].pw;	// スコアの表示幅
+				float ph = g_sprite[BUTTON_SE_MUTE].ph;	// スコアの表示高さ
+
+				float tw = g_sprite[BUTTON_SE_MUTE].tw;	// テクスチャの幅
+				float th = g_sprite[BUTTON_SE_MUTE].th;	// テクスチャの高さ
+				float tx = g_sprite[BUTTON_SE_MUTE].tx;	// テクスチャの左上X座標
+				float ty = g_sprite[BUTTON_SE_MUTE].ty;	// テクスチャの左上Y座標
+
+				// １枚のポリゴンの頂点とテクスチャ座標を設定
+				SetSpriteLTColor(g_VertexBuffer, px, py, pw, ph, tx, ty, tw, th,
+					XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+
+				// ポリゴン描画
+				GetDeviceContext()->Draw(4, 0);
+			}
+
 			//// 音量バー
 			//{
 			//	// テクスチャ設定
@@ -418,4 +583,21 @@ float VolumeToCordinate(float volume, float startPos, float BarLength) {
 float CordinateToVolume(float pos,float startPos,float BarLength) {
 	float volume = (pos - startPos) / BarLength;
 	return volume;
+}
+
+void DrawDebugMenu()
+{
+	ImGui::Begin("Menu Debug");
+
+		ImGui::Text("IsMuteBGM : %d",isHoveringMuteBGM );
+		ImGui::Text("IsMuteSE : %d", isHoveringMuteSE);
+
+		ImGui::Text("IsMuteBGM o/f : %d", muteBGM);
+		ImGui::Text("IsMuteSE  o/f : %d", muteSE);
+
+		ImGui::Text("MuteBGMPos : %f, %f, %f", MuteBGMPos.x, MuteBGMPos.y, MuteBGMPos.z);
+		ImGui::Text("MuteSEPos : %f, %f, %f", MuteSEPos.x, MuteSEPos.y, MuteSEPos.z);
+
+	ImGui::End();
+
 }

@@ -13,6 +13,7 @@
 #include "title.h"
 #include "collision.h"
 #include "debugproc.h"
+#include "menu.h"
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
@@ -50,6 +51,7 @@ XMFLOAT3 ExitButtonPos;
 XMFLOAT3 SettingButtonPos;
 XMFLOAT3 PawsPos;
 
+static float volume;
 
 static char* g_TexturName[TEXTURE_MAX] = {
 	"data/TEXTURE/title.png",						//0
@@ -160,6 +162,10 @@ void UninitTitle(void)
 //=============================================================================
 void UpdateTitle(void)
 {
+	MENU* MENU = GetMenu();
+	if (MENU->use == TRUE) {
+		return;
+	}
 
 	//// ゲームパッドで入力処理
 	//else if (IsButtonTriggered(0, BUTTON_START))
@@ -290,6 +296,11 @@ void UpdateTitle(void)
 	//char *str = GetDebugStr();
 	//sprintf(&str[strlen(str)], " PX:%.2f PY:%.2f", g_Pos.x, g_Pos.y);
 	/*PrintDebugProc("menu:%d", menu);*/
+	IXAudio2SubmixVoice* SubmixBGM = GetSubmixBGM();
+
+	SubmixBGM->GetVolume(&volume);
+
+	PrintDebugProc("Volume: %f", volume);
 #endif
 
 }

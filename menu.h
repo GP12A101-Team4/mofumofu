@@ -27,6 +27,8 @@ enum {
 	BAR_MASTER_CURRENT,
 	BAR_SE,
 	BAR_SE_CURRENT,
+	BUTTON_BGM_MUTE,
+	BUTTON_SE_MUTE,
 	MAX
 };
 
@@ -42,3 +44,5 @@ MENU* GetMenu();
 
 float VolumeToCordinate(float volume,float startPos,float BarLength);
 float CordinateToVolume(float pos, float StartPos, float BarLength);
+
+void DrawDebugMenu();

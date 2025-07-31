@@ -49,3 +49,7 @@ void StopSound(void);
 
 void SetBGMVolume(float volume);
 void SetSEVolume(float volume);
+void SetMasterVolume(float volume);
+
+IXAudio2SubmixVoice* GetSubmixBGM();
+IXAudio2SubmixVoice* GetSubmixSE();

@@ -32,9 +32,13 @@
 #include "cursor.h"
 #include "bg.h"
 #include "menu.h"
+#include "object.h"
+
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
+#include "ImGuizmo.h"	
+
 
 //*****************************************************************************
 // マクロ定義
@@ -142,6 +146,10 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLi
 
 	ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(g_pd3dDevice, g_d3dDeviceContext);
+
+
+
+
 	// フレームカウント初期化
 	timeBeginPeriod(1);	// 分解能を設定
 	dwExecLastTime = dwFPSLastTime = timeGetTime();	// システム時刻をミリ秒単位で取得
@@ -242,7 +250,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 		}
 		break;
-
 	case WM_MOUSEMOVE:
 		g_MouseX = LOWORD(lParam);
 		g_MouseY = HIWORD(lParam);
@@ -256,7 +263,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		if (wParam != WA_INACTIVE) {
 
-			//ShowCursor(FALSE);
+			ShowCursor(TRUE);
 			RECT rect;
 			GetClientRect(hWnd, &rect);
 			MapWindowPoints(hWnd, nullptr, (POINT*)&rect, 2);
@@ -352,7 +359,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// フェードの初期化
 	InitFade();
 
-	SetBGMVolume(0.3f);
+	SetMasterVolume(0.3);
+
 
 	// 最初のモードをセット
 	SetMode(g_Mode);	// ここはSetModeのままで！
@@ -415,13 +423,16 @@ void Update(void)
 	// 入力の更新処理
 	UpdateInput();
 
+	MENU* menu = GetMenu();
+	PrintDebugProc("MENU use : %d", menu->use);
 
 	switch (g_Mode)
 	{
 	case MODE_TITLE:		// タイトル画面の更新
-		UpdateTitle();
+		
 		UpdateCursor();
 		UpdateMenu();
+		UpdateTitle();
 		break;
 
 	case MODE_GAME:			// ゲーム画面の更新
@@ -502,6 +513,21 @@ void Draw(void)
       
 	case MODE_GAME:
 		DrawGame();
+
+		// 2Dの物を描画する処理
+		// Z比較なし
+		SetDepthEnable(FALSE);
+
+		// ライティングを無効
+		SetLightEnable(FALSE);
+
+		DrawCursor();
+
+		// ライティングを有効に
+		SetLightEnable(TRUE);
+
+		// Z比較あり
+		SetDepthEnable(TRUE);
 		break;
 	case MODE_RESULT:
 		SetViewPort(TYPE_FULL_SCREEN);
@@ -540,6 +566,8 @@ void Draw(void)
 		// フェード描画
 		DrawFade();
 
+		
+		
 		// ライティングを有効に
 		SetLightEnable(TRUE);
 
@@ -566,13 +594,18 @@ void Draw(void)
 	
 	ImGui::End();
 
-	DrawPartDebugUI();
+	/*DrawPartDebugUI();
 	DrawPartDebugUI_Dog();
 	DrawPartDebugUI_Elph();
 	DrawPartDebugUI_Mouse();
-	DrawPartDebugUI_Sheep();
+	DrawPartDebugUI_Sheep();*/
+
+	DrawDebugMenu();
   
-	ImGui::ShowDemoWindow();
+
+	//ImGui::ShowDemoWindow();
+
+	DrawFadeDebugUI();
 
 	// 結束新幀
 	ImGui::Render();
@@ -686,3 +719,7 @@ char* GetDebugStr(void)
 	return g_DebugStr;
 }
 #endif
+
+HWND GetHWND() {
+	return g_hWnd;
+}
