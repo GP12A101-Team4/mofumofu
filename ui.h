@@ -22,5 +22,7 @@ void UpdateUI(void);
 void DrawUI(void);
 void DrawGaugeBars(void);
 
+float GetActivePuzzleAlignmentRatio(void);
+
 
 
