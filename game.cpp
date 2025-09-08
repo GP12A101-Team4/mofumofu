@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 //
 // ゲーム画面処理 [game.cpp]
 // Author : 
@@ -28,6 +28,7 @@
 #include "fragment_sheep.h"
 #include "fragment_obstacle.h"
 #include "bg.h"
+#include "object.h"
 #include "menu.h"
 
 //*****************************************************************************
@@ -39,7 +40,7 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-
+void CheckHit(void);
 
 
 
@@ -71,7 +72,7 @@ HRESULT InitGame(void)
 	g_ViewPortType_Game = TYPE_FULL_SCREEN;
 
 	// フィールドの初期化
-	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 1, 1, 1500.0f, 1500.0f);
+	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 1, 1, MAP_W, MAP_H);
 	InitBG();
 	// ライトを有効化	// 影の初期化処理
 	InitShadow();
@@ -87,6 +88,7 @@ HRESULT InitGame(void)
 	// プレイヤーの初期化
 	InitPlayer();
 
+	InitObject();
 
 	// スコアの初期化
 	InitScore();
@@ -120,6 +122,8 @@ void UninitGame(void)
 	// プレイヤーの終了処理
 	UninitPlayer();
 
+	UninitObject();
+
 	// 影の終了処理
 	UninitShadow();
 }
@@ -145,6 +149,8 @@ void UpdateGame(void)
 		SetFade(FADE_OUT, MODE_RESULT);
 	}
 
+	
+
 
 	MENU* menu = GetMenu();
 	UpdateMenu();
@@ -158,6 +164,7 @@ void UpdateGame(void)
 	// プレイヤーの更新処理
 	UpdatePlayer();
 
+	UpdateObject();
 	//欠片の更新処理
 	UpdateFragment();
 	UpdateFragment_Dog();
@@ -171,6 +178,8 @@ void UpdateGame(void)
 
 	// スコアの更新処理
 	UpdateScore();
+
+	CheckHit();
 
 	UpdateUI();
 
@@ -190,6 +199,8 @@ void DrawGame0(void)
 
 	// プレイヤーの描画処理
 	DrawPlayer();
+
+	DrawObject();
 
 
 	// 壁の描画処理
@@ -242,26 +253,33 @@ void DrawGame(void)
 	CAMERA* camera = GetCamera();
 	PLAYER* player = GetPlayer();
 	MENU* menu = GetMenu();
+	bool IsSetting = GetIsSetting();
 
 	{
-		if(!menu->use)
-		{
-			float dist = 10.0f;
-			XMFLOAT3 dir = GetCameraDir();
+		if (IsSetting == false) {
+			if (!menu->use)
+			{
+				float dist = 10.0f;
+				XMFLOAT3 dir = GetCameraDir();
 
-			//ベクトルを拡大する　Camera.atとCamera.posの値が同じになるバグを防ぐため 
-			dir.x *= dist;
-			dir.y *= dist;
-			dir.z *= dist;
+				//ベクトルを拡大する　Camera.atとCamera.posの値が同じになるバグを防ぐため 
+				dir.x *= dist;
+				dir.y *= dist;
+				dir.z *= dist;
 
-			camera->dir = { camera->pos.x + dir.x,
-							camera->pos.y + dir.y,
-							camera->pos.z + dir.z };
+				camera->dir = { camera->pos.x + dir.x,
+								camera->pos.y + dir.y,
+								camera->pos.z + dir.z };
 
-			SetCameraAT(camera->dir);
-			SetCamera();
+				SetCameraAT(camera->dir);
+				
+			}
 		}
-
+		else {
+			SetCameraAT({0.0f, 0.0f,0.0f});
+		}
+		
+		SetCamera();
 
 
 		SetViewPort(TYPE_FULL_SCREEN);
@@ -270,6 +288,17 @@ void DrawGame(void)
 
 
 
+}
+
+void CheckHit(void)
+{
+	
+	PLAYER* player = GetPlayer();	// プレイヤーのポインターを初期化
+
+	if (player->pos.x < MAP_LEFT/2 + player->size)player->pos.x = MAP_LEFT/2 + player->size;
+	if (player->pos.x > MAP_RIGHT/2 - player->size)player->pos.x = MAP_RIGHT/2 - player->size;
+	if (player->pos.z < MAP_DOWN/2 + player->size)player->pos.z = MAP_DOWN/2 + player->size;
+	if (player->pos.z > MAP_TOP/2 - player->size)player->pos.z = MAP_TOP/2 - player->size;
 }
 
 //回転平滑化

@@ -1,6 +1,6 @@
-	//=============================================================================
+ï»¿	//=============================================================================
 //
-// ƒJƒƒ‰ˆ— [camera.cpp]
+// ã‚«ãƒ¡ãƒ©å‡¦ç† [camera.cpp]
 // Author : 
 //
 //=============================================================================
@@ -11,34 +11,37 @@
 #include "player.h"
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
-#define	POS_X_CAM			(0.0f)			// ƒJƒƒ‰‚Ì‰ŠúˆÊ’u(XÀ•W)
-#define	POS_Y_CAM			(50.0f)			// ƒJƒƒ‰‚Ì‰ŠúˆÊ’u(YÀ•W)
-#define	POS_Z_CAM			(-140.0f)		// ƒJƒƒ‰‚Ì‰ŠúˆÊ’u(ZÀ•W)
+#define	POS_X_CAM			(0.0f)			// ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®(Xåº§æ¨™)
+#define	POS_Y_CAM			(4500.0f)			// ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®(Yåº§æ¨™)
+#define	POS_Z_CAM			(-1000.0f)		// ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®(Zåº§æ¨™)
 
-//#define	POS_X_CAM		(0.0f)			// ƒJƒƒ‰‚Ì‰ŠúˆÊ’u(XÀ•W)
-//#define	POS_Y_CAM		(200.0f)		// ƒJƒƒ‰‚Ì‰ŠúˆÊ’u(YÀ•W)
-//#define	POS_Z_CAM		(-400.0f)		// ƒJƒƒ‰‚Ì‰ŠúˆÊ’u(ZÀ•W)
+//#define	POS_X_CAM		(0.0f)			// ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®(Xåº§æ¨™)
+//#define	POS_Y_CAM		(200.0f)		// ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®(Yåº§æ¨™)
+//#define	POS_Z_CAM		(-400.0f)		// ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®(Zåº§æ¨™)
 
 
-#define	VIEW_ANGLE		(XMConvertToRadians(45.0f))						// ƒrƒ…[•½–Ê‚Ì‹–ìŠp
-#define	VIEW_ASPECT		((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT)	// ƒrƒ…[•½–Ê‚ÌƒAƒXƒyƒNƒg”ä	
-#define	VIEW_NEAR_Z		(10.0f)											// ƒrƒ…[•½–Ê‚ÌNearZ’l
-#define	VIEW_FAR_Z		(10000.0f)										// ƒrƒ…[•½–Ê‚ÌFarZ’l
+#define	VIEW_ANGLE		(XMConvertToRadians(45.0f))						// ãƒ“ãƒ¥ãƒ¼å¹³é¢ã®è¦–é‡è§’
+#define	VIEW_ASPECT		((float)SCREEN_WIDTH / (float)SCREEN_HEIGHT)	// ãƒ“ãƒ¥ãƒ¼å¹³é¢ã®ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”	
+#define	VIEW_NEAR_Z		(10.0f)											// ãƒ“ãƒ¥ãƒ¼å¹³é¢ã®NearZå€¤
+#define	VIEW_FAR_Z		(10000.0f)										// ãƒ“ãƒ¥ãƒ¼å¹³é¢ã®FarZå€¤
 
-#define	VALUE_MOVE_CAMERA	(2.0f)										// ƒJƒƒ‰‚ÌˆÚ“®—Ê
-#define	VALUE_ROTATE_CAMERA	(XM_PI * 0.01f)								// ƒJƒƒ‰‚Ì‰ñ“]—Ê
+#define	VALUE_MOVE_CAMERA	(2.0f)										// ã‚«ãƒ¡ãƒ©ã®ç§»å‹•é‡
+#define	VALUE_ROTATE_CAMERA	(XM_PI * 0.01f)								// ã‚«ãƒ¡ãƒ©ã®å›è»¢é‡
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //*****************************************************************************
-static CAMERA			g_Camera;		// ƒJƒƒ‰ƒf[ƒ^
+static CAMERA			g_Camera;		// ã‚«ãƒ¡ãƒ©ãƒ‡ãƒ¼ã‚¿
 
 static int				g_ViewPortType = TYPE_FULL_SCREEN;
 
+static bool				IsSetting = false;
+static bool				IsSetting_flag = false;
+
 //=============================================================================
-// ‰Šú‰»ˆ—
+// åˆæœŸåŒ–å‡¦ç†
 //=============================================================================
 void InitCamera(void)
 {
@@ -48,19 +51,19 @@ void InitCamera(void)
 	g_Camera.rot = { 0.0f, 0.0f, 0.0f };
 	g_Camera.dir = { 0.0f, 7.0f, 1.0f };
 
-	// ‹“_‚Æ’‹“_‚Ì‹——£‚ğŒvZ
+	// è¦–ç‚¹ã¨æ³¨è¦–ç‚¹ã®è·é›¢ã‚’è¨ˆç®—
 	float vx, vz;
 	vx = g_Camera.pos.x - g_Camera.at.x;
 	vz = g_Camera.pos.z - g_Camera.at.z;
 	g_Camera.len = sqrtf(vx * vx + vz * vz);
 	
-	// ƒrƒ…[ƒ|[ƒgƒ^ƒCƒv‚Ì‰Šú‰»
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã‚¿ã‚¤ãƒ—ã®åˆæœŸåŒ–
 	SetViewPort(g_ViewPortType);
 }
 
 
 //=============================================================================
-// ƒJƒƒ‰‚ÌI—¹ˆ—
+// ã‚«ãƒ¡ãƒ©ã®çµ‚äº†å‡¦ç†
 //=============================================================================
 void UninitCamera(void)
 {
@@ -69,99 +72,113 @@ void UninitCamera(void)
 
 
 //=============================================================================
-// ƒJƒƒ‰‚ÌXVˆ—
+// ã‚«ãƒ¡ãƒ©ã®æ›´æ–°å‡¦ç†
 //=============================================================================
 void UpdateCamera(void)
 {
 	PLAYER* player = GetPlayer();
-	g_Camera.pos = player->pos;
+
+	if (IsSetting == false) {
+		g_Camera.pos = player->pos;
+		IsSetting_flag = true;
+	}
+	else if(IsSetting == true) {
+		/*if(IsSetting_flag == false){
+			InitCamera();
+		}
+		IsSetting_flag = true;*/
+		InitCamera();
+	}
 
 
 #ifdef _DEBUG
 
-	//if (GetKeyboardPress(DIK_Z))
-	//{// ‹“_ù‰ñu¶v
-	//	g_Camera.rot.y += VALUE_ROTATE_CAMERA;
-	//	if (g_Camera.rot.y > XM_PI)
-	//	{
-	//		g_Camera.rot.y -= XM_PI * 2.0f;
-	//	}
+	if (IsSetting == true) {
+		if (GetKeyboardPress(DIK_Z))
+		{// è¦–ç‚¹æ—‹å›ã€Œå·¦ã€
+			g_Camera.rot.y += VALUE_ROTATE_CAMERA;
+			if (g_Camera.rot.y > XM_PI)
+			{
+				g_Camera.rot.y -= XM_PI * 2.0f;
+			}
 
-	//	g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
-	//	g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
-	//}
+			g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
+			g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
+		}
 
-	//if (GetKeyboardPress(DIK_C))
-	//{// ‹“_ù‰ñu‰Ev
-	//	g_Camera.rot.y -= VALUE_ROTATE_CAMERA;
-	//	if (g_Camera.rot.y < -XM_PI)
-	//	{
-	//		g_Camera.rot.y += XM_PI * 2.0f;
-	//	}
+		if (GetKeyboardPress(DIK_C))
+		{// è¦–ç‚¹æ—‹å›ã€Œå³ã€
+			g_Camera.rot.y -= VALUE_ROTATE_CAMERA;
+			if (g_Camera.rot.y < -XM_PI)
+			{
+				g_Camera.rot.y += XM_PI * 2.0f;
+			}
 
-	//	g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
-	//	g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
-	//}
+			g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
+			g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
+		}
 
-	//if (GetKeyboardPress(DIK_Y))
-	//{// ‹“_ˆÚ“®uãv
-	//	g_Camera.pos.y += VALUE_MOVE_CAMERA;
-	//}
+		if (GetKeyboardPress(DIK_Y))
+		{// è¦–ç‚¹ç§»å‹•ã€Œä¸Šã€
+			g_Camera.pos.y += VALUE_MOVE_CAMERA;
+		}
 
-	//if (GetKeyboardPress(DIK_N))
-	//{// ‹“_ˆÚ“®u‰ºv
-	//	g_Camera.pos.y -= VALUE_MOVE_CAMERA;
-	//}
+		if (GetKeyboardPress(DIK_N))
+		{// è¦–ç‚¹ç§»å‹•ã€Œä¸‹ã€
+			g_Camera.pos.y -= VALUE_MOVE_CAMERA;
+		}
 
-	//if (GetKeyboardPress(DIK_Q))
-	//{// ’‹“_ù‰ñu¶v
-	//	g_Camera.rot.y -= VALUE_ROTATE_CAMERA;
-	//	if (g_Camera.rot.y < -XM_PI)
-	//	{
-	//		g_Camera.rot.y += XM_PI * 2.0f;
-	//	}
+		if (GetKeyboardPress(DIK_Q))
+		{// æ³¨è¦–ç‚¹æ—‹å›ã€Œå·¦ã€
+			g_Camera.rot.y -= VALUE_ROTATE_CAMERA;
+			if (g_Camera.rot.y < -XM_PI)
+			{
+				g_Camera.rot.y += XM_PI * 2.0f;
+			}
 
-	//	g_Camera.at.x = g_Camera.pos.x + sinf(g_Camera.rot.y) * g_Camera.len;
-	//	g_Camera.at.z = g_Camera.pos.z + cosf(g_Camera.rot.y) * g_Camera.len;
-	//}
+			g_Camera.at.x = g_Camera.pos.x + sinf(g_Camera.rot.y) * g_Camera.len;
+			g_Camera.at.z = g_Camera.pos.z + cosf(g_Camera.rot.y) * g_Camera.len;
+		}
 
-	//if (GetKeyboardPress(DIK_E))
-	//{// ’‹“_ù‰ñu‰Ev
-	//	g_Camera.rot.y += VALUE_ROTATE_CAMERA;
-	//	if (g_Camera.rot.y > XM_PI)
-	//	{
-	//		g_Camera.rot.y -= XM_PI * 2.0f;
-	//	}
+		if (GetKeyboardPress(DIK_E))
+		{// æ³¨è¦–ç‚¹æ—‹å›ã€Œå³ã€
+			g_Camera.rot.y += VALUE_ROTATE_CAMERA;
+			if (g_Camera.rot.y > XM_PI)
+			{
+				g_Camera.rot.y -= XM_PI * 2.0f;
+			}
 
-	//	g_Camera.at.x = g_Camera.pos.x + sinf(g_Camera.rot.y) * g_Camera.len;
-	//	g_Camera.at.z = g_Camera.pos.z + cosf(g_Camera.rot.y) * g_Camera.len;
-	//}
+			g_Camera.at.x = g_Camera.pos.x + sinf(g_Camera.rot.y) * g_Camera.len;
+			g_Camera.at.z = g_Camera.pos.z + cosf(g_Camera.rot.y) * g_Camera.len;
+		}
 
-	//if (GetKeyboardPress(DIK_T))
-	//{// ’‹“_ˆÚ“®uãv
-	//	g_Camera.at.y += VALUE_MOVE_CAMERA;
-	//}
+		if (GetKeyboardPress(DIK_T))
+		{// æ³¨è¦–ç‚¹ç§»å‹•ã€Œä¸Šã€
+			g_Camera.at.y += VALUE_MOVE_CAMERA;
+		}
 
-	//if (GetKeyboardPress(DIK_B))
-	//{// ’‹“_ˆÚ“®u‰ºv
-	//	g_Camera.at.y -= VALUE_MOVE_CAMERA;
-	//}
+		if (GetKeyboardPress(DIK_B))
+		{// æ³¨è¦–ç‚¹ç§»å‹•ã€Œä¸‹ã€
+			g_Camera.at.y -= VALUE_MOVE_CAMERA;
+		}
 
-	//if (GetKeyboardPress(DIK_U))
-	//{// ‹ß‚Ã‚­
-	//	g_Camera.len -= VALUE_MOVE_CAMERA;
-	//	g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
-	//	g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
-	//}
+		if (GetKeyboardPress(DIK_U))
+		{// è¿‘ã¥ã
+			g_Camera.len -= VALUE_MOVE_CAMERA;
+			g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
+			g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
+		}
 
-	//if (GetKeyboardPress(DIK_M))
-	//{// —£‚ê‚é
-	//	g_Camera.len += VALUE_MOVE_CAMERA;
-	//	g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
-	//	g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
-	//}
+		if (GetKeyboardPress(DIK_M))
+		{// é›¢ã‚Œã‚‹
+			g_Camera.len += VALUE_MOVE_CAMERA;
+			g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
+			g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
+		}
+	}
+	
 
-	// ƒJƒƒ‰‚ğ‰Šú‚É–ß‚·
+	// ã‚«ãƒ¡ãƒ©ã‚’åˆæœŸã«æˆ»ã™
 	if (GetKeyboardPress(DIK_R))
 	{
 		UninitCamera();
@@ -172,18 +189,23 @@ void UpdateCamera(void)
 
 
 
-#ifdef _DEBUG	// ƒfƒoƒbƒOî•ñ‚ğ•\¦‚·‚é
+#ifdef _DEBUG	// ãƒ‡ãƒãƒƒã‚°æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
 	PrintDebugProc("Camera:ZC QE TB YN UM R\n");
+
+	PrintDebugProc("Camera.x;%f Camera.x;%f Camera.x;%f", g_Camera.pos.x, g_Camera.pos.y, g_Camera.pos.z);
+	if (GetKeyboardTrigger(DIK_F1)) {
+		IsSetting = IsSetting ? false : true;
+	}
 #endif
 }
 
 
 //=============================================================================
-// ƒJƒƒ‰‚ÌXV
+// ã‚«ãƒ¡ãƒ©ã®æ›´æ–°
 //=============================================================================
 void SetCamera(void) 
 {
-	// ƒrƒ…[ƒ}ƒgƒŠƒbƒNƒXİ’è
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒˆãƒªãƒƒã‚¯ã‚¹è¨­å®š
 	XMMATRIX mtxView;
 	mtxView = XMMatrixLookAtLH(XMLoadFloat3(&g_Camera.pos), XMLoadFloat3(&g_Camera.at), XMLoadFloat3(&g_Camera.up));
 	SetViewMatrix(&mtxView);
@@ -194,7 +216,7 @@ void SetCamera(void)
 	XMStoreFloat4x4(&g_Camera.mtxInvView, mtxInvView);
 
 
-	// ƒvƒƒWƒFƒNƒVƒ‡ƒ“ƒ}ƒgƒŠƒbƒNƒXİ’è
+	// ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³ãƒãƒˆãƒªãƒƒã‚¯ã‚¹è¨­å®š
 	XMMATRIX mtxProjection;
 	mtxProjection = XMMatrixPerspectiveFovLH(VIEW_ANGLE, VIEW_ASPECT, VIEW_NEAR_Z, VIEW_FAR_Z);
 
@@ -206,7 +228,7 @@ void SetCamera(void)
 
 
 //=============================================================================
-// ƒJƒƒ‰‚Ìæ“¾
+// ã‚«ãƒ¡ãƒ©ã®å–å¾—
 //=============================================================================
 CAMERA *GetCamera(void) 
 {
@@ -214,7 +236,7 @@ CAMERA *GetCamera(void)
 }
 
 //=============================================================================
-// ƒrƒ…[ƒ|[ƒg‚Ìİ’è
+// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®è¨­å®š
 //=============================================================================
 void SetViewPort(int type)
 {
@@ -223,7 +245,7 @@ void SetViewPort(int type)
 
 	g_ViewPortType = type;
 
-	// ƒrƒ…[ƒ|[ƒgİ’è
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¨­å®š
 	switch (g_ViewPortType)
 	{
 	case TYPE_FULL_SCREEN:
@@ -318,14 +340,17 @@ int GetViewPortType(void)
 
 
 
-// ƒJƒƒ‰‚Ì‹“_‚Æ’‹“_‚ğƒZƒbƒg
+// ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹ã¨æ³¨è¦–ç‚¹ã‚’ã‚»ãƒƒãƒˆ
 void SetCameraAT(XMFLOAT3 pos)
 {
 	g_Camera.at = pos;
 
-	//// ƒJƒƒ‰‚Ì‹“_‚ğƒJƒƒ‰‚ÌY²‰ñ“]‚É‘Î‰‚³‚¹‚Ä‚¢‚é
+	//// ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹ã‚’ã‚«ãƒ¡ãƒ©ã®Yè»¸å›è»¢ã«å¯¾å¿œã•ã›ã¦ã„ã‚‹
 	//g_Camera.pos.x = g_Camera.at.x - sinf(g_Camera.rot.y) * g_Camera.len;
 	//g_Camera.pos.z = g_Camera.at.z - cosf(g_Camera.rot.y) * g_Camera.len;
 
 }
 
+bool GetIsSetting() {
+	return IsSetting;
+}
