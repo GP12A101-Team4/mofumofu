@@ -32,7 +32,7 @@
 #include "cursor.h"
 #include "bg.h"
 #include "menu.h"
-
+#include "object.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -69,7 +69,7 @@ char	g_DebugStr[2048] = WINDOW_NAME;		// デバッグ文字表示用
 
 #endif
 
-int	g_Mode = MODE_TITLE;					// 起動時の画面を設定
+int	g_Mode = MODE_GAME;					// 起動時の画面を設定
 
 
 
@@ -606,6 +606,7 @@ void Draw(void)
 	//ImGui::ShowDemoWindow();
 
 	DrawFadeDebugUI();
+	ShowObjectDebugWindow();
 
 	// 結束新幀
 	ImGui::Render();
