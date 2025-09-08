@@ -187,10 +187,12 @@ void DrawObject(void)
 
 		XMStoreFloat4x4(&g_Object[i].mtxWorld, mtxWorld);
 
-		if (i == Target_Object) {
-			for (int j = 0; j < g_Object[i].model.SubsetNum; j++)
-			{
-				SetModelDiffuse(&g_Object[i].model, j, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+		if(GetIsSetting()){
+			if (i == Target_Object) {
+				for (int j = 0; j < g_Object[i].model.SubsetNum; j++)
+				{
+					SetModelDiffuse(&g_Object[i].model, j, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
+				}
 			}
 		}
 		
