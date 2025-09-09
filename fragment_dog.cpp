@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 //
 // フィールド表示処理 [fragment.cpp]
 // Author : 
@@ -26,6 +26,7 @@
 
 #define FRAGMENT_ROT_AMPLITUDE	(XM_PI / 10)
 #define FRAGMENT_ANIM_TIME		(30)
+#define ANIM_MOVE_SPEED			(2.0f)
 
 
 //*****************************************************************************
@@ -270,15 +271,23 @@ void UpdateFragment_Dog(void)
 
 		XMFLOAT3 center, scale;
 		ComputePuzzleCenterAndScale_Dog(&center, &scale);
-
+	
 		g_FragmentRestored_Dog[0].pos = center;
 		g_FragmentRestored_Dog[0].scl = scale;
+		g_FragmentRestored_Dog[0].rot = g_Fragment_Dog[0].rot;;
+
 
 		g_FragmentRestored_Dog[0].Initialized = TRUE;
 	}
 
 	if (g_FragmentRestored_Dog[0].use) {
-		g_FragmentRestored_Dog[0].pos.x -= 1.0f;
+		/*g_FragmentRestored_Dog[0].pos.x -= 1.0f;*/
+
+		float moveX = cosf(g_FragmentRestored_Dog[0].rot.y) * ANIM_MOVE_SPEED;
+		float moveZ = -sinf(g_FragmentRestored_Dog[0].rot.y) * ANIM_MOVE_SPEED;
+
+		g_FragmentRestored_Dog[0].pos.x += moveX;
+		g_FragmentRestored_Dog[0].pos.z += moveZ;
 
 		float angle = (XM_PI / FRAGMENT_ANIM_TIME) * g_FragmentRestored_Dog[0].AnimCnt;
 
@@ -292,12 +301,12 @@ void UpdateFragment_Dog(void)
 			g_FragmentRestored_Dog[0].AnimCnt = 0;
 		}
 
-		g_FragmentRestored_Dog[0].alpha -= 0.005f;
+		//g_FragmentRestored_Dog[0].alpha -= 0.005f;
 	}
 
-	if (g_FragmentRestored_Dog[0].alpha < 0) {
+	/*if (g_FragmentRestored_Dog[0].alpha < 0) {
 		g_FragmentRestored_Dog[0].use = FALSE;
-	}
+	}*/
 		
 #ifdef _DEBUG
 	
@@ -611,6 +620,34 @@ void DrawPartDebugUI_Dog()
 
 	ImGui::End();
 
+}
+
+void ShowDogDebugWindow()
+{
+	ImGui::Begin("Dog Debug");
+
+	ImGui::Text("Restored Dog Pos: (%.2f, %.2f, %.2f)",
+		g_Fragment_Dog[0].pos.x,
+		g_Fragment_Dog[0].pos.y,
+		g_Fragment_Dog[0].pos.z);
+
+	ImGui::Text("Restored Dog Rot: (%.2f, %.2f, %.2f)",
+		g_Fragment_Dog[0].rot.x,
+		g_Fragment_Dog[0].rot.y,
+		g_Fragment_Dog[0].rot.z);
+
+
+	ImGui::Text("Restored Dog Pos: (%.2f, %.2f, %.2f)",
+		g_FragmentRestored_Dog[0].pos.x,
+		g_FragmentRestored_Dog[0].pos.y,
+		g_FragmentRestored_Dog[0].pos.z);
+
+	ImGui::Text("Restored Dog Rot: (%.2f, %.2f, %.2f)",
+		g_FragmentRestored_Dog[0].rot.x,
+		g_FragmentRestored_Dog[0].rot.y,
+		g_FragmentRestored_Dog[0].rot.z);
+
+	ImGui::End();
 }
 
 // right position for dog 235, 57 , 376 //
