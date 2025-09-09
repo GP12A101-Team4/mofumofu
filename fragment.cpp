@@ -196,6 +196,7 @@ void UpdateFragment(void)
 	if (!g_ShowFullImage && CheckPuzzleRestored())
 	{
 		g_ShowFullImage = true;
+		g_CatAnimationPlayed = true;
 		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
 	}
 
@@ -236,6 +237,7 @@ void UpdateFragment(void)
 
 	if (g_FragmentRestored[0].alpha < 0) {
 		g_FragmentRestored[0].use = FALSE;
+		
 	}
 		
 #ifdef _DEBUG

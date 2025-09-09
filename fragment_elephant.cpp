@@ -267,6 +267,7 @@ void UpdateFragment_Elph(void)
 	if (!g_ShowFullImage_Elph && CheckPuzzleRestored_Elph())
 	{
 		g_ShowFullImage_Elph = true;
+		g_ElphAnimationPlayed = true;
 		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
 	}
 
@@ -308,6 +309,7 @@ void UpdateFragment_Elph(void)
 
 	if (g_FragmentRestored_Elph[0].alpha < 0) {
 		g_FragmentRestored_Elph[0].use = FALSE;
+		
 	}
 		
 #ifdef _DEBUG

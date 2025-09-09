@@ -58,4 +58,5 @@ void DrawPartDebugUI();
 float GetPuzzleAlignmentRatio();
 
 extern bool g_ShowFullImage;
+extern bool g_CatAnimationPlayed;
 

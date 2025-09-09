@@ -27,5 +27,7 @@ float GetPuzzleAlignmentRatio_Elph();
 void DrawPartDebugUI_Elph();
 
 extern bool g_ShowFullImage_Elph;
+extern bool g_ElphAnimationPlayed;
+
 void ShowElephantDebugWindow();
 
