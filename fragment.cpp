@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 //
 // フィールド表示処理 [fragment.cpp]
 // Author : 
@@ -25,6 +25,7 @@
 
 #define FRAGMENT_ROT_AMPLITUDE	(XM_PI / 10)
 #define FRAGMENT_ANIM_TIME		(30)
+#define ANIM_MOVE_SPEED			(2.0f)
 
 
 //*****************************************************************************
@@ -211,7 +212,12 @@ void UpdateFragment(void)
 	}
 
 	if (g_FragmentRestored[0].use) {
-		g_FragmentRestored[0].pos.x -= 1.0f;
+
+		float moveX = -cosf(g_FragmentRestored[0].rot.y) * ANIM_MOVE_SPEED;
+		float moveZ = -sinf(g_FragmentRestored[0].rot.y) * ANIM_MOVE_SPEED;
+		g_FragmentRestored[0].pos.x += moveX;
+		g_FragmentRestored[0].pos.z += moveZ;
+		
 
 		float angle = (XM_PI / FRAGMENT_ANIM_TIME) * g_FragmentRestored[0].AnimCnt;
 

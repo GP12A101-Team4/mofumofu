@@ -48,7 +48,7 @@ HRESULT InitPlayer(void)
 	LoadModel(MODEL_PLAYER, &g_Player.model);
 	g_Player.load = TRUE;
 
-	g_Player.pos = { 0.0f, PLAYER_OFFSET_Y + 50.0f, 0.0f };
+	g_Player.pos = { 0.0f, PLAYER_OFFSET_Y + 50.0f, -300.0f };
 	g_Player.rot = { 0.0f, 0.0f, 0.0f };
 	g_Player.scl = { 1.0f, 1.0f, 1.0f };
 

@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 //
 // フィールド表示処理 [fragment.cpp]
 // Author : 
@@ -26,6 +26,7 @@
 
 #define FRAGMENT_ROT_AMPLITUDE	(XM_PI / 10)
 #define FRAGMENT_ANIM_TIME		(30)
+#define ANIM_MOVE_SPEED			(2.0f)
 
 
 //*****************************************************************************
@@ -194,7 +195,7 @@ bool CheckPuzzleRestored_Elph()
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 10.0f;  // 可接受误差半径
+	float tolerance = 18.0f;  // 可接受误差半径
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
 		// 考虑缩放、旋转、平移后的世界坐标中心点
@@ -275,14 +276,20 @@ void UpdateFragment_Elph(void)
 		XMFLOAT3 center, scale;
 		ComputePuzzleCenterAndScale_Elph(&center, &scale);
 
+
 		g_FragmentRestored_Elph[0].pos = center;
 		g_FragmentRestored_Elph[0].scl = scale;
+		g_FragmentRestored_Elph[0].rot = g_Fragment_Elph[0].rot;
 
 		g_FragmentRestored_Elph[0].Initialized = TRUE;
 	}
 
 	if (g_FragmentRestored_Elph[0].use) {
-		g_FragmentRestored_Elph[0].pos.x -= 1.0f;
+		float moveX = cosf(g_FragmentRestored_Elph[0].rot.y) * ANIM_MOVE_SPEED;
+		float moveZ = -sinf(g_FragmentRestored_Elph[0].rot.y) * ANIM_MOVE_SPEED;
+
+		g_FragmentRestored_Elph[0].pos.x -= moveX;
+		g_FragmentRestored_Elph[0].pos.z -= moveZ;
 
 		float angle = (XM_PI / FRAGMENT_ANIM_TIME) * g_FragmentRestored_Elph[0].AnimCnt;
 
@@ -619,5 +626,41 @@ void DrawPartDebugUI_Elph()
 	ImGui::End();
 
 }
+
+void ShowElephantDebugWindow()
+{
+	ImGui::Begin("Elph Debug");
+
+	ImGui::Text("Restored Elph Pos: (%.2f, %.2f, %.2f)",
+		g_Fragment_Elph[0].overallPos.x,
+		g_Fragment_Elph[0].overallPos.y,
+		g_Fragment_Elph[0].overallPos.z);
+
+	ImGui::Text("Restored Elph Rot: (%.2f, %.2f, %.2f)",
+		g_Fragment_Elph[0].rot.x,
+		g_Fragment_Elph[0].rot.y,
+		g_Fragment_Elph[0].rot.z);
+
+
+	ImGui::Text("Restored Elph Pos: (%.2f, %.2f, %.2f)",
+		g_FragmentRestored_Elph[0].pos.x,
+		g_FragmentRestored_Elph[0].pos.y,
+		g_FragmentRestored_Elph[0].pos.z);
+
+	ImGui::Text("Restored Elph Rot: (%.2f, %.2f, %.2f)",
+		g_FragmentRestored_Elph[0].rot.x,
+		g_FragmentRestored_Elph[0].rot.y,
+		g_FragmentRestored_Elph[0].rot.z);
+
+	ImGui::Text("Restored Elph Alpha: (%.2f)",
+		g_FragmentRestored_Elph[0].alpha);
+
+	ImGui::Text("Restored Elph Use: (%d)",
+		g_FragmentRestored_Elph[0].use);
+
+
+	ImGui::End();
+}
+
 
 // right position for elphant 200, 57 ,176 //

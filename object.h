@@ -38,6 +38,7 @@ struct OBJECT
 };
 
 enum object {
+	bench,
 	fountain,
 	tree_first,
 	tree_2,

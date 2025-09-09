@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 //
 // フィールド表示処理 [fragment.cpp]
 // Author : 
@@ -26,7 +26,7 @@
 
 #define FRAGMENT_ROT_AMPLITUDE	(XM_PI / 10)
 #define FRAGMENT_ANIM_TIME		(30)
-
+#define ANIM_MOVE_SPEED			(2.0f)
 
 //*****************************************************************************
 // プロトタイプ宣言
@@ -271,14 +271,20 @@ void UpdateFragment_Sheep(void)
 		XMFLOAT3 center, scale;
 		ComputePuzzleCenterAndScale_Sheep(&center, &scale);
 
+		
 		g_FragmentRestored_Sheep[0].pos = center;
 		g_FragmentRestored_Sheep[0].scl = scale;
+		g_FragmentRestored_Sheep[0].rot = g_Fragment_Sheep[0].rot;
 
 		g_FragmentRestored_Sheep[0].Initialized = TRUE;
 	}
 
 	if (g_FragmentRestored_Sheep[0].use) {
-		g_FragmentRestored_Sheep[0].pos.x -= 1.0f;
+		float moveX = cosf(g_FragmentRestored_Sheep[0].rot.y) * ANIM_MOVE_SPEED;
+		float moveZ = -sinf(g_FragmentRestored_Sheep[0].rot.y) * ANIM_MOVE_SPEED;
+
+		g_FragmentRestored_Sheep[0].pos.x -= moveX;
+		g_FragmentRestored_Sheep[0].pos.z -= moveZ;
 
 		float angle = (XM_PI / FRAGMENT_ANIM_TIME) * g_FragmentRestored_Sheep[0].AnimCnt;
 
@@ -479,7 +485,7 @@ void DrawFragment_Sheep(void)
 
 		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, g_FragmentRestored_Sheep[0].alpha);
 		SetMaterial(material);
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture_Sheep[5]);  // 最后一张完整图
+		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture_Sheep[4]);  // 最后一张完整图
 
 		GetDeviceContext()->Draw(4, 0);
 
@@ -601,3 +607,37 @@ void DrawPartDebugUI_Sheep()
 
 }
 
+void ShowSheepDebugWindow()
+{
+	ImGui::Begin("Sheep Debug");
+
+	ImGui::Text("Restored Sheep Pos: (%.2f, %.2f, %.2f)",
+		g_Fragment_Sheep[0].overallPos.x,
+		g_Fragment_Sheep[0].overallPos.y,
+		g_Fragment_Sheep[0].overallPos.z);
+
+	ImGui::Text("Restored Sheep Rot: (%.2f, %.2f, %.2f)",
+		g_Fragment_Sheep[0].rot.x,
+		g_Fragment_Sheep[0].rot.y,
+		g_Fragment_Sheep[0].rot.z);
+
+
+	ImGui::Text("Restored Sheep Pos: (%.2f, %.2f, %.2f)",
+		g_FragmentRestored_Sheep[0].pos.x,
+		g_FragmentRestored_Sheep[0].pos.y,
+		g_FragmentRestored_Sheep[0].pos.z);
+
+	ImGui::Text("Restored Sheep Rot: (%.2f, %.2f, %.2f)",
+		g_FragmentRestored_Sheep[0].rot.x,
+		g_FragmentRestored_Sheep[0].rot.y,
+		g_FragmentRestored_Sheep[0].rot.z);
+
+	ImGui::Text("Restored Sheep Alpha: (%.2f)",
+		g_FragmentRestored_Sheep[0].alpha);
+
+	ImGui::Text("Restored Sheep Use: (%d)",
+		g_FragmentRestored_Sheep[0].use);
+	
+
+	ImGui::End();
+}

@@ -22,7 +22,8 @@
 //*****************************************************************************
 #define	MODEL_TREE			"data/MODEL/tree.obj"			// 読み込むモデル名
 #define	MODEL_LAMP			"data/MODEL/lamp.obj"			// 読み込むモデル名
-#define	MODEL_FOUNTAIN			"data/MODEL/fountain.obj"			// 読み込むモデル名
+#define	MODEL_BENCH		"data/MODEL/bench.obj"			// 読み込むモデル名
+#define	MODEL_FOUNTAIN		"data/MODEL/fountain.obj"			// 読み込むモデル名
 
 #define	VALUE_MOVE			(2.0f)							// 移動量
 #define	VALUE_ROTATE		(XM_PI * 0.02f)					// 回転量
@@ -51,7 +52,10 @@ static int					Target_Object = 0;
 HRESULT InitObject(void)
 {
 	for(int i = 0;i< object_max;i++){
-		if (i < tree_first) {
+		if (i < fountain) {
+			LoadModel(MODEL_BENCH, &g_Object[i].model);
+		}
+		else if (i < tree_first) {
 			LoadModel(MODEL_FOUNTAIN, &g_Object[i].model);
 		}
 		else if(i<lamp_first){
@@ -77,6 +81,10 @@ HRESULT InitObject(void)
 		//        このメンバー変数が生成した影のIndex番号
 	}
 
+	g_Object[bench].pos =		{ 410.0f,0.0f,530.0f };
+	g_Object[bench].rot =		{ 0.0f,2.3f,0.0f };
+	g_Object[bench].scl =		{ 0.06f,0.06f,0.06f };
+
 	g_Object[fountain].pos =	{ 0.0f,0.0f,60.0f };
 	g_Object[tree_first].pos =	{ 290.0f,0.0f,2150.0f };
 	g_Object[tree_2].pos =		{ -360.0f,0.0f,1800.0f };
@@ -86,7 +94,7 @@ HRESULT InitObject(void)
 	g_Object[tree_6].pos =		{ 320.0f,0.0f,-728.0f };
 	g_Object[tree_7].pos =		{ 730.0f,0.0f,428.0f };
 	g_Object[tree_last].pos =	{ -360.0f,0.0f,-900.0f };
-	g_Object[lamp_first].pos =		{ -1910.0f,0.0f,-180.0f };
+	g_Object[lamp_first].pos =	{ -1910.0f,0.0f,-180.0f };
 	g_Object[lamp_2].pos =		{ -650.0f,0.0f,320.0f };
 	g_Object[lamp_3].pos =		{ -320.0f,0.0f,2030.0f };
 	g_Object[lamp_4].pos =		{ 310.0f,0.0f,618.0f };
@@ -94,6 +102,8 @@ HRESULT InitObject(void)
 	g_Object[lamp_6].pos =		{ 610.0f,0.0f,-230.0f };
 	g_Object[lamp_7].pos =		{ -410.0f,0.0f,520.0f };
 	g_Object[lamp_last].pos =	{ 200.0f,0.0f,-1270.0f };
+
+
 
 
 	return S_OK;
@@ -104,7 +114,7 @@ HRESULT InitObject(void)
 //=============================================================================
 void UninitObject(void)
 {
-	for (int i = 0; i < OBJECT_MAX; i++) {
+	for (int i = 0; i < object_max; i++) {
 		// モデルの解放処理
 		if (g_Object[i].load)
 		{
@@ -149,6 +159,30 @@ void UpdateObject(void)
 		else if (GetKeyboardPress(DIK_LEFT)) {
 			g_Object[Target_Object].pos.x -= 10.0f;
 		}
+		else if (GetKeyboardPress(DIK_O)) {
+			g_Object[Target_Object].rot.y -= XM_PI / 45;
+		}
+		else if (GetKeyboardPress(DIK_P)) {
+			g_Object[Target_Object].rot.y += XM_PI / 45;
+		}
+		else if (GetKeyboardPress(DIK_U)) {
+			XMVECTOR scale = XMLoadFloat3(&g_Object[Target_Object].scl);
+			scale *= 0.99f; 
+			XMStoreFloat3(&g_Object[Target_Object].scl, scale);
+		}
+		else if (GetKeyboardPress(DIK_I)) {
+			XMVECTOR scale = XMLoadFloat3(&g_Object[Target_Object].scl);
+			scale *= 1.01f;
+			XMStoreFloat3(&g_Object[Target_Object].scl, scale);
+		}
+		
+		g_Object[Target_Object].rot.y = fmodf(g_Object[Target_Object].rot.y, XM_2PI);
+
+		if (g_Object[Target_Object].rot.y < 0.0f)
+		{
+			g_Object[Target_Object].rot.y += XM_2PI;
+		}
+
 	}
 
 	PrintDebugProc("Target: %d", Target_Object);
@@ -230,6 +264,18 @@ void ShowObjectDebugWindow()
 			g_Object[i].pos.x,
 			g_Object[i].pos.y,
 			g_Object[i].pos.z);
+
+		ImGui::Text("Object %d Rot: (%.2f, %.2f, %.2f)",
+			i,
+			g_Object[i].rot.x,
+			g_Object[i].rot.y,
+			g_Object[i].rot.z);
+
+		ImGui::Text("Object %d Scl: (%.2f, %.2f, %.2f)",
+			i,
+			g_Object[i].scl.x,
+			g_Object[i].scl.y,
+			g_Object[i].scl.z);
 	}
 
 	ImGui::End();
