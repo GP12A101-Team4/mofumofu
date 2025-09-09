@@ -267,6 +267,7 @@ void UpdateFragment_Mouse(void)
 	if (!g_ShowFullImage_Mouse && CheckPuzzleRestored_Mouse())
 	{
 		g_ShowFullImage_Mouse = true;
+		g_MouseAnimationPlayed = true;
 		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
 	}
 
@@ -308,6 +309,7 @@ void UpdateFragment_Mouse(void)
 
 	if (g_FragmentRestored_Mouse[0].alpha < 0) {
 		g_FragmentRestored_Mouse[0].use = FALSE;
+		
 	}
 		
 #ifdef _DEBUG

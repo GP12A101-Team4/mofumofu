@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒXƒRƒAˆ— [ui.cpp]
+// ã‚¹ã‚³ã‚¢å‡¦ç† [ui.cpp]
 // Author : 
 //
 //=============================================================================
@@ -12,26 +12,36 @@
 #include "fragment_mouse.h"
 #include "fragment_sheep.h"
 #include "ui.h"
+#include "fade.h"
+#include "game.h"
 #include "sprite.h"
 
+
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
-#define TEXTURE_WIDTH				(70)	// ƒLƒƒƒ‰ƒTƒCƒY
+#define TEXTURE_WIDTH				(70)	// ã‚­ãƒ£ãƒ©ã‚µã‚¤ã‚º
 #define TEXTURE_HEIGHT				(70)	// 
-#define TEXTURE_MAX					(5)		// ƒeƒNƒXƒ`ƒƒ‚Ì”
+#define TEXTURE_MAX					(5)		// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ•°
 #define ANIMAL_TEX_MAX				(5)
 
+#define UI_ICON_COUNT				(5)
+// è™«çœ¼é¡
+#define UI_ICON_W					(60.0f)	// 1å€‹ã‚ãŸã‚Šã®å¹…
+#define UI_ICON_H					(60.0f)	// 1å€‹ã‚ãŸã‚Šã®é«˜ã•
+#define UI_ICON_PAD					(2.0f)	// ã‚¹ãƒ­ãƒƒãƒˆåŒå£«ã®éš™é–“
+#define UI_ICON_MARGIN_RIGHT		(-25.0f)	// ç”»é¢å³ç«¯ã‹ã‚‰ã®ä½™ç™½
+#define UI_ICON_MARGIN_TOP			(40.0f)	// ç”»é¢ä¸Šç«¯ã‹ã‚‰ã®ä½™ç™½
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //*****************************************************************************
-static ID3D11Buffer				*g_VertexBuffer = NULL;		// ’¸“_î•ñ
-static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// ƒeƒNƒXƒ`ƒƒî•ñ
+static ID3D11Buffer				*g_VertexBuffer = NULL;		// é ‚ç‚¹æƒ…å ±
+static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// ãƒ†ã‚¯ã‚¹ãƒãƒ£æƒ…å ±
 static ID3D11ShaderResourceView	*g_AnimalTex[ANIMAL_TEX_MAX] = { NULL };
 
 static char *g_TexturName[] = {
@@ -51,20 +61,29 @@ static const char* g_AnimalTexName[ANIMAL_TEX_MAX] = {
 };
 
 
-static BOOL						g_Use;						// TRUE:g‚Á‚Ä‚¢‚é  FALSE:–¢g—p
-static float					g_w, g_h;					// •‚Æ‚‚³
-static XMFLOAT3					g_Pos;						// ƒ|ƒŠƒSƒ“‚ÌÀ•W
-static int						g_TexNo;					// ƒeƒNƒXƒ`ƒƒ”Ô†
+static BOOL						g_Use;						// TRUE:ä½¿ã£ã¦ã„ã‚‹  FALSE:æœªä½¿ç”¨
+static float					g_w, g_h;					// å¹…ã¨é«˜ã•
+static XMFLOAT3					g_Pos;						// ãƒãƒªã‚´ãƒ³ã®åº§æ¨™
+static int						g_TexNo;					// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç•ªå·
 static int g_ActiveAnimalIdx = -1;
 
+static BOOL g_AnimalCounted[UI_ICON_COUNT] = { FALSE, FALSE, FALSE, FALSE, FALSE };
+static int  g_NextSlotToLight = 0;
+
+bool g_CatAnimationPlayed = false;
+bool g_DogAnimationPlayed = false;
+bool g_ElphAnimationPlayed = false;
+bool g_MouseAnimationPlayed = false;
+bool g_SheepAnimationPlayed = false;
+
 //=============================================================================
-// ‰Šú‰»ˆ—
+// åˆæœŸåŒ–å‡¦ç†
 //=============================================================================
 HRESULT InitUI(void)
 {
 	ID3D11Device *pDevice = GetDevice();
 
-	//ƒeƒNƒXƒ`ƒƒ¶¬
+	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ
 	for (int i = 0; i < TEXTURE_MAX; i++)
 	{
 		g_Texture[i] = NULL;
@@ -87,7 +106,7 @@ HRESULT InitUI(void)
 	}
 
 
-	// ’¸“_ƒoƒbƒtƒ@¶¬
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
 	D3D11_BUFFER_DESC bd;
 	ZeroMemory(&bd, sizeof(bd));
 	bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -97,18 +116,21 @@ HRESULT InitUI(void)
 	GetDevice()->CreateBuffer(&bd, NULL, &g_VertexBuffer);
 
 
-	// ƒvƒŒƒCƒ„[‚Ì‰Šú‰»
+	// ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸåŒ–
 	g_Use   = TRUE;
 	g_w     = TEXTURE_WIDTH;
 	g_h     = TEXTURE_HEIGHT;
 	g_Pos   = { 925.0f, 35.0f, 0.0f };
 	g_TexNo = 0;
 
+	for (int i = 0; i < UI_ICON_COUNT; ++i) g_AnimalCounted[i] = FALSE;
+	g_NextSlotToLight = 0;
+
 	return S_OK;
 }
 
 //=============================================================================
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 //=============================================================================
 void UninitUI(void)
 {
@@ -138,16 +160,32 @@ void UninitUI(void)
 }
 
 //=============================================================================
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 //=============================================================================
 void UpdateUI(void)
 {
-	if (g_ShowFullImage)
+	
+	UI_UpdateSequential();
+
+	if (g_ShowFullImage)       g_TexNo = 1;
+	if (g_ShowFullImage_Dog)   g_TexNo = 1;
+	if (g_ShowFullImage_Elph)  g_TexNo = 1;
+	if (g_ShowFullImage_Mouse) g_TexNo = 1;
+	if (g_ShowFullImage_Sheep) g_TexNo = 1;
+
+	int completed = 0;
+	if (g_ShowFullImage)       completed++;
+	if (g_ShowFullImage_Dog)   completed++;
+	if (g_ShowFullImage_Elph)  completed++;
+	if (g_ShowFullImage_Mouse) completed++;
+	if (g_ShowFullImage_Sheep) completed++;
+
+	if (completed == 5)
 	{
-		g_TexNo = 1;
+		SetFade(FADE_OUT, MODE_RESULT);
 	}
 
-#ifdef _DEBUG	// ƒfƒoƒbƒOî•ñ‚ğ•\¦‚·‚é
+#ifdef _DEBUG	// ãƒ‡ãƒãƒƒã‚°æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹
 	//char *str = GetDebugStr();
 	//sprintf(&str[strlen(str)], " PX:%.2f PY:%.2f", g_Pos.x, g_Pos.y);
 	
@@ -156,32 +194,64 @@ void UpdateUI(void)
 }
 
 //=============================================================================
-// BARˆ—
+// BARå‡¦ç†
 //===========================================================================
+
+// 0.0ï½1.0 ã«åã‚ã‚‹å®‰å…¨é–¢æ•°
 static inline float Safe01(float v) {
-	if (!(v == v) || !isfinite(v)) return 0.0f; // NaN/Inf -> 0
+	if (!(v == v) || !isfinite(v)) return 0.0f;
 	if (v < 0.0f) v = 0.0f;
 	if (v > 1.0f) v = 1.0f;
 	return v;
 }
 
-// Œ»İƒAƒNƒeƒBƒu‚È“®•¨‚ÌƒpƒYƒ‹Š®¬“x‚ğæ“¾‚·‚é
+// å‹•ç‰©ã®ãƒ‘ã‚ºãƒ«å®Œæˆåº¦ã‚’é †æ¬¡ãƒã‚§ãƒƒã‚¯ã—ã¦ã€UIã«åæ˜ ã™ã‚‹
+static void UI_UpdateSequential(void)
+{
+	// 0: çŒ«
+	if (!g_AnimalCounted[0] && g_ShowFullImage) {
+		g_AnimalCounted[0] = TRUE;
+		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
+	}
+	// 1: ç‹—
+	if (!g_AnimalCounted[1] && g_ShowFullImage_Dog) {
+		g_AnimalCounted[1] = TRUE;
+		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
+	}
+	// 2: è±¡
+	if (!g_AnimalCounted[2] && g_ShowFullImage_Elph) {
+		g_AnimalCounted[2] = TRUE;
+		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
+	}
+	// 3: é¼ 
+	if (!g_AnimalCounted[3] && g_ShowFullImage_Mouse) {
+		g_AnimalCounted[3] = TRUE;
+		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
+	}
+	// 4: ç¾Š
+	if (!g_AnimalCounted[4] && g_ShowFullImage_Sheep) {
+		g_AnimalCounted[4] = TRUE;
+		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
+	}
+}
+
+// ç¾åœ¨ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªå‹•ç‰©ã®ãƒ‘ã‚ºãƒ«å®Œæˆåº¦ã‚’å–å¾—ã™ã‚‹
 float GetActivePuzzleAlignmentRatio()
 {
 	float ratios[5] = {
-		GetPuzzleAlignmentRatio(),        // ”L
-		GetPuzzleAlignmentRatio_Dog(),    // ‹ç
-		GetPuzzleAlignmentRatio_Elph(),   // Û
-		GetPuzzleAlignmentRatio_Mouse(),  // ‘l
-		GetPuzzleAlignmentRatio_Sheep()   // —r
+		g_CatAnimationPlayed   ? 0.0f : GetPuzzleAlignmentRatio(),
+		g_DogAnimationPlayed   ? 0.0f : GetPuzzleAlignmentRatio_Dog(),
+		g_ElphAnimationPlayed  ? 0.0f : GetPuzzleAlignmentRatio_Elph(),
+		g_MouseAnimationPlayed ? 0.0f : GetPuzzleAlignmentRatio_Mouse(),
+		g_SheepAnimationPlayed ? 0.0f : GetPuzzleAlignmentRatio_Sheep()
 	};
 
-	// æ“¾‚µ‚½’l‚ğ [0,1] ‚Éû‚ß‚é
+	// å–å¾—ã—ãŸå€¤ã‚’ [0,1] ã«åã‚ã‚‹
 	for (int i = 0; i < 5; ++i) {
 		ratios[i] = Safe01(ratios[i]);
 	}
 
-	// Å‘å’l‚ğ‚Â“®•¨‚ğ’T‚·
+	// æœ€å¤§å€¤ã‚’æŒã¤å‹•ç‰©ã‚’æ¢ã™
 	int   bestIdx = -1;
 	float bestVal = 0.0f;
 	for (int i = 0; i < 5; ++i) {
@@ -191,93 +261,134 @@ float GetActivePuzzleAlignmentRatio()
 		}
 	}
 
-	// ƒQ[ƒW•\¦‚ğŠJn‚·‚éÅ¬‚µ‚«‚¢’l
+	// ã‚²ãƒ¼ã‚¸è¡¨ç¤ºã‚’é–‹å§‹ã™ã‚‹æœ€å°ã—ãã„å€¤
 	const float ENTER_EPS = 0.005f;
 #ifdef _DEBUG
 	{
-		// ƒfƒoƒbƒO—p‚ÉŠe“®•¨‚Ì”ä—¦‚ÆÅ‘å’l‚ğo—Í
+		// ãƒ‡ãƒãƒƒã‚°ç”¨ã«å„å‹•ç‰©ã®æ¯”ç‡ã¨æœ€å¤§å€¤ã‚’å‡ºåŠ›
 		char* str = GetDebugStr();
 		sprintf(&str[strlen(str)], " [GB] cat=%.3f dog=%.3f elph=%.3f mou=%.3f sheep=%.3f | best=%d val=%.3f",
 			ratios[0], ratios[1], ratios[2], ratios[3], ratios[4], bestIdx, bestVal);
 	}
 #endif
 
-	// ˆê’èˆÈã‚Ì”ä—¦‚ª‚ ‚éê‡‚ÍƒAƒNƒeƒBƒu“®•¨‚Æ‚µ‚Ä“o˜^
+	// ä¸€å®šä»¥ä¸Šã®æ¯”ç‡ãŒã‚ã‚‹å ´åˆã¯ã‚¢ã‚¯ãƒ†ã‚£ãƒ–å‹•ç‰©ã¨ã—ã¦ç™»éŒ²
 	if (bestIdx >= 0 && bestVal > ENTER_EPS) {
 		g_ActiveAnimalIdx = bestIdx;  
 		return bestVal;
 	}
 
-	// ‚¢‚¸‚ê‚Ì“®•¨‚à‘ÎÛŠO‚Ìê‡
+	// ã„ãšã‚Œã®å‹•ç‰©ã‚‚å¯¾è±¡å¤–ã®å ´åˆ
 	g_ActiveAnimalIdx = -1;
 
 	return 0.0f;
 }
 
 //=============================================================================
-// •`‰æˆ—
+// æç”»å‡¦ç†
 //=============================================================================
 void DrawUI(void)
 {
-	// ’¸“_ƒoƒbƒtƒ@İ’è
+	// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
 	UINT stride = sizeof(VERTEX_3D);
 	UINT offset = 0;
 	GetDeviceContext()->IASetVertexBuffers(0, 1, &g_VertexBuffer, &stride, &offset);
 
-	// ƒ}ƒgƒŠƒNƒXİ’è
+	// ãƒãƒˆãƒªã‚¯ã‚¹è¨­å®š
 	SetWorldViewProjection2D();
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
+	// ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ãƒˆãƒãƒ­ã‚¸è¨­å®š
 	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	// ƒ}ƒeƒŠƒAƒ‹İ’è
+	// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 	MATERIAL material;
 	ZeroMemory(&material, sizeof(material));
 	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	SetMaterial(material);
 
-	// ƒeƒNƒXƒ`ƒƒİ’è
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
+	// ãƒ†ã‚¯ã‚¹ãƒãƒ£è¨­å®š
+	//GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
 
-	// Œ…”•ªˆ—‚·‚é
-	
-		// ‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ğİ’è
-		SetSpriteColor(g_VertexBuffer,
-			g_Pos.x, g_Pos.y, g_w, g_h,     // position siz
-			0.0f, 0.0f, 1.0f, 1.0f,         // texture coord
-			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+	//// æ¡æ•°åˆ†å‡¦ç†ã™ã‚‹
+	//
+	//	// ï¼‘æšã®ãƒãƒªã‚´ãƒ³ã®é ‚ç‚¹ã¨ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨­å®š
+	//	SetSpriteColor(g_VertexBuffer,
+	//		g_Pos.x, g_Pos.y, g_w, g_h,     // position siz
+	//		0.0f, 0.0f, 1.0f, 1.0f,         // texture coord
+	//		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
-		GetDeviceContext()->Draw(4, 0);
+	//	// ãƒãƒªã‚´ãƒ³æç”»
+	//	GetDeviceContext()->Draw(4, 0);
+
+		DrawSequentialSlotsRow();
 }
+
+static void DrawSequentialSlotsRow(void)
+{
+	if (!g_Texture[0] || !g_Texture[1]) return; 
+
+	
+	float totalW = UI_ICON_COUNT * UI_ICON_W + (UI_ICON_COUNT - 1) * UI_ICON_PAD;
+	float leftX = SCREEN_WIDTH - UI_ICON_MARGIN_RIGHT - totalW;
+	float y = UI_ICON_MARGIN_TOP;
+
+	UINT stride = sizeof(VERTEX_3D);
+	UINT offset = 0;
+	GetDeviceContext()->IASetVertexBuffers(0, 1, &g_VertexBuffer, &stride, &offset);
+	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
+	MATERIAL mat;
+	ZeroMemory(&mat, sizeof(mat));
+	mat.Diffuse = XMFLOAT4(1, 1, 1, 1);
+	SetMaterial(mat);
+
+
+	for (int i = 0; i < UI_ICON_COUNT; ++i)
+	{
+		ID3D11ShaderResourceView* tex = (i < g_NextSlotToLight) ? g_Texture[1] : g_Texture[0];
+
+		float x = leftX + i * (UI_ICON_W + UI_ICON_PAD);
+
+		SetSpriteColor(
+			g_VertexBuffer,
+			x, y, UI_ICON_W, UI_ICON_H,
+			0.0f, 0.0f, 1.0f, 1.0f,
+			XMFLOAT4(1, 1, 1, 1)
+		);
+
+		GetDeviceContext()->PSSetShaderResources(0, 1, &tex);
+		GetDeviceContext()->Draw(4, 0);
+	}
+}
+
 
 void DrawGaugeBars()
 {
-	// Œ»İ‚ÌƒAƒNƒeƒBƒu“®•¨‚ÌŠ®¬“x‚ğæ“¾
+	// ç¾åœ¨ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–å‹•ç‰©ã®å®Œæˆåº¦ã‚’å–å¾—
 	float ratio = GetActivePuzzleAlignmentRatio();
 	
-	// ƒQ[ƒWƒo[‚Ì•\¦ˆÊ’u‚ÆƒTƒCƒY
+	// ã‚²ãƒ¼ã‚¸ãƒãƒ¼ã®è¡¨ç¤ºä½ç½®ã¨ã‚µã‚¤ã‚º
 	float screenX   = 480.0f;
 	float screenY   = 475.0f;
 	float barWidth  = 250.0f;
 	float barHeight = 50.0f;
 
-	// ===== ƒAƒNƒeƒBƒu“®•¨‚ÌƒAƒCƒRƒ“•`‰æ =====
+	// ===== ã‚¢ã‚¯ãƒ†ã‚£ãƒ–å‹•ç‰©ã®ã‚¢ã‚¤ã‚³ãƒ³æç”» =====
 	if (g_ActiveAnimalIdx >= 0 && g_ActiveAnimalIdx < ANIMAL_TEX_MAX) {
 		
-		float iconW = 64.0f;
-		float iconH = 64.0f;
+		float iconW = 90.0f;
+		float iconH = 90.0f;
 
 		float padding = 24.0f; 
 		
-		// ƒAƒCƒRƒ“‚ğƒQ[ƒW¶‚É”z’u‚·‚é‚½‚ß‚ÌÀ•W
+		// ã‚¢ã‚¤ã‚³ãƒ³ã‚’ã‚²ãƒ¼ã‚¸å·¦ã«é…ç½®ã™ã‚‹ãŸã‚ã®åº§æ¨™
 		float iconX = (screenX - barWidth * 0.5f) - padding - iconW * 0.5f;
 		float iconY = screenY; 
 
-		// “®•¨ƒAƒCƒRƒ“‚ÌƒeƒNƒXƒ`ƒƒ‚ğİ’è
+		// å‹•ç‰©ã‚¢ã‚¤ã‚³ãƒ³ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’è¨­å®š
 		GetDeviceContext()->PSSetShaderResources(0, 1, &g_AnimalTex[g_ActiveAnimalIdx]);
 
-		// ƒAƒCƒRƒ“‚ÌƒXƒvƒ‰ƒCƒg•`‰æ
+		// ã‚¢ã‚¤ã‚³ãƒ³ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆæç”»
 		SetSpriteColor(g_VertexBuffer,
 			iconX, iconY, iconW, iconH,
 			0.0f, 0.0f, 1.0f, 1.0f,
@@ -306,7 +417,12 @@ void DrawGaugeBars()
 	GetDeviceContext()->Draw(4, 0);
 }
 
-
+void ResetPuzzleAnimationFlags(void)
+{
+	g_CatAnimationPlayed = g_DogAnimationPlayed =
+		g_ElphAnimationPlayed = g_MouseAnimationPlayed =
+		g_SheepAnimationPlayed = false;
+}
 
 
 

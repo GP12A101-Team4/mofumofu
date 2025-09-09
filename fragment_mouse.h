@@ -27,4 +27,5 @@ float GetPuzzleAlignmentRatio_Mouse();
 void DrawPartDebugUI_Mouse();
 
 extern bool g_ShowFullImage_Mouse;
+extern bool g_MouseAnimationPlayed;
 
