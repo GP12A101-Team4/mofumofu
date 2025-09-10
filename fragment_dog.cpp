@@ -450,11 +450,11 @@ void DrawFragment_Dog(void)
 			
 			*/
 
-			g_Fragment_Dog[0].overallPos = XMFLOAT3(585.0f, 27.0f, 234.0f);
-			g_Fragment_Dog[1].overallPos = XMFLOAT3(647.0f, 34.0f, 246.0f);
-			g_Fragment_Dog[2].overallPos = XMFLOAT3(644.0f, 37.0f, 236.0f);
-			g_Fragment_Dog[3].overallPos = XMFLOAT3(525.0f, 29.0f, 208.0f);
-			g_Fragment_Dog[4].overallPos = XMFLOAT3(422.0f, 8.0f, 216.0f);
+			g_Fragment_Dog[0].overallPos = XMFLOAT3(1185.0f, 27.0f, 234.0f);
+			g_Fragment_Dog[1].overallPos = XMFLOAT3(1247.0f, 34.0f, 246.0f);
+			g_Fragment_Dog[2].overallPos = XMFLOAT3(1244.0f, 37.0f, 236.0f);
+			g_Fragment_Dog[3].overallPos = XMFLOAT3(1125.0f, 29.0f, 208.0f);
+			g_Fragment_Dog[4].overallPos = XMFLOAT3(1022.0f, 8.0f, 216.0f);
 
 			g_Fragment_Dog[0].scl = XMFLOAT3(1.09f, 1.09f, 1.0f);
 			g_Fragment_Dog[1].scl = XMFLOAT3(1.36f, 1.36f, 1.0f);
