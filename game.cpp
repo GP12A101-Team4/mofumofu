@@ -294,12 +294,34 @@ void DrawGame(void)
 void CheckHit(void)
 {
 	
-	PLAYER* player = GetPlayer();	// プレイヤーのポインターを初期化
+	//PLAYER* player = GetPlayer();	// プレイヤーのポインターを初期化
 
-	if (player->pos.x < MAP_LEFT/2 + player->size)player->pos.x = MAP_LEFT/2 + player->size;
-	if (player->pos.x > MAP_RIGHT/2 - player->size)player->pos.x = MAP_RIGHT/2 - player->size;
-	if (player->pos.z < MAP_DOWN/2 + player->size)player->pos.z = MAP_DOWN/2 + player->size;
-	if (player->pos.z > MAP_TOP/2 - player->size)player->pos.z = MAP_TOP/2 - player->size;
+	//if (player->pos.x < MAP_LEFT/2 + player->size)player->pos.x = MAP_LEFT/2 + player->size;
+	//if (player->pos.x > MAP_RIGHT/2 - player->size)player->pos.x = MAP_RIGHT/2 - player->size;
+	//if (player->pos.z < MAP_DOWN/2 + player->size)player->pos.z = MAP_DOWN/2 + player->size;
+	//if (player->pos.z > MAP_TOP/2 - player->size)player->pos.z = MAP_TOP/2 - player->size;
+
+	PLAYER* player = GetPlayer();   // プレイヤーのポインターを初期化
+
+	// 圓心在 (0,0,0)
+	float centerX = 0.0f;
+	float centerZ = 0.0f;
+
+	float mapWidth = MAP_RIGHT - MAP_LEFT;
+	float radius = (mapWidth / 2.0f) * 0.75f; 
+
+
+	float dx = player->pos.x - centerX;
+	float dz = player->pos.z - centerZ;
+	float dist = sqrtf(dx * dx + dz * dz);
+
+	
+	if (dist > radius)
+	{
+		float scale = radius / dist;
+		player->pos.x = centerX + dx * scale;
+		player->pos.z = centerZ + dz * scale;
+	}
 }
 
 //回転平滑化
