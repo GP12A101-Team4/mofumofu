@@ -20,3 +20,4 @@ void StopTimer();      // ゲーム終了で呼ぶ
 
 // 経過秒（整数秒）を返す（必要なら利用）
 int GetElapsedTime(void);
+int GetElapsedTimeMs();
