@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒXƒRƒAˆ— [score.cpp]
+// ã‚¿ã‚¤ãƒãƒ¼å‡¦ç† [score.cpp]
 // Author : 
 //
 //=============================================================================
@@ -8,190 +8,182 @@
 #include "renderer.h"
 #include "score.h"
 #include "sprite.h"
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
-#define TEXTURE_WIDTH				(16)	// ƒLƒƒƒ‰ƒTƒCƒY
-#define TEXTURE_HEIGHT				(32)	// 
-#define TEXTURE_MAX					(1)		// ƒeƒNƒXƒ`ƒƒ‚Ì”
-
-
-//*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
-//*****************************************************************************
-
+#define TEXTURE_WIDTH   (22)   // ã‚­ãƒ£ãƒ©ã‚µã‚¤ã‚º
+#define TEXTURE_HEIGHT  (38)
+#define TEXTURE_MAX     (1)    // ãƒ†ã‚¯ã‚¹ãƒãƒ£æ•°
 
 //*****************************************************************************
-// ƒOƒ[ƒoƒ‹•Ï”
+// ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
 //*****************************************************************************
-static ID3D11Buffer				*g_VertexBuffer = NULL;		// ’¸“_î•ñ
-static ID3D11ShaderResourceView	*g_Texture[TEXTURE_MAX] = { NULL };	// ƒeƒNƒXƒ`ƒƒî•ñ
+static ID3D11Buffer* g_VertexBuffer = NULL;
+static ID3D11ShaderResourceView* g_Texture[TEXTURE_MAX] = { NULL };
 
-static char *g_TexturName[] = {
-	"data/TEXTURE/number16x32.png",
+static char* g_TexturName[] = {
+    "data/TEXTURE/Numberrr.png",
 };
 
+static float g_w, g_h;
+static XMFLOAT3 g_Pos;
+static int g_TexNo;
 
-static BOOL						g_Use;						// TRUE:g‚Á‚Ä‚¢‚é  FALSE:–¢g—p
-static float					g_w, g_h;					// •‚Æ‚‚³
-static XMFLOAT3					g_Pos;						// ƒ|ƒŠƒSƒ“‚ÌÀ•W
-static int						g_TexNo;					// ƒeƒNƒXƒ`ƒƒ”Ô†
-
-static int						g_Score;					// ƒXƒRƒA
+// ã‚¿ã‚¤ãƒãƒ¼ç”¨
+static DWORD g_StartTime = 0;
+static DWORD g_ElapsedTime = 0;
+static BOOL  g_Running = FALSE;
 
 //=============================================================================
-// ‰Šú‰»ˆ—
+// åˆæœŸåŒ–å‡¦ç†
 //=============================================================================
 HRESULT InitScore(void)
 {
-	ID3D11Device *pDevice = GetDevice();
+    // ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”Ÿæˆ
+    for (int i = 0; i < TEXTURE_MAX; i++)
+    {
+        g_Texture[i] = NULL;
+        D3DX11CreateShaderResourceViewFromFile(
+            GetDevice(), g_TexturName[i], NULL, NULL, &g_Texture[i], NULL);
+    }
 
-	//ƒeƒNƒXƒ`ƒƒ¶¬
-	for (int i = 0; i < TEXTURE_MAX; i++)
-	{
-		g_Texture[i] = NULL;
-		D3DX11CreateShaderResourceViewFromFile(GetDevice(),
-			g_TexturName[i],
-			NULL,
-			NULL,
-			&g_Texture[i],
-			NULL);
-	}
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ç”Ÿæˆ
+    D3D11_BUFFER_DESC bd{};
+    bd.Usage = D3D11_USAGE_DYNAMIC;
+    bd.ByteWidth = sizeof(VERTEX_3D) * 4;
+    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    GetDevice()->CreateBuffer(&bd, NULL, &g_VertexBuffer);
 
+    g_w = TEXTURE_WIDTH;
+    g_h = TEXTURE_HEIGHT;
+    g_Pos = { 450.0f, 5.0f, 0.0f };  // è¡¨ç¤ºä½ç½®ï¼ˆå¿…è¦ãªã‚‰èª¿æ•´ï¼‰
+    g_TexNo = 0;
 
-	// ’¸“_ƒoƒbƒtƒ@¶¬
-	D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
-	bd.Usage = D3D11_USAGE_DYNAMIC;
-	bd.ByteWidth = sizeof(VERTEX_3D) * 4;
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	GetDevice()->CreateBuffer(&bd, NULL, &g_VertexBuffer);
+    g_StartTime = 0;
+    g_ElapsedTime = 0;
+    g_Running = FALSE;
 
-
-	// ƒvƒŒƒCƒ„[‚Ì‰Šú‰»
-	g_Use   = TRUE;
-	g_w     = TEXTURE_WIDTH;
-	g_h     = TEXTURE_HEIGHT;
-	g_Pos   = { 500.0f, 20.0f, 0.0f };
-	g_TexNo = 0;
-
-	g_Score = 0;	// ƒXƒRƒA‚Ì‰Šú‰»
-
-	return S_OK;
+    return S_OK;
 }
 
 //=============================================================================
-// I—¹ˆ—
+// çµ‚äº†å‡¦ç†
 //=============================================================================
 void UninitScore(void)
 {
-	if (g_VertexBuffer)
-	{
-		g_VertexBuffer->Release();
-		g_VertexBuffer = NULL;
-	}
-
-	for (int i = 0; i < TEXTURE_MAX; i++)
-	{
-		if (g_Texture[i])
-		{
-			g_Texture[i]->Release();
-			g_Texture[i] = NULL;
-		}
-	}
-
+    if (g_VertexBuffer)
+    {
+        g_VertexBuffer->Release();
+        g_VertexBuffer = NULL;
+    }
+    for (int i = 0; i < TEXTURE_MAX; i++)
+    {
+        if (g_Texture[i])
+        {
+            g_Texture[i]->Release();
+            g_Texture[i] = NULL;
+        }
+    }
 }
 
 //=============================================================================
-// XVˆ—
+// æ›´æ–°å‡¦ç†
 //=============================================================================
 void UpdateScore(void)
 {
-
-
-#ifdef _DEBUG	// ƒfƒoƒbƒOî•ñ‚ğ•\¦‚·‚é
-	//char *str = GetDebugStr();
-	//sprintf(&str[strlen(str)], " PX:%.2f PY:%.2f", g_Pos.x, g_Pos.y);
-	
-#endif
-
+    if (g_Running)
+    {
+        g_ElapsedTime = timeGetTime() - g_StartTime;
+    }
 }
 
 //=============================================================================
-// •`‰æˆ—
+// æç”»å‡¦ç†
 //=============================================================================
 void DrawScore(void)
 {
-	// ’¸“_ƒoƒbƒtƒ@İ’è
-	UINT stride = sizeof(VERTEX_3D);
-	UINT offset = 0;
-	GetDeviceContext()->IASetVertexBuffers(0, 1, &g_VertexBuffer, &stride, &offset);
+    // é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡è¨­å®š
+    UINT stride = sizeof(VERTEX_3D);
+    UINT offset = 0;
+    GetDeviceContext()->IASetVertexBuffers(0, 1, &g_VertexBuffer, &stride, &offset);
 
-	// ƒ}ƒgƒŠƒNƒXİ’è
-	SetWorldViewProjection2D();
+    SetWorldViewProjection2D();
+    GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
-	// ƒvƒŠƒ~ƒeƒBƒuƒgƒ|ƒƒWİ’è
-	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    MATERIAL material{};
+    material.Diffuse = XMFLOAT4(1, 1, 1, 1);
+    SetMaterial(material);
 
-	// ƒ}ƒeƒŠƒAƒ‹İ’è
-	MATERIAL material;
-	ZeroMemory(&material, sizeof(material));
-	material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	SetMaterial(material);
+    GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
 
-	// ƒeƒNƒXƒ`ƒƒİ’è
-	GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture[g_TexNo]);
+    // çµŒéæ™‚é–“ â†’ åˆ†, ç§’, ãƒŸãƒªç§’
+    DWORD msAll = g_ElapsedTime;
+    int mm = msAll / 60000;
+    int ss = (msAll / 1000) % 60;
+    int ms = (msAll % 1000) / 10; // 2æ¡ãƒŸãƒªç§’
 
-	// Œ…”•ªˆ—‚·‚é
-	int number = g_Score;
-	for (int i = 0; i < SCORE_DIGIT; i++)
-	{
-		// ¡‰ñ•\¦‚·‚éŒ…‚Ì”š
-		float x = (float)(number % 10);
+    // æ¡ã”ã¨ã®é…åˆ—ï¼šMM:SS:MS
+    // -1 ã‚’ã€Œå†’å·ã€ã«ã™ã‚‹ï¼ˆãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æœ€å¾Œã®åˆ—ã‚’ä½¿ç”¨ï¼‰
+    int layout[8] = {
+        mm / 10, mm % 10,
+        -1,                 // å†’å·
+        ss / 10, ss % 10,
+        -1,                 // å†’å·
+        ms / 10, ms % 10
+    };
 
-		// ƒXƒRƒA‚ÌˆÊ’u‚âƒeƒNƒXƒ`ƒƒ[À•W‚ğ”½‰f
-		float px = g_Pos.x - g_w*i;	// ƒXƒRƒA‚Ì•\¦ˆÊ’uX
-		float py = g_Pos.y;			// ƒXƒRƒA‚Ì•\¦ˆÊ’uY
-		float pw = g_w;				// ƒXƒRƒA‚Ì•\¦•
-		float ph = g_h;				// ƒXƒRƒA‚Ì•\¦‚‚³
+    float startX = g_Pos.x;
+    float startY = g_Pos.y;
+    float tw = 1.0f / 11.0f;  // æ•°å­—(0-9) + å†’å·(10) â†’ 11åˆ—
 
-		float tw = 1.0f / 10;		// ƒeƒNƒXƒ`ƒƒ‚Ì•
-		float th = 1.0f / 1;		// ƒeƒNƒXƒ`ƒƒ‚Ì‚‚³
-		float tx = x * tw;			// ƒeƒNƒXƒ`ƒƒ‚Ì¶ãXÀ•W
-		float ty = 0.0f;			// ƒeƒNƒXƒ`ƒƒ‚Ì¶ãYÀ•W
+    for (int i = 0; i < 8; i++)
+    {
+        int d = layout[i];
+        float tx;
 
-		// ‚P–‡‚Ìƒ|ƒŠƒSƒ“‚Ì’¸“_‚ÆƒeƒNƒXƒ`ƒƒÀ•W‚ğİ’è
-		SetSpriteColor(g_VertexBuffer, px, py, pw, ph, tx, ty, tw, th,
-			XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
+        if (d == -1) {
+            // å†’å·ï¼šæœ€åä¸€åˆ— (index = 10)
+            tx = 10 * tw;
+        }
+        else {
+            // æ™®é€šæ•°å­—
+            tx = d * tw;
+        }
 
-		// ƒ|ƒŠƒSƒ“•`‰æ
-		GetDeviceContext()->Draw(4, 0);
+        SetSpriteLeftTop(g_VertexBuffer,
+            startX + i * g_w, startY,
+            g_w, g_h,
+            tx, 0.0f, tw, 1.0f);
 
-		// Ÿ‚ÌŒ…‚Ö
-		number /= 10;
-	}
+        GetDeviceContext()->Draw(4, 0);
+    }
 }
 
 
 //=============================================================================
-// ƒXƒRƒA‚ğ‰ÁZ‚·‚é
-// ˆø”:add :’Ç‰Á‚·‚é“_”Bƒ}ƒCƒiƒX‚à‰Â”\
+// ã‚¿ã‚¤ãƒãƒ¼åˆ¶å¾¡
 //=============================================================================
-void AddScore(int add)
+void StartTimer()
 {
-	g_Score += add;
-	if (g_Score > SCORE_MAX)
-	{
-		g_Score = SCORE_MAX;
-	}
-
+    g_StartTime = timeGetTime();
+    g_ElapsedTime = 0;
+    g_Running = TRUE;
 }
 
-
-int GetScore(void)
+void StopTimer()
 {
-	return g_Score;
+    if (g_Running)
+    {
+        g_ElapsedTime = timeGetTime() - g_StartTime;
+        g_Running = FALSE;
+    }
 }
 
+int GetElapsedTime(void)
+{
+    return g_ElapsedTime / 1000;
+}

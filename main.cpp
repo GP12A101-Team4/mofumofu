@@ -666,12 +666,14 @@ void SetMode(int mode)
 		/*InitPlayer();
 		InitScore();*/
 		InitGame();
+		StartTimer();
 
 		PlaySound(SOUND_LABEL_BGM_GAME);
 		break;
 
 	case MODE_RESULT:
 		InitResult();
+		StopTimer();
 		PlaySound(SOUND_LABEL_BGM_GAME);
 		break;
 

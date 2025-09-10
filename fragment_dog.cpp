@@ -263,6 +263,7 @@ void UpdateFragment_Dog(void)
 	if (!g_ShowFullImage_Dog && CheckPuzzleRestored_Dog())
 	{
 		g_ShowFullImage_Dog = true;
+		g_DogAnimationPlayed = true;
 		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
 	}
 

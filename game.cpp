@@ -76,6 +76,7 @@ HRESULT InitGame(void)
 	InitBG();
 	// ライトを有効化	// 影の初期化処理
 	InitShadow();
+	ResetPuzzleAnimationFlags();
 
 	// 欠片の初期処理
 	InitFragment();

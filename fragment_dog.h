@@ -27,6 +27,7 @@ float GetPuzzleAlignmentRatio_Dog();
 void DrawPartDebugUI_Dog();
 
 extern bool g_ShowFullImage_Dog;
+extern bool g_DogAnimationPlayed;
 
 void ShowDogDebugWindow();
 

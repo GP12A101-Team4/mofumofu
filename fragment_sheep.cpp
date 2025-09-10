@@ -262,6 +262,7 @@ void UpdateFragment_Sheep(void)
 	if (!g_ShowFullImage_Sheep && CheckPuzzleRestored_Sheep())
 	{
 		g_ShowFullImage_Sheep = true;
+		g_SheepAnimationPlayed = true;
 		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
 	}
 
@@ -303,6 +304,7 @@ void UpdateFragment_Sheep(void)
 
 	if (g_FragmentRestored_Sheep[0].alpha < 0) {
 		g_FragmentRestored_Sheep[0].use = FALSE;
+		
 	}
 
 #ifdef _DEBUG
