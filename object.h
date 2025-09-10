@@ -38,17 +38,17 @@ struct OBJECT
 };
 
 enum object {
-	bench,
-	fountain,
-	tree_first,
+	tree_1,
 	tree_2,
 	tree_3,
 	tree_4,
 	tree_5,
 	tree_6,
 	tree_7,
+	tree_8,
+	tree_9,
 	tree_last,
-	lamp_first,
+	lamp_1,
 	lamp_2,
 	lamp_3,
 	lamp_4,
@@ -56,6 +56,33 @@ enum object {
 	lamp_6,
 	lamp_7,
 	lamp_last,
+	plant_1,
+	plant_2,
+	plant_3,
+	plant_4,
+	plant_5,
+	plant_last,
+	bench_1,
+	bench_2,
+	bench_3,
+	bench_4,
+	bench_5,
+	bench_last,
+	shop_1,
+	shop_2,
+	shop_3,
+	fountain,
+	cafe,
+	building,
+	burger_shop,
+	candy_shop,
+	ice_truck,
+	restaurant,
+	
+	
+	
+	
+	
 	object_max
 
 };

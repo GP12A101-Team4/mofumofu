@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ƒ‚ƒfƒ‹‚Ìˆ— [model.h]
+// ãƒ¢ãƒ‡ãƒ«ã®å‡¦ç† [model.h]
 // Author :
 //
 //=============================================================================
@@ -10,25 +10,27 @@
 #include "renderer.h"
 
 //*********************************************************
-// \‘¢‘Ì
+// æ§‹é€ ä½“
 //*********************************************************
 
-// ƒ}ƒeƒŠƒAƒ‹\‘¢‘Ì
+// ãƒãƒ†ãƒªã‚¢ãƒ«æ§‹é€ ä½“
 
-#define MODEL_MAX_MATERIAL		(16)		// ‚Pƒ‚ƒfƒ‹‚ÌMaxƒ}ƒeƒŠƒAƒ‹”
+#define MODEL_MAX_MATERIAL		(16)		// ï¼‘ãƒ¢ãƒ‡ãƒ«ã®Maxãƒãƒ†ãƒªã‚¢ãƒ«æ•°
 
 struct DX11_MODEL_MATERIAL
 {
 	MATERIAL					Material;
+
 	ID3D11ShaderResourceView	*Texture;
 };
 
-// •`‰æƒTƒuƒZƒbƒg\‘¢‘Ì
+// æç”»ã‚µãƒ–ã‚»ãƒƒãƒˆæ§‹é€ ä½“
 struct DX11_SUBSET
 {
 	unsigned short	StartIndex;
 	unsigned short	IndexNum;
 	DX11_MODEL_MATERIAL	Material;
+	XMFLOAT4 Diffuse_Original;
 };
 
 struct DX11_MODEL
@@ -43,16 +45,16 @@ struct DX11_MODEL
 
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 void LoadModel( char *FileName, DX11_MODEL *Model );
 void UnloadModel( DX11_MODEL *Model );
 void DrawModel( DX11_MODEL *Model );
 
-// ƒ‚ƒfƒ‹‚Ìƒ}ƒeƒŠƒAƒ‹‚ÌƒfƒBƒtƒ…[ƒY‚ğæ“¾‚·‚éBMax16ŒÂ•ª‚É‚µ‚Ä‚ ‚é
+// ãƒ¢ãƒ‡ãƒ«ã®ãƒãƒ†ãƒªã‚¢ãƒ«ã®ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºã‚’å–å¾—ã™ã‚‹ã€‚Max16å€‹åˆ†ã«ã—ã¦ã‚ã‚‹
 void GetModelDiffuse(DX11_MODEL *Model, XMFLOAT4 *diffuse);
 
-// ƒ‚ƒfƒ‹‚Ìw’èƒ}ƒeƒŠƒAƒ‹‚ÌƒfƒBƒtƒ…[ƒY‚ğƒZƒbƒg‚·‚éB
+// ãƒ¢ãƒ‡ãƒ«ã®æŒ‡å®šãƒãƒ†ãƒªã‚¢ãƒ«ã®ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
 void SetModelDiffuse(DX11_MODEL *Model, int mno, XMFLOAT4 diffuse);
 
 

@@ -17,13 +17,29 @@
 #include "imgui.h"
 #include "game.h"
 
+#include <fstream>
+#include <string>
+
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
 #define	MODEL_TREE			"data/MODEL/tree.obj"			// 読み込むモデル名
 #define	MODEL_LAMP			"data/MODEL/lamp.obj"			// 読み込むモデル名
-#define	MODEL_BENCH		"data/MODEL/bench.obj"			// 読み込むモデル名
+#define	MODEL_PLANT			"data/MODEL/plant.obj"			// 読み込むモデル名
+#define	MODEL_BENCH			"data/MODEL/bench.obj"			// 読み込むモデル名
+#define	MODEL_SHOP_1		"data/MODEL/shop.obj"			// 読み込むモデル名
+#define	MODEL_SHOP_2		"data/MODEL/shop_second.obj"			// 読み込むモデル名
+#define	MODEL_SHOP_3		"data/MODEL/shop_third.obj"			// 読み込むモデル名
 #define	MODEL_FOUNTAIN		"data/MODEL/fountain.obj"			// 読み込むモデル名
+#define	MODEL_CAFE			"data/MODEL/cafe.obj"			// 読み込むモデル名
+#define	MODEL_BUILDING		"data/MODEL/building.obj"			// 読み込むモデル名
+#define	MODEL_BURGER_SHOP	"data/MODEL/burger.obj"			// 読み込むモデル名
+#define	MODEL_CANDY_SHOP	"data/MODEL/candy_shop.obj"			// 読み込むモデル名
+#define	MODEL_ICE_TRUCK		"data/MODEL/ice_truck.obj"			// 読み込むモデル名
+#define	MODEL_RESTAURANT	"data/MODEL/restaurant.obj"			// 読み込むモデル名
+
+
+
 
 #define	VALUE_MOVE			(2.0f)							// 移動量
 #define	VALUE_ROTATE		(XM_PI * 0.02f)					// 回転量
@@ -36,7 +52,7 @@
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-
+void SaveObjectPositions(const char* filename);
 
 //*****************************************************************************
 // グローバル変数
@@ -45,64 +61,185 @@ static OBJECT				g_Object[object_max];						// プレイヤー
 
 static int					Target_Object = 0;
 
+const char* objectNames[] = {
+	"tree_1",
+	"tree_2",
+	"tree_3",
+	"tree_4",
+	"tree_5",
+	"tree_6",
+	"tree_7",
+	"tree_8",
+	"tree_9",
+	"tree_last",
 
+	"lamp_1",
+	"lamp_2",
+	"lamp_3",
+	"lamp_4",
+	"lamp_5",
+	"lamp_6",
+	"lamp_7",
+	"lamp_last",
+
+	"plant_1",
+	"plant_2",
+	"plant_3",
+	"plant_4",
+	"plant_5",
+	"plant_last",
+
+	"bench_1",
+	"bench_2",
+	"bench_3",
+	"bench_4",
+	"bench_5",
+	"bench_last",
+
+	"shop_1",
+	"shop_2",
+	"shop_3",
+
+	"fountain",
+	"cafe",
+	"building",
+	"burger_shop",
+	"candy_shop",
+	"ice_truck",
+	"restaurant"
+};
 //=============================================================================
 // 初期化処理
 //=============================================================================
 HRESULT InitObject(void)
 {
-	for(int i = 0;i< object_max;i++){
-		if (i < fountain) {
+	for (int i = 0; i < object_max; i++) {
+		if (i < tree_last + 1) {
+			LoadModel(MODEL_TREE, &g_Object[i].model);
+		}
+		else if (i < lamp_last + 1) {
+			LoadModel(MODEL_LAMP, &g_Object[i].model);
+		}
+		else if (i < plant_last + 1) {
+			LoadModel(MODEL_PLANT, &g_Object[i].model);
+		}
+		else if (i < bench_last + 1) {
 			LoadModel(MODEL_BENCH, &g_Object[i].model);
-		}
-		else if (i < tree_first) {
-			LoadModel(MODEL_FOUNTAIN, &g_Object[i].model);
-		}
-		else if(i<lamp_first){
-		LoadModel(MODEL_TREE, &g_Object[i].model);
-		}
-		else if (i < object_max ) {
-		LoadModel(MODEL_LAMP, &g_Object[i].model);
 		}
 		g_Object[i].load = TRUE;
 
-		g_Object[i].pos = { 0.0f, 0.0f, 0.0f };
+		g_Object[i].pos = { 0.0f + i * 90.0f, 0.0f, 0.0f };
 		g_Object[i].rot = { 0.0f, 0.0f, 0.0f };
-		g_Object[i].scl = { 0.1f, 0.1f, 0.1f };
+		//g_Object[i].scl = { 0.1f, 0.1f, 0.1f };
+		g_Object[i].scl = { 1.0f, 1.0f, 1.0f };
 
 		g_Object[i].size = OBJECT_SIZE;	// 当たり判定の大きさ
 		g_Object[i].use = TRUE;
 
-		// ここでプレイヤー用の影を作成している
-		XMFLOAT3 pos = g_Object[i].pos;
-		pos.y -= (OBJECT_OFFSET_Y - 0.1f);
-		g_Object[i].shadowIdx = CreateShadow(pos, OBJECT_SHADOW_SIZE, OBJECT_SHADOW_SIZE);
-		//          ↑
-		//        このメンバー変数が生成した影のIndex番号
+		//// ここでプレイヤー用の影を作成している
+		//XMFLOAT3 pos = g_Object[i].pos;
+		//pos.y -= (OBJECT_OFFSET_Y - 0.1f);
+		//g_Object[i].shadowIdx = CreateShadow(pos, OBJECT_SHADOW_SIZE, OBJECT_SHADOW_SIZE);
+		////          ↑
+		////        このメンバー変数が生成した影のIndex番号
 	}
 
-	g_Object[bench].pos =		{ 410.0f,0.0f,530.0f };
-	g_Object[bench].rot =		{ 0.0f,2.3f,0.0f };
-	g_Object[bench].scl =		{ 0.06f,0.06f,0.06f };
+	LoadModel(MODEL_SHOP_1, &g_Object[shop_1].model);
+	LoadModel(MODEL_SHOP_2, &g_Object[shop_2].model);
+	LoadModel(MODEL_SHOP_3, &g_Object[shop_3].model);
+	LoadModel(MODEL_FOUNTAIN, &g_Object[fountain].model);
+	LoadModel(MODEL_CAFE, &g_Object[cafe].model);
+	LoadModel(MODEL_BUILDING, &g_Object[building].model);
+	LoadModel(MODEL_BURGER_SHOP, &g_Object[burger_shop].model);
+	LoadModel(MODEL_CANDY_SHOP, &g_Object[candy_shop].model);
+	LoadModel(MODEL_ICE_TRUCK, &g_Object[ice_truck].model);
+	LoadModel(MODEL_RESTAURANT, &g_Object[restaurant].model);
+	
+	g_Object[bench_1].scl = { 0.6f,0.6f,0.6f };
+	g_Object[bench_2].scl = { 0.6f,0.6f,0.6f };
+	g_Object[bench_3].scl = { 0.6f,0.6f,0.6f };
+	g_Object[bench_4].scl = { 0.6f,0.6f,0.6f };
+	g_Object[bench_5].scl = { 0.6f,0.6f,0.6f };
+	g_Object[bench_last].scl = { 0.6f,0.6f,0.6f };
+	
 
-	g_Object[fountain].pos =	{ 0.0f,0.0f,60.0f };
-	g_Object[tree_first].pos =	{ 290.0f,0.0f,2150.0f };
-	g_Object[tree_2].pos =		{ -360.0f,0.0f,1800.0f };
-	g_Object[tree_3].pos =		{ -1380.0f,0.0f,330.0f };
-	g_Object[tree_4].pos =		{ -2070.0f,0.0f,-330.0f };
-	g_Object[tree_5].pos =		{ 1980.0f,0.0f,230.0f };
-	g_Object[tree_6].pos =		{ 320.0f,0.0f,-728.0f };
-	g_Object[tree_7].pos =		{ 730.0f,0.0f,428.0f };
-	g_Object[tree_last].pos =	{ -360.0f,0.0f,-900.0f };
-	g_Object[lamp_first].pos =	{ -1910.0f,0.0f,-180.0f };
-	g_Object[lamp_2].pos =		{ -650.0f,0.0f,320.0f };
-	g_Object[lamp_3].pos =		{ -320.0f,0.0f,2030.0f };
-	g_Object[lamp_4].pos =		{ 310.0f,0.0f,618.0f };
-	g_Object[lamp_5].pos =		{ 1550.0f,0.0f,0268.0f };
-	g_Object[lamp_6].pos =		{ 610.0f,0.0f,-230.0f };
-	g_Object[lamp_7].pos =		{ -410.0f,0.0f,520.0f };
-	g_Object[lamp_last].pos =	{ 200.0f,0.0f,-1270.0f };
 
+	g_Object[tree_1].pos = { -430.0f,0.0f,1980.0f };
+	g_Object[tree_2].pos = { -1710.0f,0.0f,950.0f };
+	g_Object[tree_3].pos = { 1140.0f,0.0f,1600.0f };
+	g_Object[tree_4].pos = { -600.0f,0.0f,490.0f };
+	g_Object[tree_5].pos = { -1980.0f,0.0f,-280.0f };
+	g_Object[tree_6].pos = { 1950.0f,0.0f,480.0f };
+	g_Object[tree_7].pos = { 660.0f,0.0f,-310.0f };
+	g_Object[tree_8].pos = { -1480.0f,0.0f,-1360.0f };
+	g_Object[tree_9].pos = { 1640.0f,0.0f,-880.0f };
+	g_Object[tree_last].pos = { 330.0f,0.0f,-1800.0f };
+	
+	g_Object[lamp_1].pos = { 510.0f,0.0f,2100.0f };
+	g_Object[lamp_2].pos = { -2020.0f,0.0f,390.0f };
+	g_Object[lamp_3].pos = { -310.0f,0.0f,650.0f };
+	g_Object[lamp_4].pos = { -700.0f,0.0f,-200.0f };
+	g_Object[lamp_5].pos = { 310.0f,0.0f,-520.0f };
+	g_Object[lamp_6].pos = { -440.0f,0.0f,-1580.0f };
+	g_Object[lamp_7].pos = { 1930.0f,0.0f,-230.0f };
+	g_Object[lamp_last].pos = { -310.0f,0.0f,-1920.0f };
+
+	g_Object[plant_1].pos = { -270.0f,0.0f,1350.0f };
+	g_Object[plant_2].pos = { 1810.0f,0.0f,1980.0f };
+	g_Object[plant_3].pos = { 340.0f,0.0f,690.0f };
+	g_Object[plant_4].pos = { -310.0f,0.0f,-550.0f };
+	g_Object[plant_5].pos = { -2000.0f,0.0f,-1760.0f };
+	g_Object[plant_last].pos = { 1960.0f,0.0f,-1760.0f };
+
+	g_Object[bench_1].pos = { -300.0f,0.0f,1550.0f };
+	g_Object[bench_1].rot = { 0.0f,4.60767f,0.0f };
+	g_Object[bench_2].pos = { -1460.0f,0.0f,310.0f };
+	g_Object[bench_2].rot = { 0.0f,0.f,0.0f };
+	g_Object[bench_3].pos = { 490.0f,0.0f,520.0f };
+	g_Object[bench_3].rot = { 0.0f,0.767947f,0.0f };
+	g_Object[bench_4].pos = { -500.0f,0.0f,-450.0f };
+	g_Object[bench_4].rot = { 0.0f,3.90954f,0.0f };
+	g_Object[bench_5].pos = { 1400.0f,0.0f,-280.0f };
+	g_Object[bench_5].rot = { 0.0f,3.21141f,0.0f };
+	g_Object[bench_last].pos = { 270.0f,0.0f,-1390.0f };
+	g_Object[bench_last].rot = { 0.0f,1.53589f,0.0f };
+
+	g_Object[shop_1].pos = { -970.0f, 0.0f, 2020.0f };
+	g_Object[shop_1].rot = { 0.0f, 0.0f, 0.0f };                 
+
+	g_Object[shop_2].pos = { 840.0f, 0.0f, 2070.0f };
+	g_Object[shop_2].rot = { 0.0f, -XM_PI / 2.0f, 0.0f };        
+
+	g_Object[shop_3].pos = { 1290.0f, 0.0f, 2040.0f };
+	g_Object[shop_3].rot = { 0.0f, XM_PI / 2, 0.0f };                
+
+	g_Object[fountain].pos = { 0.0f, 0.0f, 50.0f };
+	g_Object[fountain].rot = { 0.0f, 0.0f, 0.0f };               
+
+	g_Object[cafe].pos = { -1090.0f,0.0f,-2080.0f };
+	g_Object[cafe].rot = { 0.0f, XM_PI / 2 ,0.0f };
+
+
+	g_Object[building].pos = { -1480.0f,0.0f,2000.0f };
+	g_Object[building].rot = { 0.0f,0.0f,0.0f };
+
+
+	g_Object[burger_shop].pos = { 2020.0f,0.0f,850.0f };
+	g_Object[burger_shop].rot = { 0.0f, XM_PI, 0.0f }; 
+
+
+	g_Object[candy_shop].pos = { -2060.0f, 0.0f, -830.0f };
+	g_Object[candy_shop].rot = { 0.0f, XM_PI, 0.0f };            
+
+	g_Object[ice_truck].pos = { 1250.0f, 0.0f, -1190.0f };
+	g_Object[ice_truck].rot = { 0.0f, -3.0f * XM_PI / 4.0f, 0.0f }; 
+
+	g_Object[restaurant].pos = { 3510.0f, 0.0f, 0.0f };
+	g_Object[restaurant].rot = { 0.0f, 0.0f, 0.0f };            
+
+
+
+	//g_Object[]
 
 
 
@@ -140,10 +277,16 @@ void UpdateObject(void)
 
 #ifdef _DEBUG	// デバッグ情報を表示する
 	if(GetIsSetting()){
-		if (GetKeyboardTrigger(DIK_TAB)) {
+		if (GetKeyboardTrigger(DIK_1)) {
 			Target_Object += 1;
 			if (Target_Object > object_max) {
 				Target_Object = 0;
+			}
+		}
+		else if(GetKeyboardTrigger(DIK_2)) {
+			Target_Object -= 1;
+			if (Target_Object < 0) {
+				Target_Object = object_max;
 			}
 		}
 
@@ -175,6 +318,11 @@ void UpdateObject(void)
 			scale *= 1.01f;
 			XMStoreFloat3(&g_Object[Target_Object].scl, scale);
 		}
+
+		if (GetKeyboardTrigger(DIK_L)) // 按 L 鍵存檔
+		{
+			SaveObjectPositions("object_positions.txt");
+		}
 		
 		g_Object[Target_Object].rot.y = fmodf(g_Object[Target_Object].rot.y, XM_2PI);
 
@@ -183,6 +331,7 @@ void UpdateObject(void)
 			g_Object[Target_Object].rot.y += XM_2PI;
 		}
 
+		
 	}
 
 	PrintDebugProc("Target: %d", Target_Object);
@@ -221,24 +370,39 @@ void DrawObject(void)
 
 		XMStoreFloat4x4(&g_Object[i].mtxWorld, mtxWorld);
 
-		if(GetIsSetting()){
-			if (i == Target_Object) {
-				for (int j = 0; j < g_Object[i].model.SubsetNum; j++)
+#ifdef _DEBUG
+		if (GetIsSetting())
+		{
+			for (int j = 0; j < g_Object[i].model.SubsetNum; j++)
+			{
+				if (i == Target_Object)
 				{
+					// 選中 → 改紅色
 					SetModelDiffuse(&g_Object[i].model, j, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 				}
+				else
+				{
+					// 未選中 → 還原原始顏色
+					SetModelDiffuse(&g_Object[i].model, j, g_Object[i].model.SubsetArray[j].Diffuse_Original);
+				}
+			}
+
+			
+			
+		}
+		else {
+			for (int j = 0; j < g_Object[i].model.SubsetNum; j++)
+			{
+					SetModelDiffuse(&g_Object[i].model, j, g_Object[i].model.SubsetArray[j].Diffuse_Original);
 			}
 		}
+#endif
+
 		
 
 		// モデル描画
 		DrawModel(&g_Object[i].model);
-
-		SetFuchi(0);
-		for (int j = 0; j < g_Object[i].model.SubsetNum; j++)
-		{
-			SetModelDiffuse(&g_Object[i].model, j, XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-		}
+	
 	}
 	// カリング設定を戻す
 	SetCullingMode(CULL_MODE_BACK);
@@ -259,26 +423,54 @@ void ShowObjectDebugWindow()
 
 	for (int i = 0; i < object_max; i++)
 	{
-		ImGui::Text("Object %d Pos: (%.2f, %.2f, %.2f)",
-			i,
+		ImGui::Text("%s Pos: (%.2f, %.2f, %.2f)",
+			objectNames[i],
 			g_Object[i].pos.x,
 			g_Object[i].pos.y,
 			g_Object[i].pos.z);
 
-		ImGui::Text("Object %d Rot: (%.2f, %.2f, %.2f)",
-			i,
+		/*ImGui::Text("%s Rot: (%.2f, %.2f, %.2f)",
+			objectNames[i],
 			g_Object[i].rot.x,
 			g_Object[i].rot.y,
-			g_Object[i].rot.z);
+			g_Object[i].rot.z);*/
 
-		ImGui::Text("Object %d Scl: (%.2f, %.2f, %.2f)",
-			i,
+		/*ImGui::Text("%s Scl: (%.2f, %.2f, %.2f)",
+			objectNames[i],
 			g_Object[i].scl.x,
 			g_Object[i].scl.y,
-			g_Object[i].scl.z);
+			g_Object[i].scl.z);*/
 	}
 
 	ImGui::End();
 }
 
+void SaveObjectPositions(const char* filename)
+{
+	std::ofstream ofs(filename);
+	if (!ofs.is_open())
+	{
+		MessageBoxA(NULL, "Failed to open file for writing!", "Error", MB_OK);
+		return;
+	}
 
+	for (int i = 24; i < object_max; i++)
+	{
+		ofs << "g_Object[" << objectNames[i] << "].pos = {"
+			<< g_Object[i].pos.x << ".0f,"
+			<< g_Object[i].pos.y << ".0f,"
+			<< g_Object[i].pos.z << ".0f};\n";
+
+		ofs << "g_Object[" << objectNames[i] << "].rot = {"
+			<< g_Object[i].rot.x << "f,"
+			<< g_Object[i].rot.y << "f,"
+			<< g_Object[i].rot.z << "f};\n";
+
+		ofs << "g_Object[" << objectNames[i] << "].scl = {"
+			<< g_Object[i].scl.x << "f,"
+			<< g_Object[i].scl.y << "f,"
+			<< g_Object[i].scl.z << "f};\n";
+	}
+
+	ofs.close();
+}
