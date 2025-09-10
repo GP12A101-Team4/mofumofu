@@ -368,10 +368,10 @@ void DrawFragment(void)
 
 			//g_Fragment[4].overallPos = XMFLOAT3(70.0f, 0.0f, 90.0f);
 
-			g_Fragment[0].overallPos = XMFLOAT3(-513.0f, -4.0f, 402.0f);
-			g_Fragment[1].overallPos = XMFLOAT3(-511.0f, -4.0f, 291.0f);
-			g_Fragment[2].overallPos = XMFLOAT3(-518.0f, -4.0f, 280.0f);
-			g_Fragment[3].overallPos = XMFLOAT3(-518.0f, -5.0f, 223.0f);
+			g_Fragment[0].overallPos = XMFLOAT3(-913.0f, -4.0f, 402.0f);
+			g_Fragment[1].overallPos = XMFLOAT3(-911.0f, -4.0f, 291.0f);
+			g_Fragment[2].overallPos = XMFLOAT3(-918.0f, -4.0f, 280.0f);
+			g_Fragment[3].overallPos = XMFLOAT3(-918.0f, -5.0f, 223.0f);
 
 
 			g_Fragment[0].scl = XMFLOAT3(1.21f, 1.21f, 0.0f);
