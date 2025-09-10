@@ -26,7 +26,8 @@
 //*****************************************************************************
 // ƒOƒ[ƒoƒ‹•Ï”
 //*****************************************************************************
-
+static inline float _minf(float a, float b) { return (a < b) ? a : b; }
+static inline float _absf(float a) { return (a < 0.0f) ? -a : a; }
 
 //=============================================================================
 // BB‚É‚æ‚é“–‚½‚è”»’èˆ—
@@ -79,6 +80,42 @@ BOOL CollisionBC(XMFLOAT3 pos1, XMFLOAT3 pos2, float r1, float r2)
 	}
 
 	return ans;
+}
+
+//=============================================================================
+// AABB_XZ“–‚½‚è”»’èˆ—
+//=============================================================================
+BOOL ResolveCircleAABB_XZ(XMFLOAT3* pCenter, float radius,
+	XMFLOAT3 aabbMin, XMFLOAT3 aabbMax)
+{
+	const float minx = aabbMin.x - radius;
+	const float maxx = aabbMax.x + radius;
+	const float minz = aabbMin.z - radius;
+	const float maxz = aabbMax.z + radius;
+
+	const float px = pCenter->x;
+	const float pz = pCenter->z;
+
+	if (px < minx || px > maxx || pz < minz || pz > maxz)
+		return FALSE;
+
+	const float penLeft = px - minx;
+	const float penRight = maxx - px;
+	const float penTop = pz - minz;
+	const float penBottom = maxz - pz;
+
+	
+	const float pushX = (penLeft < penRight) ? -penLeft : +penRight;
+	
+	const float pushZ = (penTop < penBottom) ? -penTop : +penBottom;
+
+
+	if (_absf(pushX) < _absf(pushZ))
+		pCenter->x += pushX;
+	else
+		pCenter->z += pushZ;
+
+	return TRUE;
 }
 
 

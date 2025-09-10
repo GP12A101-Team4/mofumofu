@@ -445,11 +445,11 @@ void DrawFragment_Mouse(void)
 			g_Fragment_Mouse[4].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);*/
 
 
-			g_Fragment_Mouse[0].overallPos = XMFLOAT3(-1.0f, -26.0f, -191.5f);
-			g_Fragment_Mouse[1].overallPos = XMFLOAT3(107.0f, -49.0f, -193.0f);
-			g_Fragment_Mouse[2].overallPos = XMFLOAT3(117.0f, -51.0f, -193.0f);
-			g_Fragment_Mouse[3].overallPos = XMFLOAT3(42.0f, -36.0f, -192.0f);
-			g_Fragment_Mouse[4].overallPos = XMFLOAT3(-85.0f, -29.0f, -196.0f);
+			g_Fragment_Mouse[0].overallPos = XMFLOAT3(399.0f, -26.0f, -191.5f);
+			g_Fragment_Mouse[1].overallPos = XMFLOAT3(507.0f, -49.0f, -193.0f);
+			g_Fragment_Mouse[2].overallPos = XMFLOAT3(517.0f, -51.0f, -193.0f);
+			g_Fragment_Mouse[3].overallPos = XMFLOAT3(442.0f, -36.0f, -192.0f);
+			g_Fragment_Mouse[4].overallPos = XMFLOAT3(315.0f, -29.0f, -196.0f);
 
 
 			g_Fragment_Mouse[0].scl = XMFLOAT3(0.09f, 0.09f, 1.0f);

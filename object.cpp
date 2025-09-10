@@ -108,6 +108,88 @@ const char* objectNames[] = {
 	"ice_truck",
 	"restaurant"
 };
+
+static inline void ComputeAABB(OBJECT& o)
+{
+	XMFLOAT3 half = {
+		o.aabbHalf.x * fabsf(o.scl.x),
+		o.aabbHalf.y * fabsf(o.scl.y),
+		o.aabbHalf.z * fabsf(o.scl.z),
+	};
+	o.aabbMin = { o.pos.x - half.x, o.pos.y - half.y, o.pos.z - half.z };
+	o.aabbMax = { o.pos.x + half.x, o.pos.y + half.y, o.pos.z + half.z };
+}
+
+BOOL TestAABBOverlap(const OBJECT& a, const OBJECT& b)
+{
+	return !(a.aabbMax.x < b.aabbMin.x || a.aabbMin.x > b.aabbMax.x ||
+		a.aabbMax.y < b.aabbMin.y || a.aabbMin.y > b.aabbMax.y ||
+		a.aabbMax.z < b.aabbMin.z || a.aabbMin.z > b.aabbMax.z);
+}
+
+static ID3D11Buffer* s_pAABBLineVB = NULL;
+
+static void EnsureAABBLineVB()
+{
+	if (s_pAABBLineVB) return;
+	D3D11_BUFFER_DESC bd{};
+	bd.Usage = D3D11_USAGE_DYNAMIC;
+	bd.ByteWidth = sizeof(VERTEX_3D) * 24;
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	GetDevice()->CreateBuffer(&bd, nullptr, &s_pAABBLineVB);
+}
+
+static void DrawAABB_Wire(const OBJECT& o)
+{
+	if (!s_pAABBLineVB) EnsureAABBLineVB();
+	if (!s_pAABBLineVB) return;
+
+	GetDeviceContext()->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+
+	XMFLOAT3 mn = o.aabbMin, mx = o.aabbMax;
+	XMFLOAT3 p[8] = {
+		{mn.x,mn.y,mn.z},{mx.x,mn.y,mn.z},{mx.x,mx.y,mn.z},{mn.x,mx.y,mn.z},
+		{mn.x,mn.y,mx.z},{mx.x,mn.y,mx.z},{mx.x,mx.y,mx.z},{mn.x,mx.y,mx.z}
+	};
+	int e[24] = { 0,1,1,2,2,3,3,0, 4,5,5,6,6,7,7,4, 0,4,1,5,2,6,3,7 };
+
+	VERTEX_3D v[24]{};
+	for (int i = 0; i < 24; ++i) {
+		v[i].Position = p[e[i]];
+		v[i].Normal = XMFLOAT3(0, 0, 0);
+		v[i].Diffuse = XMFLOAT4(1, 1, 1, 1); // 不依赖：材质里会上色
+		v[i].TexCoord = XMFLOAT2(0, 0);
+	}
+
+	D3D11_MAPPED_SUBRESOURCE msr{};
+	if (SUCCEEDED(GetDeviceContext()->Map(s_pAABBLineVB, 0, D3D11_MAP_WRITE_DISCARD, 0, &msr)))
+	{
+		memcpy(msr.pData, v, sizeof(v));
+		GetDeviceContext()->Unmap(s_pAABBLineVB, 0);
+	}
+	else {
+		OutputDebugStringA("Map AABB VB failed\n");
+		return;
+	}
+
+	XMMATRIX I = XMMatrixIdentity();
+	SetWorldMatrix(&I);
+
+	MATERIAL m{};
+	m.Diffuse = o.isColliding ? XMFLOAT4(0, 0, 0, 1) : XMFLOAT4(0, 0, 0, 1);
+	m.Ambient = m.Diffuse;
+	m.noTexSampling = 1;
+	SetMaterial(m);
+
+	UINT stride = sizeof(VERTEX_3D), offset = 0;
+	ID3D11Buffer* vb = s_pAABBLineVB;
+	GetDeviceContext()->IASetVertexBuffers(0, 1, &vb, &stride, &offset);
+	GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+
+	GetDeviceContext()->Draw(24, 0);
+}
+
 //=============================================================================
 // 初期化処理
 //=============================================================================
@@ -135,6 +217,27 @@ HRESULT InitObject(void)
 
 		g_Object[i].size = OBJECT_SIZE;	// 当たり判定の大きさ
 		g_Object[i].use = TRUE;
+
+		g_Object[i].aabbHalf = { 100.0f, 100.0f, 100.0f };
+
+		if (i <= tree_last)                 g_Object[i].aabbHalf = { 70.0f, 200.0f, 70.0f };
+		else if (i <= lamp_last)            g_Object[i].aabbHalf = { 30.0f, 200.0f,  30.0f };
+		else if (i <= plant_last)           g_Object[i].aabbHalf = { 40.0f, 160.0f, 40.0f };
+		else if (i <= bench_last)           g_Object[i].aabbHalf = { 100.0f,  100.0f,  60.0f };
+
+		else if (i == shop_1 || i == shop_2 || i == shop_3)
+			g_Object[i].aabbHalf = { 350.0f, 250.0f, 250.0f };
+		else if (i == fountain)             g_Object[i].aabbHalf = { 90.0f, 220.0f, 90.0f };
+		else if (i == cafe)                 g_Object[i].aabbHalf = { 420.0f, 260.0f, 320.0f };
+		else if (i == building)             g_Object[i].aabbHalf = { 200.0f, 400.0f, 200.0f };
+		else if (i == burger_shop)          g_Object[i].aabbHalf = { 380.0f, 260.0f, 300.0f };
+		else if (i == candy_shop)           g_Object[i].aabbHalf = { 380.0f, 260.0f, 300.0f };
+		else if (i == ice_truck)            g_Object[i].aabbHalf = { 220.0f, 160.0f, 120.0f };
+		else if (i == restaurant)           g_Object[i].aabbHalf = { 200.0f, 300.0f, 200.0f };
+
+		g_Object[i].showAABB = TRUE;
+		g_Object[i].isColliding = FALSE;
+		ComputeAABB(g_Object[i]);
 
 		//// ここでプレイヤー用の影を作成している
 		//XMFLOAT3 pos = g_Object[i].pos;
@@ -275,7 +378,19 @@ void UpdateObject(void)
 
 	//g_Object[Target_Object].
 
+	for (int i = 0; i < object_max; ++i) {
+		g_Object[i].isColliding = FALSE;
+		ComputeAABB(g_Object[i]);
+	}
 
+	for (int i = 0; i < object_max; ++i) {
+		for (int j = i + 1; j < object_max; ++j) {
+			if (TestAABBOverlap(g_Object[i], g_Object[j])) {
+				g_Object[i].isColliding = TRUE;
+				g_Object[j].isColliding = TRUE;
+			}
+		}
+	}
 
 
 #ifdef _DEBUG	// デバッグ情報を表示する
@@ -405,8 +520,15 @@ void DrawObject(void)
 
 		// モデル描画
 		DrawModel(&g_Object[i].model);
-	
 	}
+
+	XMMATRIX I = XMMatrixIdentity();
+	SetWorldMatrix(&I);
+
+	for (int i = 0; i < object_max; i++) {
+		DrawAABB_Wire(g_Object[i]);
+	}
+
 	// カリング設定を戻す
 	SetCullingMode(CULL_MODE_BACK);
 }
@@ -476,4 +598,11 @@ void SaveObjectPositions(const char* filename)
 	}
 
 	ofs.close();
+}
+
+void SetObjectAABBHalf(int idx, XMFLOAT3 half)
+{
+	if (idx < 0 || idx >= object_max) return;
+	g_Object[idx].aabbHalf = half;
+	ComputeAABB(g_Object[idx]);
 }

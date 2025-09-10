@@ -10,6 +10,7 @@
 #include "debugproc.h"
 #include "model.h"
 #include "player.h"
+#include "object.h"
 #include "shadow.h"
 #include "light.h"
 #include "collision.h"
@@ -153,6 +154,19 @@ void UpdatePlayer(void)
 		g_Player.pos.z += moveY;
 
 		
+	}
+
+	// 当たり判定
+	{
+		OBJECT* objs = GetObject();
+		const float r = g_Player.size;
+
+		for (int it = 0; it < 2; ++it) {
+			for (int i = 0; i < object_max; ++i) {
+				if (!objs[i].use) continue;
+				ResolveCircleAABB_XZ(&g_Player.pos, r, objs[i].aabbMin, objs[i].aabbMax);
+			}
+		}
 	}
 
 	// 影もプレイヤーの位置に合わせる

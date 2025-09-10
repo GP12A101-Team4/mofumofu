@@ -453,13 +453,13 @@ void DrawFragment_Elph(void)
 			g_Fragment_Elph[6].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
 			*/
 
-			g_Fragment_Elph[0].overallPos = XMFLOAT3(-504.0f, 117.0f, -726.0f);
-			g_Fragment_Elph[1].overallPos = XMFLOAT3(-413.0f, 91.0f, -613.0f);
-			g_Fragment_Elph[2].overallPos = XMFLOAT3(-756.0f, 128.0f, -901.0f);
-			g_Fragment_Elph[3].overallPos = XMFLOAT3(-147.0f, 47.0f, -358.0f);
-			g_Fragment_Elph[4].overallPos = XMFLOAT3(-597.0f, 141.0f, -818.0f);
-			g_Fragment_Elph[5].overallPos = XMFLOAT3(-236.0f, 59.0f, -446.0f);
-			g_Fragment_Elph[6].overallPos = XMFLOAT3(-623.0f, 137.0f, -842.0f);
+			g_Fragment_Elph[0].overallPos = XMFLOAT3(-1004.0f, 117.0f, -726.0f);
+			g_Fragment_Elph[1].overallPos = XMFLOAT3(-913.0f, 91.0f, -613.0f);
+			g_Fragment_Elph[2].overallPos = XMFLOAT3(-1256.0f, 128.0f, -901.0f);
+			g_Fragment_Elph[3].overallPos = XMFLOAT3(-647.0f, 47.0f, -358.0f);
+			g_Fragment_Elph[4].overallPos = XMFLOAT3(-1097.0f, 141.0f, -818.0f);
+			g_Fragment_Elph[5].overallPos = XMFLOAT3(-736.0f, 59.0f, -446.0f);
+			g_Fragment_Elph[6].overallPos = XMFLOAT3(-1123.0f, 137.0f, -842.0f);
 
 
 			g_Fragment_Elph[0].scl = XMFLOAT3(2.27f, 2.27f, 1.0f);
