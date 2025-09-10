@@ -34,6 +34,12 @@ struct OBJECT
 	int				shadowIdx;	// 影のIndex
 	BOOL			use;
 
+	//AABBテスト
+	XMFLOAT3		aabbHalf;
+	XMFLOAT3		aabbMin;
+	XMFLOAT3		aabbMax;
+	BOOL			showAABB;
+	BOOL			isColliding;
 
 };
 
@@ -97,4 +103,6 @@ void DrawObject(void);
 
 OBJECT *GetObject(void);
 void ShowObjectDebugWindow();
+void SetObjectAABBHalf(int idx, XMFLOAT3 half);
+BOOL TestAABBOverlap(const OBJECT& a, const OBJECT& b);
 
