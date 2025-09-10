@@ -1,0 +1,48 @@
+newmtl shop1:lambert2SG
+illum 4
+Kd 0.87 0.88 0.61
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl shop1:lambert3SG
+illum 4
+Kd 0.13 0.16 0.79
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl shop1:lambert4SG
+illum 4
+Kd 0.15 0.41 0.11
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl shop1:lambert5SG
+illum 4
+Kd 0.66 0.87 0.93
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl shop1:lambert6SG
+illum 4
+Kd 0.66 0.50 0.07
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl shop1:lambert7SG
+illum 4
+Kd 0.50 0.50 0.46
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl shop1:lambert8SG
+illum 4
+Kd 0.40 0.64 0.79
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl shop1:lambert9SG
+illum 4
+Kd 0.13 0.09 0.03
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
