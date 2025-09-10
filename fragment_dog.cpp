@@ -282,7 +282,6 @@ void UpdateFragment_Dog(void)
 	}
 
 	if (g_FragmentRestored_Dog[0].use) {
-		/*g_FragmentRestored_Dog[0].pos.x -= 1.0f;*/
 
 		float moveX = cosf(g_FragmentRestored_Dog[0].rot.y) * ANIM_MOVE_SPEED;
 		float moveZ = -sinf(g_FragmentRestored_Dog[0].rot.y) * ANIM_MOVE_SPEED;
@@ -302,12 +301,11 @@ void UpdateFragment_Dog(void)
 			g_FragmentRestored_Dog[0].AnimCnt = 0;
 		}
 
-		//g_FragmentRestored_Dog[0].alpha -= 0.005f;
+		g_FragmentRestored_Dog[0].alpha -= 0.005f;
 	}
 
 	if (g_FragmentRestored_Dog[0].alpha < 0) {
 		g_FragmentRestored_Dog[0].use = FALSE;
-		
 	}
 		
 #ifdef _DEBUG
