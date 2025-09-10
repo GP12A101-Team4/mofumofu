@@ -216,8 +216,9 @@ HRESULT InitObject(void)
 	g_Object[fountain].pos = { 0.0f, 0.0f, 50.0f };
 	g_Object[fountain].rot = { 0.0f, 0.0f, 0.0f };               
 
-	g_Object[cafe].pos = { -1090.0f,0.0f,-2080.0f };
-	g_Object[cafe].rot = { 0.0f, XM_PI / 2 ,0.0f };
+	g_Object[cafe].pos = { -2080.0f,0.0f,-1120.0f };
+	g_Object[cafe].rot = { 0.0f,XM_PI,0.0f };
+
 
 
 	g_Object[building].pos = { -1480.0f,0.0f,2000.0f };
@@ -234,8 +235,10 @@ HRESULT InitObject(void)
 	g_Object[ice_truck].pos = { 1250.0f, 0.0f, -1190.0f };
 	g_Object[ice_truck].rot = { 0.0f, -3.0f * XM_PI / 4.0f, 0.0f }; 
 
-	g_Object[restaurant].pos = { 3510.0f, 0.0f, 0.0f };
-	g_Object[restaurant].rot = { 0.0f, 0.0f, 0.0f };            
+	g_Object[restaurant].pos = { -1040.0f,0.0f,-2000.0f };
+	g_Object[restaurant].rot = { 0.0f,0.0f,0.0f };
+
+
 
 
 
