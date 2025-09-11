@@ -185,6 +185,8 @@ HRESULT InitFragment_Mouse(void)
 	
 	g_TexNo_Mouse = 0;
 
+	g_ShowFullImage_Mouse = false;
+
 	return S_OK;
 }
 
@@ -622,6 +624,11 @@ void DrawPartDebugUI_Mouse()
 
 	ImGui::End();
 
+}
+
+bool GetShowFullImage_Mouse()
+{
+	return g_ShowFullImage_Mouse;
 }
 
 // right position of mouse -209. 57 , 5.54 //

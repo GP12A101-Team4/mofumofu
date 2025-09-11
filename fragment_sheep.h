@@ -26,7 +26,7 @@ void DrawFragment_Sheep(void);
 float GetPuzzleAlignmentRatio_Sheep();
 void DrawPartDebugUI_Sheep();
 
-extern bool g_ShowFullImage_Sheep;
+bool GetShowFullImage_Sheep();
 extern bool g_SheepAnimationPlayed;
 
 void ShowSheepDebugWindow();

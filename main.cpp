@@ -660,6 +660,10 @@ void SetMode(int mode)
 		InitTitle();
 		InitCursor();
 		InitMenu();
+		InitScore();
+		InitUI();
+		ResetPuzzleAnimationFlags();
+
 		PlaySound(SOUND_LABEL_BGM_TITLE);
 
 

@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// ’n–Êˆ— [fragment.h]
+// åœ°é¢å‡¦ç† [fragment.h]
 // Author : 
 //
 //=============================================================================
@@ -11,15 +11,15 @@
 #define MAX_HISTORY_SIZE 100
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒžã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
 struct FRAGMENT
 {
-	XMFLOAT3		pos;		// ƒ|ƒŠƒSƒ“‚ÌˆÊ’u
-	XMFLOAT3		rot;		// ƒ|ƒŠƒSƒ“‚ÌŒü‚«(‰ñ“])
-	XMFLOAT3		scl;		// ƒ|ƒŠƒSƒ“‚Ì‘å‚«‚³(ƒXƒP[ƒ‹)
+	XMFLOAT3		pos;		// ãƒãƒªã‚´ãƒ³ã®ä½ç½®
+	XMFLOAT3		rot;		// ãƒãƒªã‚´ãƒ³ã®å‘ã(å›žè»¢)
+	XMFLOAT3		scl;		// ãƒãƒªã‚´ãƒ³ã®å¤§ãã•(ã‚¹ã‚±ãƒ¼ãƒ«)
 
-	XMFLOAT4X4		mtxWorld;	// ƒ[ƒ‹ƒhƒ}ƒgƒŠƒbƒNƒX
+	XMFLOAT4X4		mtxWorld;	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹
 	XMFLOAT3		overallPos;
 	
 	XMFLOAT3		history[MAX_HISTORY_SIZE];
@@ -28,11 +28,11 @@ struct FRAGMENT
 
 struct FRAGMENT_RESTORED
 {
-	XMFLOAT3		pos;		// ƒ|ƒŠƒSƒ“‚ÌˆÊ’u
-	XMFLOAT3		rot;		// ƒ|ƒŠƒSƒ“‚ÌŒü‚«(‰ñ“])
-	XMFLOAT3		scl;		// ƒ|ƒŠƒSƒ“‚Ì‘å‚«‚³(ƒXƒP[ƒ‹)
+	XMFLOAT3		pos;		// ãƒãƒªã‚´ãƒ³ã®ä½ç½®
+	XMFLOAT3		rot;		// ãƒãƒªã‚´ãƒ³ã®å‘ã(å›žè»¢)
+	XMFLOAT3		scl;		// ãƒãƒªã‚´ãƒ³ã®å¤§ãã•(ã‚¹ã‚±ãƒ¼ãƒ«)
 
-	XMFLOAT4X4		mtxWorld;	// ƒ[ƒ‹ƒhƒ}ƒgƒŠƒbƒNƒX
+	XMFLOAT4X4		mtxWorld;	// ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒžãƒˆãƒªãƒƒã‚¯ã‚¹
 	
 	BOOL			use;
 	BOOL			Initialized;
@@ -46,7 +46,7 @@ struct FRAGMENT_RESTORED
 //test
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 HRESULT InitFragment(void);
 void UninitFragment(void);
@@ -57,6 +57,6 @@ void DrawPartDebugUI();
 
 float GetPuzzleAlignmentRatio();
 
-extern bool g_ShowFullImage;
+bool GetShowFullImage();
 extern bool g_CatAnimationPlayed;
 
