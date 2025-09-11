@@ -18,10 +18,10 @@
 //*****************************************************************************
 #define TEXTURE_WIDTH              (SCREEN_WIDTH)   // 背景サイズ
 #define TEXTURE_HEIGHT             (SCREEN_HEIGHT)
-#define TEXTURE_MAX                (3)              // テクスチャの数
+#define TEXTURE_MAX                (4)              // テクスチャの数
 
-#define TEXTURE_WIDTH_LOGO         (682)           // ロゴサイズ
-#define TEXTURE_HEIGHT_LOGO        (411)
+#define TEXTURE_WIDTH_LOGO         (409)           // ロゴサイズ
+#define TEXTURE_HEIGHT_LOGO        (246)
 
 //*****************************************************************************
 // グローバル変数
@@ -33,6 +33,7 @@ static char* g_TexturName[TEXTURE_MAX] = {
     "data/TEXTURE/result.png",
     "data/TEXTURE/result_logo.png",
     "data/TEXTURE/Numberrr.png",
+    "data/TEXTURE/back.png",
 };
 
 static BOOL      g_Use;                     // TRUE:使っている  FALSE:未使用
@@ -133,7 +134,7 @@ void UpdateResult(void)
     {
         SetFade(FADE_OUT, MODE_TITLE);
     }
-    else if (IsButtonTriggered(0, BUTTON_B))
+	else if (IsButtonTriggered(0, BUTTON_B) || (IsMouseLeftTriggered) ())
     {
         SetFade(FADE_OUT, MODE_TITLE);
     }
@@ -171,7 +172,7 @@ void DrawResult(void)
         GetDeviceContext()->PSSetShaderResources(0, 1, &srv);
 
         SetSpriteLeftTop(g_VertexBuffer, 0.0f, 0.0f, g_w, g_h,
-            0.0f, 0.0f, 1.0f, 1.0f);      // 全面貼り
+            0.0f, 0.0f, 1.0f, 1.0f);
         GetDeviceContext()->Draw(4, 0);
     }
 
@@ -182,15 +183,36 @@ void DrawResult(void)
 
         const float w = TEXTURE_WIDTH_LOGO;   // 480
         const float h = TEXTURE_HEIGHT_LOGO;  // 80
-        const float x = 140.0f;               // 位置はお好みで
-        const float y = 100.0f;
+        const float x = 260.0f;               // 位置はお好みで
+        const float y = 25.0f;
 
         SetSpriteLeftTop(g_VertexBuffer, x, y, w, h,
             0.0f, 0.0f, 1.0f, 1.0f);
         GetDeviceContext()->Draw(4, 0);
     }
 
-    // --- タイム（score の描画処理をそのまま利用）---
-    // DrawScore() は score.cpp 内で「自前の頂点 VB/テクスチャ/UV 切り出し」を行う実装です。:contentReference[oaicite:4]{index=4}
+    {
+        ID3D11ShaderResourceView* srv = g_Texture[3];
+        GetDeviceContext()->PSSetShaderResources(0, 1, &srv);
+
+        const float w = 400.0f;   // 480
+        const float h = 80.0f;  // 80
+        const float x = 280.0f;               // 位置はお好みで
+        const float y = 420.0f;
+
+        SetSpriteLeftTop(g_VertexBuffer, x, y, w, h,
+            0.0f, 0.0f, 1.0f, 1.0f);
+        GetDeviceContext()->Draw(4, 0);
+    }
+
+    Score_SetScale(3.3f);
+
+    float scale = 2.0f;
+    float totalWidth = 13 * 22.0f * scale;
+    float x = (SCREEN_WIDTH - totalWidth) * 0.5f;
+    float y = 280.0f;
+
+    Score_SetPosition(x, y);
     DrawScore();
+
 }

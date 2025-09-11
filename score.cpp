@@ -192,3 +192,22 @@ int GetElapsedTimeMs()
 {
     return (int)g_ElapsedTime;
 }
+
+void Score_SetPosition(float x, float y)
+{
+    // g_Pos 在 score.cpp 内部就是显示起点坐标
+    // 默认为 {450, 5, 0}，改成传入坐标即可
+    // g_Pos.z 不用动
+    extern XMFLOAT3 g_Pos; // 如果在同文件顶端可见则无需 extern
+    g_Pos.x = x;
+    g_Pos.y = y;
+}
+
+void Score_SetScale(float scale)
+{
+    // g_w/g_h 是每个字符的绘制尺寸；默认 22x38
+    // 用统一缩放即可得到想要的大小
+    extern float g_w, g_h;
+    g_w = 22.0f * scale;  // TEXTURE_WIDTH = 22
+    g_h = 38.0f * scale;  // TEXTURE_HEIGHT = 38
+}
