@@ -195,10 +195,10 @@ void DrawResult(void)
         ID3D11ShaderResourceView* srv = g_Texture[3];
         GetDeviceContext()->PSSetShaderResources(0, 1, &srv);
 
-        const float w = 400.0f;   // 480
-        const float h = 80.0f;  // 80
-        const float x = 280.0f;               // 位置はお好みで
-        const float y = 420.0f;
+        const float w = 300.0f;   // 480
+        const float h = 40.0f;  // 80
+        const float x = 320.0f;               // 位置はお好みで
+        const float y = 450.0f;
 
         SetSpriteLeftTop(g_VertexBuffer, x, y, w, h,
             0.0f, 0.0f, 1.0f, 1.0f);
@@ -210,7 +210,7 @@ void DrawResult(void)
     float scale = 2.0f;
     float totalWidth = 13 * 22.0f * scale;
     float x = (SCREEN_WIDTH - totalWidth) * 0.5f;
-    float y = 280.0f;
+    float y = 300.0f;
 
     Score_SetPosition(x, y);
     DrawScore();
