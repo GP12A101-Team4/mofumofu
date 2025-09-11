@@ -376,13 +376,13 @@ void DrawGaugeBars()
 	// ===== アクティブ動物のアイコン描画 =====
 	if (g_ActiveAnimalIdx >= 0 && g_ActiveAnimalIdx < ANIMAL_TEX_MAX) {
 		
-		float iconW = 90.0f;
-		float iconH = 90.0f;
+		float iconW = 120.0f;
+		float iconH = 120.0f;
 
 		float padding = 24.0f; 
 		
 		// アイコンをゲージ左に配置するための座標
-		float iconX = (screenX - barWidth * 0.5f) - padding - iconW * 0.5f;
+		float iconX = (screenX - barWidth * 0.5f) - padding - iconW * 0.3f;
 		float iconY = screenY; 
 
 		// 動物アイコンのテクスチャを設定
