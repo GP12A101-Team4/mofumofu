@@ -270,7 +270,7 @@ void UpdateTitle(void)
 	}
 
 
-	if (GetKeyboardTrigger(DIK_RETURN)|| IsMouseLeftPressed())
+	if (GetKeyboardTrigger(DIK_RETURN)|| IsMouseLeftTriggered())
 	{// Enter押したら、ステージを切り替える
 		
 		if (menu == MENU_START)

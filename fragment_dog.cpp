@@ -178,6 +178,8 @@ HRESULT InitFragment_Dog(void)
 		g_FragmentRestored_Dog[i].alpha = 1.0f;
 		g_FragmentRestored_Dog[i].Initialized = FALSE;
 	}
+
+	g_ShowFullImage_Dog = false;
 	
 	g_TexNo_Dog = 0;
 
@@ -653,6 +655,11 @@ void ShowDogDebugWindow()
 		g_FragmentRestored_Dog[0].rot.z);
 
 	ImGui::End();
+}
+
+bool GetShowFullImage_Dog()
+{
+	return g_ShowFullImage_Dog;
 }
 
 // right position for dog 235, 57 , 376 //

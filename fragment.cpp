@@ -152,6 +152,9 @@ HRESULT InitFragment(void)
 		g_FragmentRestored[i].alpha = 1.0f;
 		g_FragmentRestored[i].Initialized = FALSE;
 	}
+
+	g_ShowFullImage = false;
+
 	
 	g_TexNo = 0;
 
@@ -596,3 +599,9 @@ void DrawPartDebugUI()
 
 }
 #endif // DEBUG
+
+
+bool GetShowFullImage()
+{ 
+	return g_ShowFullImage; 
+}

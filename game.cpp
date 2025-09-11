@@ -29,6 +29,7 @@
 #include "fragment_obstacle.h"
 #include "bg.h"
 #include "object.h"
+#include "score.h"
 #include "menu.h"
 
 //*****************************************************************************

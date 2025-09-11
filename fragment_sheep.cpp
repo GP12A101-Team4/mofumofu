@@ -178,6 +178,8 @@ HRESULT InitFragment_Sheep(void)
 		g_FragmentRestored_Sheep[i].Initialized = FALSE;
 	}
 
+	g_ShowFullImage_Sheep = false;
+
 	g_TexNo_Sheep = 0;
 
 	return S_OK;
@@ -650,4 +652,9 @@ void ShowSheepDebugWindow()
 	
 
 	ImGui::End();
+}
+
+bool GetShowFullImage_Sheep()
+{
+	return g_ShowFullImage_Sheep;
 }

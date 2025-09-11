@@ -182,7 +182,9 @@ HRESULT InitFragment_Elph(void)
 		g_FragmentRestored_Elph[i].alpha = 1.0f;
 		g_FragmentRestored_Elph[i].Initialized = FALSE;
 	}
-	
+
+	g_ShowFullImage_Elph = false;
+
 	g_TexNo_Elph = 0;
 
 	return S_OK;
@@ -670,5 +672,9 @@ void ShowElephantDebugWindow()
 	ImGui::End();
 }
 
+bool GetShowFullImage_Elph()
+{
+	return g_ShowFullImage_Elph;
+}
 
 // right position for elphant 200, 57 ,176 //

@@ -168,18 +168,18 @@ void UpdateUI(void)
 	
 	UI_UpdateSequential();
 
-	if (g_ShowFullImage)       g_TexNo = 1;
-	if (g_ShowFullImage_Dog)   g_TexNo = 1;
-	if (g_ShowFullImage_Elph)  g_TexNo = 1;
-	if (g_ShowFullImage_Mouse) g_TexNo = 1;
-	if (g_ShowFullImage_Sheep) g_TexNo = 1;
+	if (GetShowFullImage())       g_TexNo = 1;
+	if (GetShowFullImage_Dog())   g_TexNo = 1;
+	if (GetShowFullImage_Elph())  g_TexNo = 1;
+	if (GetShowFullImage_Mouse()) g_TexNo = 1;
+	if (GetShowFullImage_Sheep()) g_TexNo = 1;
 
 	int completed = 0;
-	if (g_ShowFullImage)       completed++;
-	if (g_ShowFullImage_Dog)   completed++;
-	if (g_ShowFullImage_Elph)  completed++;
-	if (g_ShowFullImage_Mouse) completed++;
-	if (g_ShowFullImage_Sheep) completed++;
+	if (GetShowFullImage())       completed++;
+	if (GetShowFullImage_Dog())   completed++;
+	if (GetShowFullImage_Elph())  completed++;
+	if (GetShowFullImage_Mouse()) completed++;
+	if (GetShowFullImage_Sheep()) completed++;
 
 	if (completed == 5)
 	{
@@ -211,27 +211,27 @@ static inline float Safe01(float v) {
 static void UI_UpdateSequential(void)
 {
 	// 0: 猫
-	if (!g_AnimalCounted[0] && g_ShowFullImage) {
+	if (!g_AnimalCounted[0] && GetShowFullImage()) {
 		g_AnimalCounted[0] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
 	// 1: 狗
-	if (!g_AnimalCounted[1] && g_ShowFullImage_Dog) {
+	if (!g_AnimalCounted[1] && GetShowFullImage_Dog()) {
 		g_AnimalCounted[1] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
 	// 2: 象
-	if (!g_AnimalCounted[2] && g_ShowFullImage_Elph) {
+	if (!g_AnimalCounted[2] && GetShowFullImage_Elph()) {
 		g_AnimalCounted[2] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
 	// 3: 鼠
-	if (!g_AnimalCounted[3] && g_ShowFullImage_Mouse) {
+	if (!g_AnimalCounted[3] && GetShowFullImage_Mouse()) {
 		g_AnimalCounted[3] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
 	// 4: 羊
-	if (!g_AnimalCounted[4] && g_ShowFullImage_Sheep) {
+	if (!g_AnimalCounted[4] && GetShowFullImage_Sheep()) {
 		g_AnimalCounted[4] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
