@@ -14,6 +14,7 @@
 #include "ui.h"
 #include "fade.h"
 #include "game.h"
+#include "score.h"
 #include "sprite.h"
 
 
@@ -183,6 +184,7 @@ void UpdateUI(void)
 	if (completed == 5)
 	{
 		SetFade(FADE_OUT, MODE_RESULT);
+		StopTimer();
 	}
 
 #ifdef _DEBUG	// デバッグ情報を表示する

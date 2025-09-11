@@ -541,6 +541,8 @@ void Draw(void)
 		SetLightEnable(FALSE);
 
 		DrawResult();
+		
+		DrawCursor();
 
 		// ライティングを有効に
 		SetLightEnable(TRUE);
@@ -675,7 +677,7 @@ void SetMode(int mode)
 
 	case MODE_RESULT:
 		InitResult();
-		StopTimer();
+		//StopTimer();
 		PlaySound(SOUND_LABEL_BGM_GAME);
 		break;
 

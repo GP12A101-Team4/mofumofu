@@ -185,7 +185,7 @@ void DrawCursor(void)
 	int mode = GetMode();
 	MENU* menu = GetMenu();
 
-	if ((menu->use == FALSE) && (mode != MODE_TITLE)) {
+	if ((menu->use == FALSE) && (mode != MODE_TITLE) && (mode != MODE_RESULT)) {
 		return;
 	}
 
