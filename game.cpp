@@ -140,7 +140,7 @@ void UpdateGame(void)
 		g_ViewPortType_Game = (g_ViewPortType_Game + 1) % TYPE_NONE;
 		SetViewPort(g_ViewPortType_Game);
 	}
-#endif
+
 	if (GetKeyboardTrigger(DIK_P))
 	{
 		g_Ui.pause = g_Ui.pause ? FALSE : TRUE;
@@ -150,7 +150,7 @@ void UpdateGame(void)
 		SetFade(FADE_OUT, MODE_RESULT);
 	}
 
-	
+#endif
 
 
 	MENU* menu = GetMenu();
