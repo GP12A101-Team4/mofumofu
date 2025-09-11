@@ -657,6 +657,7 @@ void SetMode(int mode)
 		//タイトル画面の初期化
 		InitTitle();
 		InitCursor();
+		InitMenu();
 		PlaySound(SOUND_LABEL_BGM_TITLE);
 
 
