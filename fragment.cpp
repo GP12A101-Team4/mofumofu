@@ -9,6 +9,7 @@
 #include "camera.h"
 #include "debugproc.h"
 #include "fragment.h"
+#include "sound.h"
 #include "imgui.h"
 
 //*****************************************************************************
@@ -56,10 +57,8 @@ static XMFLOAT2 g_TargetScreenPos[TEXTURE_MAX] = {
 	{554.7f, 466.5f},
 	{530.2f, 476.7f},
 	{514.9f, 567.5f},
-	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
+	{0.0f, 0.0f}  
 };
-
-//static bool g_HasRecordedTarget = false;  // ← 直接设为 true
 
 
 bool g_ShowFullImage = false;
@@ -197,7 +196,7 @@ void UpdateFragment(void)
 	{
 		g_ShowFullImage = true;
 		g_CatAnimationPlayed = true;
-		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
+		PlaySound(SOUND_LABEL_SE_CAT);
 	}
 
 	if (g_ShowFullImage && !g_FragmentRestored[0].Initialized) {
@@ -240,83 +239,39 @@ void UpdateFragment(void)
 		
 	}
 		
-#ifdef _DEBUG
+	#ifdef _DEBUG
+		
 	
-
-//猫
-if (GetKeyboardPress(DIK_LEFT))
-{
-	g_Fragment[4].overallPos.x -= 1.0f;
-}
-if (GetKeyboardPress(DIK_RIGHT))
-{
-	g_Fragment[4].overallPos.x += 1.0f;
-}
-if (GetKeyboardPress(DIK_UP))
-{
-	g_Fragment[4].overallPos.y += 1.0f;
-}
-if (GetKeyboardPress(DIK_DOWN))
-{
-	g_Fragment[4].overallPos.y -= 1.0f;
-}
-if (GetKeyboardPress(DIK_M))
-{
-	g_Fragment[4].overallPos.z -= 1.0f;
-}
-if (GetKeyboardPress(DIK_N))
-{
-	g_Fragment[4].overallPos.z += 1.0f;
-}
-
-
-#endif
-
-
-
-#ifdef _DEBUG	// デバッグ情報を表示する
-
-	/*PrintDebugProc("Field:↑→↓←\n");
-	PrintDebugProc("cat head: X:%f Y:%f Z:%f\n", g_Fragment[0].overallPos.x, g_Fragment[0].overallPos.y, g_Fragment[0].overallPos.z);
-	PrintDebugProc("cat body: X:%f Y:%f Z:%f\n", g_Fragment[1].overallPos.x, g_Fragment[1].overallPos.y, g_Fragment[1].overallPos.z);
-	PrintDebugProc("cat head: X:%f Y:%f Z:%f\n", g_Fragment[2].overallPos.x, g_Fragment[2].overallPos.y, g_Fragment[2].overallPos.z);
-	PrintDebugProc("cat tail: X:%f Y:%f Z:%f\n", g_Fragment[3].overallPos.x, g_Fragment[3].overallPos.y, g_Fragment[3].overallPos.z);
-	PrintDebugProc("cat scale head: X:%f Y:%f Z:%f\n", g_Fragment[0].scl.x, g_Fragment[0].scl.y);
-	PrintDebugProc("cat scale body: X:%f Y:%f Z:%f\n", g_Fragment[1].scl.x, g_Fragment[1].scl.y);
-	PrintDebugProc("cat scale head: X:%f Y:%f Z:%f\n", g_Fragment[2].scl.x, g_Fragment[2].scl.y);
-	PrintDebugProc("cat scale tail: X:%f Y:%f Z:%f\n", g_Fragment[3].scl.x, g_Fragment[3].scl.y);*/
-
-	//if (GetKeyboardTrigger(DIK_F1)) {
-	//	D3D11_VIEWPORT vp;
-	//	UINT num = 1;
-	//	GetDeviceContext()->RSGetViewports(&num, &vp);
-
-	//	CAMERA* cam = GetCamera();
-
-	//	for (int i = 0; i < TEXTURE_MAX; i++) {
-	//		XMVECTOR world = XMLoadFloat3(&g_Fragment[i].overallPos);
-	//		XMVECTOR screen = XMVector3Project(
-	//			world,
-	//			0, 0,
-	//			vp.Width, vp.Height,
-	//			0.0f, 1.0f,
-	//			XMLoadFloat4x4(&cam->mtxProjection),
-	//			XMLoadFloat4x4(&cam->mtxView),
-	//			XMMatrixIdentity()
-	//		);
-
-	//		g_TargetScreenPos[i].x = XMVectorGetX(screen);
-	//		g_TargetScreenPos[i].y = XMVectorGetY(screen);
-	//	}
-
-	//	//g_HasRecordedTarget = true;
-	//	OutputDebugStringA("✨ 已记录当前碎片的投影坐标作为正确答案\n");
-	//}
-
+	//猫
+	if (GetKeyboardPress(DIK_LEFT))
+	{
+		g_Fragment[4].overallPos.x -= 1.0f;
+	}
+	if (GetKeyboardPress(DIK_RIGHT))
+	{
+		g_Fragment[4].overallPos.x += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_UP))
+	{
+		g_Fragment[4].overallPos.y += 1.0f;
+	}
+	if (GetKeyboardPress(DIK_DOWN))
+	{
+		g_Fragment[4].overallPos.y -= 1.0f;
+	}
+	if (GetKeyboardPress(DIK_M))
+	{
+		g_Fragment[4].overallPos.z -= 1.0f;
+	}
+	if (GetKeyboardPress(DIK_N))
+	{
+		g_Fragment[4].overallPos.z += 1.0f;
+	}
+	
+	
+	#endif
 
 }
-#endif
-
 //=============================================================================
 // 描画処理
 //=============================================================================
@@ -545,6 +500,7 @@ float GetPuzzleAlignmentRatio()
 	return ratioSum / (TEXTURE_MAX - 1);  // 返回0～1之间的平均完成度
 }
 
+#ifdef DEBUG
 
 void DrawPartDebugUI()
 {
@@ -639,4 +595,4 @@ void DrawPartDebugUI()
 	}
 
 }
-
+#endif // DEBUG

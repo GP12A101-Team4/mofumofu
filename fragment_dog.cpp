@@ -10,6 +10,7 @@
 #include "debugproc.h"
 #include "fragment.h"
 #include "fragment_dog.h"
+#include "sound.h"
 #include "imgui.h"
 
 //*****************************************************************************
@@ -191,10 +192,9 @@ bool CheckPuzzleRestored_Dog()
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 10.0f;  // 可接受误差半径
+	float tolerance = 10.0f;  
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		// 考虑缩放、旋转、平移后的世界坐标中心点
 		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Dog[i].scl.x, g_Fragment_Dog[i].scl.y, g_Fragment_Dog[i].scl.z);
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Dog[i].rot.x, g_Fragment_Dog[i].rot.y, g_Fragment_Dog[i].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Dog[i].overallPos.x, g_Fragment_Dog[i].overallPos.y + 60.0f, g_Fragment_Dog[i].overallPos.z + 200.0f);
@@ -264,7 +264,7 @@ void UpdateFragment_Dog(void)
 	{
 		g_ShowFullImage_Dog = true;
 		g_DogAnimationPlayed = true;
-		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
+		PlaySound(SOUND_LABEL_SE_DOG);
 	}
 
 	if (g_ShowFullImage_Dog && !g_FragmentRestored_Dog[0].Initialized) {
@@ -362,42 +362,37 @@ void UpdateFragment_Dog(void)
 //}
 
 
-#endif
-
-
-
-#ifdef _DEBUG	// デバッグ情報を表示する
-
-	if (GetKeyboardTrigger(DIK_F1)) {
-		D3D11_VIEWPORT vp;
-		UINT num = 1;
-		GetDeviceContext()->RSGetViewports(&num, &vp);
-
-		CAMERA* cam = GetCamera();
-
-		for (int i = 0; i < TEXTURE_MAX; i++) {
-			XMVECTOR world = XMLoadFloat3(&g_Fragment_Dog[i].overallPos);
-			XMVECTOR screen = XMVector3Project(
-				world,
-				0, 0,
-				vp.Width, vp.Height,
-				0.0f, 1.0f,
-				XMLoadFloat4x4(&cam->mtxProjection),
-				XMLoadFloat4x4(&cam->mtxView),
-				XMMatrixIdentity()
-			);
-
-			g_TargetScreenPos_Dog[i].x = XMVectorGetX(screen);
-			g_TargetScreenPos_Dog[i].y = XMVectorGetY(screen);
+	
+		if (GetKeyboardTrigger(DIK_F1)) {
+			D3D11_VIEWPORT vp;
+			UINT num = 1;
+			GetDeviceContext()->RSGetViewports(&num, &vp);
+	
+			CAMERA* cam = GetCamera();
+	
+			for (int i = 0; i < TEXTURE_MAX; i++) {
+				XMVECTOR world = XMLoadFloat3(&g_Fragment_Dog[i].overallPos);
+				XMVECTOR screen = XMVector3Project(
+					world,
+					0, 0,
+					vp.Width, vp.Height,
+					0.0f, 1.0f,
+					XMLoadFloat4x4(&cam->mtxProjection),
+					XMLoadFloat4x4(&cam->mtxView),
+					XMMatrixIdentity()
+				);
+	
+				g_TargetScreenPos_Dog[i].x = XMVectorGetX(screen);
+				g_TargetScreenPos_Dog[i].y = XMVectorGetY(screen);
+			}
+	
+			//g_HasRecordedTarget = true;
+			OutputDebugStringA("✨ 已记录当前碎片的投影坐标作为正确答案\n");
 		}
-
-		//g_HasRecordedTarget = true;
-		OutputDebugStringA("✨ 已记录当前碎片的投影坐标作为正确答案\n");
-	}
-
-
+	
+	
+	#endif
 }
-#endif
 
 //=============================================================================
 // 描画処理
@@ -583,7 +578,7 @@ void DrawPartDebugUI_Dog()
 	GetDeviceContext()->RSGetViewports(&num, &vp);
 
 	float ratio = GetPuzzleAlignmentRatio_Dog();
-	ImGui::Text("拼图完成度: %.1f%%", ratio * 100.0f);
+	ImGui::Text("パズル完成度: %.1f%%", ratio * 100.0f);
 	ImGui::ProgressBar(ratio, ImVec2(200, 20));
 
 	ImGui::Separator();
