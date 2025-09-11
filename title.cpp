@@ -162,10 +162,7 @@ void UninitTitle(void)
 //=============================================================================
 void UpdateTitle(void)
 {
-	MENU* MENU = GetMenu();
-	if (MENU->use == TRUE) {
-		return;
-	}
+	
 
 	//// ゲームパッドで入力処理
 	//else if (IsButtonTriggered(0, BUTTON_START))
@@ -194,7 +191,10 @@ void UpdateTitle(void)
 
 	bool isPaws = CollisionBB(MousePos, 1.0f, 1.0f, PawsPos, 40.0f, 40.0f);
 
-
+	MENU* MENU = GetMenu();
+	if (MENU->use == TRUE) {
+		return;
+	}
 
 	if (isHoveringStart && inputMode == 0) {
 		menu = MENU_START;
