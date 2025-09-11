@@ -536,6 +536,16 @@ float GetPuzzleAlignmentRatio_Elph()
 
 		XMVECTOR worldCenter = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
 
+		XMMATRIX view = XMLoadFloat4x4(&cam->mtxView);
+		XMVECTOR viewPos = XMVector3TransformCoord(worldCenter, view);
+
+		// カメラの前方にある場合のみ処理する
+		// 使用している View 行列の定義によって >0 または <0 を判定に使う）
+		if (XMVectorGetZ(viewPos) <= 0.0f) {
+			// 背面にある場合「continue」
+			continue;
+		}
+
 		XMVECTOR screen = XMVector3Project(
 			worldCenter,
 			0, 0,
