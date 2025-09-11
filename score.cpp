@@ -14,8 +14,8 @@
 //*****************************************************************************
 // マクロ定義
 //*****************************************************************************
-#define TEXTURE_WIDTH   (22)   // キャラサイズ
-#define TEXTURE_HEIGHT  (38)
+#define TEXTURE_WIDTH   (27)   // キャラサイズ
+#define TEXTURE_HEIGHT  (43)
 #define TEXTURE_MAX     (1)    // テクスチャ数
 
 //*****************************************************************************
@@ -60,7 +60,7 @@ HRESULT InitScore(void)
 
     g_w = TEXTURE_WIDTH;
     g_h = TEXTURE_HEIGHT;
-    g_Pos = { 450.0f, 5.0f, 0.0f };  // 表示位置（必要なら調整）
+    g_Pos = { 360.0f, 20.0f, 0.0f };  // 表示位置（必要なら調整）
     g_TexNo = 0;
 
     g_StartTime = 0;
@@ -186,4 +186,9 @@ void StopTimer()
 int GetElapsedTime(void)
 {
     return g_ElapsedTime / 1000;
+}
+
+int GetElapsedTimeMs()
+{
+    return (int)g_ElapsedTime;
 }

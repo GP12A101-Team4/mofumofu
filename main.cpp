@@ -422,6 +422,7 @@ void Update(void)
 {
 	// 入力の更新処理
 	UpdateInput();
+	UpdateScore();
 
 	MENU* menu = GetMenu();
 	PrintDebugProc("MENU use : %d", menu->use);
@@ -645,8 +646,8 @@ void SetMode(int mode)
 	// プレイヤーの終了処理
 	UninitPlayer();
 
-	// スコアの終了処理
-	UninitScore();
+	//// スコアの終了処理
+	//UninitScore();
 
 	g_Mode = mode;	// 次のモードをセットしている
 
