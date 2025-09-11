@@ -254,8 +254,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		g_MouseX = LOWORD(lParam);
 		g_MouseY = HIWORD(lParam);
 
-		POINT point = GetClientCenter(g_hWnd);
-		//SetCursorPos(point.x, point.y);
+		/*POINT point = GetClientCenter(g_hWnd);
+		SetCursorPos(point.x, point.y);*/
 
 
 		break;
@@ -263,11 +263,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_ACTIVATE:
 		if (wParam != WA_INACTIVE) {
 
-			ShowCursor(TRUE);
+			ShowCursor(FALSE);
 			RECT rect;
 			GetClientRect(hWnd, &rect);
 			MapWindowPoints(hWnd, nullptr, (POINT*)&rect, 2);
-			//ClipCursor(&rect);
+			ClipCursor(&rect);
 
 		}
 		else {
@@ -359,7 +359,7 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	// フェードの初期化
 	InitFade();
 
-	SetMasterVolume(0.3);
+	SetMasterVolume(0.3f);
 
 
 	// 最初のモードをセット

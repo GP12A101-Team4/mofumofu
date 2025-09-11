@@ -105,7 +105,7 @@ HRESULT InitFade(void)
 	g_Fade  = FADE_NONE;
 	g_Color = { 0.0, 0.0, 0.0, 1.0 };	
 
-	g_fade.Enable = 1.0f;
+	g_fade.Enable = 1;
 	g_fade.center = XMFLOAT2(0.5f,0.5f);
 	g_fade.radius = 1.0f;       // 半徑在 UV 空間
 	g_fade.softness = 0.001f;     // 邊緣模糊範圍 (0~1)
@@ -160,7 +160,7 @@ void UpdateFade(void)
 		if (g_Fade == FADE_OUT)
 		{// フェードアウト処理
 			//g_fade.radius -= 0.01f;
-			g_pawfade.g_FadeAmount -= 0.1;
+			g_pawfade.g_FadeAmount -= 0.1f;
 			if (g_pawfade.g_FadeAmount < 0.0f)
 			{
 				// 鳴っている曲を全部止める

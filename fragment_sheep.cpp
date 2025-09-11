@@ -10,6 +10,7 @@
 #include "debugproc.h"
 #include "fragment.h"
 #include "fragment_sheep.h"
+#include "sound.h"
 #include "imgui.h"
 
 //*****************************************************************************
@@ -263,7 +264,7 @@ void UpdateFragment_Sheep(void)
 	{
 		g_ShowFullImage_Sheep = true;
 		g_SheepAnimationPlayed = true;
-		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
+		PlaySound(SOUND_LABEL_SE_SHEEP);
 	}
 
 	if (g_ShowFullImage_Sheep && !g_FragmentRestored_Sheep[0].Initialized) {
@@ -353,12 +354,6 @@ void UpdateFragment_Sheep(void)
 	}
 
 
-#endif
-
-
-
-#ifdef _DEBUG	// デバッグ情報を表示する
-
 	if (GetKeyboardTrigger(DIK_F3)) {
 		D3D11_VIEWPORT vp;
 		UINT num = 1;
@@ -387,8 +382,10 @@ void UpdateFragment_Sheep(void)
 	}
 
 
-}
 #endif
+	
+	}
+
 
 //=============================================================================
 // 描画処理

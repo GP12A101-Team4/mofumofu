@@ -10,6 +10,7 @@
 #include "debugproc.h"
 #include "fragment.h"
 #include "fragment_elephant.h"
+#include "sound.h"
 #include "imgui.h"
 
 //*****************************************************************************
@@ -268,7 +269,8 @@ void UpdateFragment_Elph(void)
 	{
 		g_ShowFullImage_Elph = true;
 		g_ElphAnimationPlayed = true;
-		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
+		PlaySound(SOUND_LABEL_SE_ELEPHANT);
+		
 	}
 
 	if (g_ShowFullImage_Elph && !g_FragmentRestored_Elph[0].Initialized) {
@@ -358,12 +360,6 @@ void UpdateFragment_Elph(void)
 //}
 
 
-#endif
-
-
-
-#ifdef _DEBUG	// デバッグ情報を表示する
-
 	if (GetKeyboardTrigger(DIK_F2)) {
 		D3D11_VIEWPORT vp;
 		UINT num = 1;
@@ -392,9 +388,9 @@ void UpdateFragment_Elph(void)
 	}
 
 
-}
 #endif
 
+}
 //=============================================================================
 // 描画処理
 //=============================================================================

@@ -10,6 +10,7 @@
 #include "debugproc.h"
 #include "fragment.h"
 #include "fragment_mouse.h"
+#include "sound.h"
 #include "imgui.h"
 
 //*****************************************************************************
@@ -268,7 +269,9 @@ void UpdateFragment_Mouse(void)
 	{
 		g_ShowFullImage_Mouse = true;
 		g_MouseAnimationPlayed = true;
-		OutputDebugStringA("✅ 判定成功，准备显示完整贴图\n");
+		PlaySound(SOUND_LABEL_SE_MOUSE);
+		
+		
 	}
 
 	if (g_ShowFullImage_Mouse && !g_FragmentRestored_Mouse[0].Initialized) {
@@ -358,12 +361,6 @@ void UpdateFragment_Mouse(void)
 //}
 
 
-#endif
-
-
-
-#ifdef _DEBUG	// デバッグ情報を表示する
-
 	if (GetKeyboardTrigger(DIK_F3)) {
 		D3D11_VIEWPORT vp;
 		UINT num = 1;
@@ -392,9 +389,9 @@ void UpdateFragment_Mouse(void)
 	}
 
 
-}
-#endif
 
+#endif
+	}
 //=============================================================================
 // 描画処理
 //=============================================================================
