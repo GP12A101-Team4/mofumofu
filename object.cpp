@@ -525,9 +525,9 @@ void DrawObject(void)
 	XMMATRIX I = XMMatrixIdentity();
 	SetWorldMatrix(&I);
 
-	for (int i = 0; i < object_max; i++) {
+	/*for (int i = 0; i < object_max; i++) {
 		DrawAABB_Wire(g_Object[i]);
-	}
+	}*/
 
 	// カリング設定を戻す
 	SetCullingMode(CULL_MODE_BACK);
