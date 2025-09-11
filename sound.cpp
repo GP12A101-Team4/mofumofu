@@ -52,9 +52,9 @@ SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 	{ (char*)"data/SE/SYSTEM/point.wav", 0 },
 	{ (char*)"data/SE/SYSTEM/timesup.wav", 0 },
 	{ (char*)"data/SE/SYSTEM/winning.wav", 0 },
-	{ (char*)"data/SE/SYSTEM/Modern10.wav", 0 },
-	{ (char*)"data/SE/SYSTEM/Modern11.wav", 0 },
-	{ (char*)"data/SE/SYSTEM/Modern8.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/switchButton.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/mouseClick.wav", 0 },
+	{ (char*)"data/SE/SYSTEM/enterButton.wav", 0 },
 
 	{ (char*)"data/SE/CAT/cat_1.wav", 0 },
 
