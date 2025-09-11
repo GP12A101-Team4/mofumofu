@@ -373,7 +373,7 @@ HRESULT InitObstacleFragment(void)
         27,             // 障害物配列のインデックス（27番）
         4,              // 種類：4 = 羊（0=犬, 1=猫, 2=象, 3=鼠, 4=羊）
         0,              // 羊の0番目のテクスチャ（sheep_01.png）
-        { 400, 35, 800 }, // ワールド空間での配置座標（X, Y, Z）
+        { 620, 35, 800 }, // ワールド空間での配置座標（X, Y, Z）
         { 1.5f, 1.5f, 1.3f }, // スケール（X, Y, Z）
         { 0, XMConvertToRadians(225), 0 }  // 回転（X, Y, Z）＝Y軸に225度回転
     );
@@ -493,7 +493,7 @@ HRESULT InitObstacleFragment(void)
         39,             // 障害物配列のインデックス（39番）
         3,              // 種類：3 = 鼠（0=犬, 1=猫, 2=象, 3=鼠, 4=羊）
         0,              // 鼠の0番目のテクスチャ（mouse_01.png）
-        { 150, 5, -800 }, // ワールド空間での配置座標（X, Y, Z）
+        { 250, 5, -800 }, // ワールド空間での配置座標（X, Y, Z）
         { 1.7f, 1.7f, 1.5f }, // スケール（X, Y, Z）
         { 0, XMConvertToRadians(270), 0 }  // 回転（X, Y, Z）＝Y軸に270度回転
     );
@@ -573,9 +573,9 @@ HRESULT InitObstacleFragment(void)
         48,             // 障害物配列のインデックス（47番）
         4,              // 種類：4 = 羊（0=犬, 1=猫, 2=象, 3=鼠, 4=羊）
         0,              // 羊の0番目のテクスチャ（sheep_01.png）
-        { 120, 35, -900 }, // ワールド空間での配置座標（X, Y, Z）
+        { -110, 35, -1200 }, // ワールド空間での配置座標（X, Y, Z）
         { 0.9f, 0.9f, 0.9f }, // スケール（X, Y, Z）
-        { 0, XMConvertToRadians(285), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
+        { 0, XMConvertToRadians(135), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
     );
 
     // 49番目の障害物を「羊」の0番テクスチャ（sheep_01.png）として配置。位置は(900, 35, 600)、スケールは(0.9, 0.9, 0.9)、Y軸に285度回転。
@@ -585,7 +585,7 @@ HRESULT InitObstacleFragment(void)
         2,              // 羊の0番目のテクスチャ（sheep_01.png）
         { -520, 35, -1100 }, // ワールド空間での配置座標（X, Y, Z）
         { 0.9f, 0.9f, 0.9f }, // スケール（X, Y, Z）
-        { 0, XMConvertToRadians(285), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
+        { 0, XMConvertToRadians(150), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
     );
 
 
@@ -596,7 +596,7 @@ HRESULT InitObstacleFragment(void)
         4,              // 羊の0番目のテクスチャ（sheep_01.png）
         { -220, 35, -1100 }, // ワールド空間での配置座標（X, Y, Z）
         { 0.9f, 0.9f, 0.9f }, // スケール（X, Y, Z）
-        { 0, XMConvertToRadians(285), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
+        { 0, XMConvertToRadians(205), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
     );
 
 
@@ -607,7 +607,7 @@ HRESULT InitObstacleFragment(void)
         3,              // 羊の0番目のテクスチャ（sheep_01.png）
         { -20, 35, -1100 }, // ワールド空間での配置座標（X, Y, Z）
         { 0.9f, 0.9f, 0.9f }, // スケール（X, Y, Z）
-        { 0, XMConvertToRadians(285), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
+        { 0, XMConvertToRadians(246), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
     );
 
     // 52番目の障害物を「羊」の0番テクスチャ（sheep_01.png）として配置。位置は(900, 35, 600)、スケールは(0.9, 0.9, 0.9)、Y軸に285度回転。
@@ -617,7 +617,7 @@ HRESULT InitObstacleFragment(void)
         1,              // 羊の0番目のテクスチャ（sheep_01.png）
         { 120, 35, -900 }, // ワールド空間での配置座標（X, Y, Z）
         { 0.9f, 0.9f, 0.9f }, // スケール（X, Y, Z）
-        { 0, XMConvertToRadians(285), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
+        { 0, XMConvertToRadians(300), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
     );
 
     // 53番目の障害物を「羊」の0番テクスチャ（sheep_01.png）として配置。位置は(900, 35, 600)、スケールは(0.9, 0.9, 0.9)、Y軸に285度回転。
@@ -627,7 +627,7 @@ HRESULT InitObstacleFragment(void)
         3,              // 羊の0番目のテクスチャ（sheep_01.png）
         { 220, 35, -800 }, // ワールド空間での配置座標（X, Y, Z）
         { 0.9f, 0.9f, 0.9f }, // スケール（X, Y, Z）
-        { 0, XMConvertToRadians(285), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
+        { 0, XMConvertToRadians(220), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
     );
 
     // 54番目の障害物を「羊」の0番テクスチャ（sheep_01.png）として配置。位置は(900, 35, 600)、スケールは(0.9, 0.9, 0.9)、Y軸に285度回転。
@@ -637,7 +637,7 @@ HRESULT InitObstacleFragment(void)
         2,              // 羊の0番目のテクスチャ（sheep_01.png）
         { 300, 35, -1200 }, // ワールド空間での配置座標（X, Y, Z）
         { 0.9f, 0.9f, 0.9f }, // スケール（X, Y, Z）
-        { 0, XMConvertToRadians(285), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
+        { 0, XMConvertToRadians(271), 0 }  // 回転（X, Y, Z）＝Y軸に285度回転
     );
 
     //for (int i = 2; i < OBSTACLE_MAX; i++) {
