@@ -111,8 +111,8 @@ HRESULT InitMenu(void)
 	bd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	GetDevice()->CreateBuffer(&bd, NULL, &g_VertexBuffer);
 
-	g_sprite[BAR_MASTER] = {			(SCREEN_CENTER_X +10 ) - BAR_WIDTH/2,
-										SCREEN_CENTER_Y - 80,
+	g_sprite[BAR_MASTER] = {			(SCREEN_CENTER_X +10.0f ) - BAR_WIDTH/2,
+										SCREEN_CENTER_Y - 80.0f,
 										BAR_WIDTH,
 										20.0f,
 
@@ -121,8 +121,8 @@ HRESULT InitMenu(void)
 										0.0f,
 										0.0f};
 
-	g_sprite[BAR_MASTER_CURRENT] = {	(SCREEN_CENTER_X +10 ) - BAR_WIDTH / 2,
-										SCREEN_CENTER_Y - 80,
+	g_sprite[BAR_MASTER_CURRENT] = {	(SCREEN_CENTER_X +10.0f ) - BAR_WIDTH / 2,
+										SCREEN_CENTER_Y - 80.0f,
 										BAR_WIDTH,
 										20.0f,
 
@@ -131,7 +131,7 @@ HRESULT InitMenu(void)
 										0.0f,				
 										0.0f};
 
-	g_sprite[BAR_SE] = {				(SCREEN_CENTER_X +10 ) - BAR_WIDTH / 2,
+	g_sprite[BAR_SE] = {				(SCREEN_CENTER_X +10.0f ) - BAR_WIDTH / 2,
 										SCREEN_CENTER_Y - 80 + OFFSET,
 										BAR_WIDTH,
 										20.0f,
@@ -141,8 +141,8 @@ HRESULT InitMenu(void)
 										0.0f,
 										0.0f };
 
-	g_sprite[BAR_SE_CURRENT] = {		(SCREEN_CENTER_X + 10 ) - BAR_WIDTH / 2,
-										SCREEN_CENTER_Y - 80 + OFFSET,
+	g_sprite[BAR_SE_CURRENT] = {		(SCREEN_CENTER_X + 10.0f ) - BAR_WIDTH / 2,
+										SCREEN_CENTER_Y - 80.0f + OFFSET,
 										BAR_WIDTH,
 										20.0f,
 
@@ -152,7 +152,7 @@ HRESULT InitMenu(void)
 										0.0f };
 
 	g_sprite[BUTTON_BGM_MUTE] = {		SCREEN_CENTER_X + 30.0f,
-										SCREEN_CENTER_Y + OFFSET,
+										SCREEN_CENTER_Y ,
 										90.0f,
 										90.0f,
 
@@ -162,7 +162,7 @@ HRESULT InitMenu(void)
 										0.0f };
 
 	g_sprite[BUTTON_SE_MUTE] = { 		SCREEN_CENTER_X + 90.0f,
-										SCREEN_CENTER_Y + OFFSET,
+										SCREEN_CENTER_Y ,
 										90.0f,
 										90.0f,
 
@@ -191,10 +191,10 @@ HRESULT InitMenu(void)
 										0.0f,
 										0.0f };
 
-	g_sprite[BACK_TO_TITLE_BUTTON] = {	SCREEN_CENTER_X - 461.0f / 3,
-										SCREEN_CENTER_Y  + 30.0f + OFFSET,
-										461.0f / 2.5f,
-										109.0f / 2.5f,
+	g_sprite[BACK_TO_TITLE_BUTTON] = {	SCREEN_CENTER_X - 461.0f / 4,
+										SCREEN_CENTER_Y  + 50.0f + OFFSET,
+										461.0f / 2.0f,
+										109.0f / 2.0f,
 
 										1.0f,
 										1.0f,

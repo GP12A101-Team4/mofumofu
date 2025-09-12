@@ -33,7 +33,7 @@ static char* g_TexturName[TEXTURE_MAX] = {
     "data/TEXTURE/result.png",
     "data/TEXTURE/result_logo.png",
     "data/TEXTURE/Numberrr.png",
-    "data/TEXTURE/back.png",
+    "data/TEXTURE/press_any_key.png",
 };
 
 static BOOL      g_Use;                     // TRUE:使っている  FALSE:未使用
@@ -125,19 +125,11 @@ void UpdateResult(void)
     // StopTimer() で凍結していれば値は固定ですし、
     // 走らせても g_Running==FALSE なら値は変わりません。:contentReference[oaicite:3]{index=3}
 
-    if (GetKeyboardTrigger(DIK_RETURN))
+    if (IsAnyKeyTriggered())
     {// Enter押したら、ステージを切り替える
         SetFade(FADE_OUT, MODE_TITLE);
     }
-    // ゲームパッドで入力処理
-    else if (IsButtonTriggered(0, BUTTON_START))
-    {
-        SetFade(FADE_OUT, MODE_TITLE);
-    }
-	else if (IsButtonTriggered(0, BUTTON_B) || (IsMouseLeftTriggered) ())
-    {
-        SetFade(FADE_OUT, MODE_TITLE);
-    }
+   
 
 #ifdef _DEBUG
     // デバッグ表示があればここに
