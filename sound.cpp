@@ -55,7 +55,6 @@ SOUNDPARAM g_aParam[SOUND_LABEL_MAX] =
 	{ (char*)"data/SE/SYSTEM/switchButton.wav", 0 },
 	{ (char*)"data/SE/SYSTEM/mouseClick.wav", 0 },
 	{ (char*)"data/SE/SYSTEM/enterButton.wav", 0 },
-	{ (char*)"data/SE/SYSTEM/flipPage.wav", 0 },
 
 	{ (char*)"data/SE/CAT/cat_1.wav", 0 },
 

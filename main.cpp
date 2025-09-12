@@ -667,7 +667,6 @@ void SetMode(int mode)
 		break;
 
 	case MODE_TUTORIAL:
-		PlaySound(SOUND_LABEL_BGM_TITLE);
 		InitTutorial();
 		break;
 

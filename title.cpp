@@ -162,6 +162,17 @@ void UninitTitle(void)
 //=============================================================================
 void UpdateTitle(void)
 {
+	
+
+	//// ゲームパッドで入力処理
+	//else if (IsButtonTriggered(0, BUTTON_START))
+	//{
+	//	SetFade(FADE_OUT, MODE_TUTORIAL);
+	//}
+	//else if (IsButtonTriggered(0, BUTTON_B))
+	//{
+	//	SetFade(FADE_OUT, MODE_TUTORIAL);
+	//}
 
 	long MouseDeltaX = GetMouseX();
 	long MouseDeltaY = GetMouseY();
@@ -265,7 +276,7 @@ void UpdateTitle(void)
 		if (menu == MENU_START)
 		{
 			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
-			SetFade(FADE_OUT, MODE_TUTORIAL);
+			SetFade(FADE_OUT, MODE_GAME);
 		}
 		else if (menu == MENU_SETTING) {
 			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
