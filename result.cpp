@@ -33,7 +33,7 @@ static char* g_TexturName[TEXTURE_MAX] = {
     "data/TEXTURE/result.png",
     "data/TEXTURE/result_logo.png",
     "data/TEXTURE/Numberrr.png",
-    "data/TEXTURE/back.png",
+    "data/TEXTURE/press_any_key.png",
 };
 
 static BOOL      g_Use;                     // TRUE:使っている  FALSE:未使用
