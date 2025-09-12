@@ -14,7 +14,7 @@
 #include "shadow.h"
 #include "light.h"
 #include "meshfield.h"
-#include "fragment.h"
+#include "fragment_cat.h"
 #include "fragment_dog.h"
 #include "fragment_elephant.h"
 #include "fragment_mouse.h"
