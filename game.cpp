@@ -21,7 +21,7 @@
 #include "collision.h"
 #include "debugproc.h"
 #include "meshwall.h"
-#include "fragment.h"
+#include "fragment_cat.h"
 #include "fragment_dog.h"
 #include "fragment_elephant.h"
 #include "fragment_mouse.h"

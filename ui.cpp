@@ -6,7 +6,7 @@
 //=============================================================================
 #include "main.h"
 #include "renderer.h"
-#include "fragment.h"
+#include "fragment_cat.h"
 #include "fragment_dog.h"
 #include "fragment_elephant.h"
 #include "fragment_mouse.h"

@@ -8,7 +8,7 @@
 #include "input.h"
 #include "camera.h"
 #include "debugproc.h"
-#include "fragment.h"
+#include "fragment_cat.h"
 #include "sound.h"
 #include "imgui.h"
 

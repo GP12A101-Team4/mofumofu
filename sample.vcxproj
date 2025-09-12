@@ -144,7 +144,7 @@
     <ClInclude Include="cursor.h" />
     <ClInclude Include="debugproc.h" />
     <ClInclude Include="fade.h" />
-    <ClInclude Include="fragment.h" />
+    <ClInclude Include="fragment_cat.h" />
     <ClInclude Include="fragment_dog.h" />
     <ClInclude Include="fragment_elephant.h" />
     <ClInclude Include="fragment_mouse.h" />
@@ -184,7 +184,7 @@
     <ClCompile Include="cursor.cpp" />
     <ClCompile Include="debugproc.cpp" />
     <ClCompile Include="fade.cpp" />
-    <ClCompile Include="fragment.cpp" />
+    <ClCompile Include="fragment_cat.cpp" />
     <ClCompile Include="fragment_dog.cpp" />
     <ClCompile Include="fragment_elephant.cpp" />
     <ClCompile Include="fragment_mouse.cpp" />
