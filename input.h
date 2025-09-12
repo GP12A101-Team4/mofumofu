@@ -1,6 +1,6 @@
-//=============================================================================
+ï»¿//=============================================================================
 //
-// “ü—Íˆ— [input.h]
+// å…¥åŠ›å‡¦ç† [input.h]
 // Author : 
 //
 //=============================================================================
@@ -9,46 +9,46 @@
 #include "main.h"
 
 //*****************************************************************************
-// ƒ}ƒNƒ’è‹`
+// ãƒã‚¯ãƒ­å®šç¾©
 //*****************************************************************************
 
-// ƒvƒƒOƒ‰ƒ€•ª‚¯‚·‚é‚Æ‚«‚Ég‚¤
-#define	USE_KEYBOARD				// éŒ¾‚·‚é‚ÆƒL[ƒ{[ƒh‚Å‘€ì‰Â”\‚É‚È‚é
-#define	USE_MOUSE					// éŒ¾‚·‚é‚Æƒ}ƒEƒX‚Å‘€ì‰Â”\‚É‚È‚é
-#define	USE_PAD						// éŒ¾‚·‚é‚Æƒpƒbƒh‚Å‘€ì‰Â”\‚É‚È‚é
+// ãƒ—ãƒ­ã‚°ãƒ©ãƒ åˆ†ã‘ã™ã‚‹ã¨ãã«ä½¿ã†
+#define	USE_KEYBOARD				// å®£è¨€ã™ã‚‹ã¨ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã§æ“ä½œå¯èƒ½ã«ãªã‚‹
+#define	USE_MOUSE					// å®£è¨€ã™ã‚‹ã¨ãƒã‚¦ã‚¹ã§æ“ä½œå¯èƒ½ã«ãªã‚‹
+#define	USE_PAD						// å®£è¨€ã™ã‚‹ã¨ãƒ‘ãƒƒãƒ‰ã§æ“ä½œå¯èƒ½ã«ãªã‚‹
 
 
-/* game padî•ñ */
-#define BUTTON_UP		0x00000001l	// •ûŒüƒL[ã(.IY<0)
-#define BUTTON_DOWN		0x00000002l	// •ûŒüƒL[‰º(.IY>0)
-#define BUTTON_LEFT		0x00000004l	// •ûŒüƒL[¶(.IX<0)
-#define BUTTON_RIGHT	0x00000008l	// •ûŒüƒL[‰E(.IX>0)
+/* game padæƒ…å ± */
+#define BUTTON_UP		0x00000001l	// æ–¹å‘ã‚­ãƒ¼ä¸Š(.IY<0)
+#define BUTTON_DOWN		0x00000002l	// æ–¹å‘ã‚­ãƒ¼ä¸‹(.IY>0)
+#define BUTTON_LEFT		0x00000004l	// æ–¹å‘ã‚­ãƒ¼å·¦(.IX<0)
+#define BUTTON_RIGHT	0x00000008l	// æ–¹å‘ã‚­ãƒ¼å³(.IX>0)
 
-//#define BUTTON_A		0x00000010l	// ‚`ƒ{ƒ^ƒ“(.rgbButtons[0]&0x80)
-//#define BUTTON_B		0x00000020l	// ‚aƒ{ƒ^ƒ“(.rgbButtons[1]&0x80)
-//#define BUTTON_C		0x00000040l	// ‚bƒ{ƒ^ƒ“(.rgbButtons[2]&0x80)
-//#define BUTTON_X		0x00000080l	// ‚wƒ{ƒ^ƒ“(.rgbButtons[3]&0x80)
-//#define BUTTON_Y		0x00000100l	// ‚xƒ{ƒ^ƒ“(.rgbButtons[4]&0x80)
-//#define BUTTON_Z		0x00000200l	// ‚yƒ{ƒ^ƒ“(.rgbButtons[5]&0x80)
-//#define BUTTON_L		0x00000400l	// ‚kƒ{ƒ^ƒ“(.rgbButtons[6]&0x80)
-//#define BUTTON_R		0x00000800l	// ‚qƒ{ƒ^ƒ“(.rgbButtons[7]&0x80)
-//#define BUTTON_START	0x00001000l	// ‚r‚s‚`‚q‚sƒ{ƒ^ƒ“(.rgbButtons[8]&0x80)
-//#define BUTTON_M		0x00002000l	// ‚lƒ{ƒ^ƒ“(.rgbButtons[9]&0x80)
+//#define BUTTON_A		0x00000010l	// ï¼¡ãƒœã‚¿ãƒ³(.rgbButtons[0]&0x80)
+//#define BUTTON_B		0x00000020l	// ï¼¢ãƒœã‚¿ãƒ³(.rgbButtons[1]&0x80)
+//#define BUTTON_C		0x00000040l	// ï¼£ãƒœã‚¿ãƒ³(.rgbButtons[2]&0x80)
+//#define BUTTON_X		0x00000080l	// ï¼¸ãƒœã‚¿ãƒ³(.rgbButtons[3]&0x80)
+//#define BUTTON_Y		0x00000100l	// ï¼¹ãƒœã‚¿ãƒ³(.rgbButtons[4]&0x80)
+//#define BUTTON_Z		0x00000200l	// ï¼ºãƒœã‚¿ãƒ³(.rgbButtons[5]&0x80)
+//#define BUTTON_L		0x00000400l	// ï¼¬ãƒœã‚¿ãƒ³(.rgbButtons[6]&0x80)
+//#define BUTTON_R		0x00000800l	// ï¼²ãƒœã‚¿ãƒ³(.rgbButtons[7]&0x80)
+//#define BUTTON_START	0x00001000l	// ï¼³ï¼´ï¼¡ï¼²ï¼´ãƒœã‚¿ãƒ³(.rgbButtons[8]&0x80)
+//#define BUTTON_M		0x00002000l	// ï¼­ãƒœã‚¿ãƒ³(.rgbButtons[9]&0x80)
 
-#define BUTTON_X		0x00000010l	// ‚wƒ{ƒ^ƒ“(.rgbButtons[0]&0x80)
-#define BUTTON_A		0x00000020l	// ‚`ƒ{ƒ^ƒ“(.rgbButtons[1]&0x80)
-#define BUTTON_B		0x00000040l	// ‚aƒ{ƒ^ƒ“(.rgbButtons[2]&0x80)
-#define BUTTON_Y		0x00000080l	// ‚xƒ{ƒ^ƒ“(.rgbButtons[3]&0x80)
-#define BUTTON_L		0x00000100l	// ‚kƒ{ƒ^ƒ“(.rgbButtons[4]&0x80)
-#define BUTTON_R		0x00000200l	// ‚qƒ{ƒ^ƒ“(.rgbButtons[5]&0x80)
-#define BUTTON_L2		0x00000400l	// ‚kƒ{ƒ^ƒ“(.rgbButtons[6]&0x80)
-#define BUTTON_R2		0x00000800l	// ‚qƒ{ƒ^ƒ“(.rgbButtons[7]&0x80)
-#define BUTTON_SELECT	0x00001000l	// ‚yƒ{ƒ^ƒ“(.rgbButtons[8]&0x80)
-#define BUTTON_START	0x00002000l	// ‚r‚s‚`‚q‚sƒ{ƒ^ƒ“(.rgbButtons[9]&0x80)
+#define BUTTON_X		0x00000010l	// ï¼¸ãƒœã‚¿ãƒ³(.rgbButtons[0]&0x80)
+#define BUTTON_A		0x00000020l	// ï¼¡ãƒœã‚¿ãƒ³(.rgbButtons[1]&0x80)
+#define BUTTON_B		0x00000040l	// ï¼¢ãƒœã‚¿ãƒ³(.rgbButtons[2]&0x80)
+#define BUTTON_Y		0x00000080l	// ï¼¹ãƒœã‚¿ãƒ³(.rgbButtons[3]&0x80)
+#define BUTTON_L		0x00000100l	// ï¼¬ãƒœã‚¿ãƒ³(.rgbButtons[4]&0x80)
+#define BUTTON_R		0x00000200l	// ï¼²ãƒœã‚¿ãƒ³(.rgbButtons[5]&0x80)
+#define BUTTON_L2		0x00000400l	// ï¼¬ãƒœã‚¿ãƒ³(.rgbButtons[6]&0x80)
+#define BUTTON_R2		0x00000800l	// ï¼²ãƒœã‚¿ãƒ³(.rgbButtons[7]&0x80)
+#define BUTTON_SELECT	0x00001000l	// ï¼ºãƒœã‚¿ãƒ³(.rgbButtons[8]&0x80)
+#define BUTTON_START	0x00002000l	// ï¼³ï¼´ï¼¡ï¼²ï¼´ãƒœã‚¿ãƒ³(.rgbButtons[9]&0x80)
 
-#define GAMEPADMAX		4			// “¯‚ÉÚ‘±‚·‚éƒWƒ‡ƒCƒpƒbƒh‚ÌÅ‘å”‚ğƒZƒbƒg
+#define GAMEPADMAX		4			// åŒæ™‚ã«æ¥ç¶šã™ã‚‹ã‚¸ãƒ§ã‚¤ãƒ‘ãƒƒãƒ‰ã®æœ€å¤§æ•°ã‚’ã‚»ãƒƒãƒˆ
 
-enum {	// ƒ{ƒ^ƒ“‚É‘Î‚·‚érgbButtons[?]”z—ñ‚Ì”z—ñ”Ô†(DirectInputã‚Å‚ÌXYABƒ{ƒ^ƒ“ˆÊ’u‚É‡‚í‚¹‚½)
+enum {	// ãƒœã‚¿ãƒ³ã«å¯¾ã™ã‚‹rgbButtons[?]é…åˆ—ã®é…åˆ—ç•ªå·(DirectInputä¸Šã§ã®XYABãƒœã‚¿ãƒ³ä½ç½®ã«åˆã‚ã›ãŸ)
 	rgbButtons_X,
 	rgbButtons_A,
 	rgbButtons_B,
@@ -64,7 +64,7 @@ enum {	// ƒ{ƒ^ƒ“‚É‘Î‚·‚érgbButtons[?]”z—ñ‚Ì”z—ñ”Ô†(DirectInputã‚Å‚ÌXYABƒ{ƒ^ƒ“ˆ
 
 
 //*****************************************************************************
-// ƒvƒƒgƒ^ƒCƒvéŒ¾
+// ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€
 //*****************************************************************************
 HRESULT InitInput(HINSTANCE hInst, HWND hWnd);
 void UninitInput(void);
@@ -77,18 +77,18 @@ BOOL GetKeyboardRepeat(int nKey);
 BOOL GetKeyboardRelease(int nKey);
 
 //---------------------------- mouse
-BOOL IsMouseLeftPressed(void);      // ¶ƒNƒŠƒbƒN‚µ‚½ó‘Ô
-BOOL IsMouseLeftTriggered(void);    // ¶ƒNƒŠƒbƒN‚µ‚½uŠÔ
-BOOL IsMouseRightPressed(void);     // ‰EƒNƒŠƒbƒN‚µ‚½ó‘Ô
-BOOL IsMouseRightTriggered(void);   // ‰EƒNƒŠƒbƒN‚µ‚½uŠÔ
-BOOL IsMouseCenterPressed(void);    // ’†ƒNƒŠƒbƒN‚µ‚½ó‘Ô
-BOOL IsMouseCenterTriggered(void);  // ’†ƒNƒŠƒbƒN‚µ‚½uŠÔ
-long GetMouseX(void);               // ƒ}ƒEƒX‚ªX•ûŒü‚É“®‚¢‚½‘Š‘Î’l
-long GetMouseY(void);               // ƒ}ƒEƒX‚ªY•ûŒü‚É“®‚¢‚½‘Š‘Î’l
-long GetMouseZ(void);               // ƒ}ƒEƒXƒzƒC[ƒ‹‚ª“®‚¢‚½‘Š‘Î’l
+BOOL IsMouseLeftPressed(void);      // å·¦ã‚¯ãƒªãƒƒã‚¯ã—ãŸçŠ¶æ…‹
+BOOL IsMouseLeftTriggered(void);    // å·¦ã‚¯ãƒªãƒƒã‚¯ã—ãŸç¬é–“
+BOOL IsMouseRightPressed(void);     // å³ã‚¯ãƒªãƒƒã‚¯ã—ãŸçŠ¶æ…‹
+BOOL IsMouseRightTriggered(void);   // å³ã‚¯ãƒªãƒƒã‚¯ã—ãŸç¬é–“
+BOOL IsMouseCenterPressed(void);    // ä¸­ã‚¯ãƒªãƒƒã‚¯ã—ãŸçŠ¶æ…‹
+BOOL IsMouseCenterTriggered(void);  // ä¸­ã‚¯ãƒªãƒƒã‚¯ã—ãŸç¬é–“
+long GetMouseX(void);               // ãƒã‚¦ã‚¹ãŒXæ–¹å‘ã«å‹•ã„ãŸç›¸å¯¾å€¤
+long GetMouseY(void);               // ãƒã‚¦ã‚¹ãŒYæ–¹å‘ã«å‹•ã„ãŸç›¸å¯¾å€¤
+long GetMouseZ(void);               // ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ãŒå‹•ã„ãŸç›¸å¯¾å€¤
 
 //---------------------------- game pad
 BOOL IsButtonPressed(int padNo,DWORD button);
 BOOL IsButtonTriggered(int padNo,DWORD button);
 
-
+BOOL IsAnyKeyTriggered(void);

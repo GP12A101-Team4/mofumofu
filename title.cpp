@@ -276,7 +276,7 @@ void UpdateTitle(void)
 		if (menu == MENU_START)
 		{
 			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
-			SetFade(FADE_OUT, MODE_GAME);
+			SetFade(FADE_OUT, MODE_TUTORIAL);
 		}
 		else if (menu == MENU_SETTING) {
 			PlaySound(SOUND_LABEL_SE_ENTERBOTTON);
