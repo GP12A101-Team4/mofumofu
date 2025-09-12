@@ -210,27 +210,27 @@ static inline float Safe01(float v) {
 // 動物のパズル完成度を順次チェックして、UIに反映する
 static void UI_UpdateSequential(void)
 {
-	// 0: 猫
+	// 0: ねこ
 	if (!g_AnimalCounted[0] && GetShowFullImage()) {
 		g_AnimalCounted[0] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
-	// 1: 狗
+	// 1: いぬ
 	if (!g_AnimalCounted[1] && GetShowFullImage_Dog()) {
 		g_AnimalCounted[1] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
-	// 2: 象
+	// 2: ゾウ
 	if (!g_AnimalCounted[2] && GetShowFullImage_Elph()) {
 		g_AnimalCounted[2] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
-	// 3: 鼠
+	// 3: ネズミ
 	if (!g_AnimalCounted[3] && GetShowFullImage_Mouse()) {
 		g_AnimalCounted[3] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;
 	}
-	// 4: 羊
+	// 4: ひつじ
 	if (!g_AnimalCounted[4] && GetShowFullImage_Sheep()) {
 		g_AnimalCounted[4] = TRUE;
 		if (g_NextSlotToLight < UI_ICON_COUNT) ++g_NextSlotToLight;

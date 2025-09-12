@@ -432,21 +432,6 @@ void DrawFragment_Dog(void)
 			XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Dog[i].overallPos.x, g_Fragment_Dog[i].overallPos.y + 60.0f, g_Fragment_Dog[i].overallPos.z + 200.0f);
 			mtxWorld = mtxScl * mtxRot * mtxTranslate;
 
-			/*g_Fragment_Dog[0].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Dog[1].overallPos = XMFLOAT3(430.0f, 9.0f, 188.0f);
-			g_Fragment_Dog[2].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Dog[3].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Dog[4].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-
-
-			g_Fragment_Dog[0].scl = XMFLOAT3(1.21f, 1.21f, 0.0f);
-			g_Fragment_Dog[1].scl = XMFLOAT3(0.87f, 0.87f, 0.0f);
-			g_Fragment_Dog[2].scl = XMFLOAT3(0.84f, 0.84f, 0.0f);
-			g_Fragment_Dog[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
-			g_Fragment_Dog[4].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
-			
-			*/
-
 			g_Fragment_Dog[0].overallPos = XMFLOAT3(1185.0f, 27.0f, 234.0f);
 			g_Fragment_Dog[1].overallPos = XMFLOAT3(1247.0f, 34.0f, 246.0f);
 			g_Fragment_Dog[2].overallPos = XMFLOAT3(1244.0f, 37.0f, 236.0f);
@@ -523,7 +508,6 @@ float GetPuzzleAlignmentRatio_Dog()
 	float ratioSum = 0.0f;
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		// 构建世界变换矩阵（缩放 → 旋转 → 平移）
 		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Dog[i].scl.x, g_Fragment_Dog[i].scl.y, g_Fragment_Dog[i].scl.z);
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Dog[i].rot.x, g_Fragment_Dog[i].rot.y, g_Fragment_Dog[i].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Dog[i].overallPos.x, g_Fragment_Dog[i].overallPos.y + 60.0f, g_Fragment_Dog[i].overallPos.z + 200.0f);
@@ -566,7 +550,7 @@ float GetPuzzleAlignmentRatio_Dog()
 		ratioSum += partRatio;
 	}
 
-	return ratioSum / (TEXTURE_MAX - 1);  // 返回平均完成度 (0.0~1.0)
+	return ratioSum / (TEXTURE_MAX - 1); 
 }
 
 
@@ -587,16 +571,16 @@ void DrawPartDebugUI_Dog()
 	ImGui::Text("碎片中心位置（投影） vs 目标位置");
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		// 构建世界矩阵
+		
 		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Dog[i].scl.x, g_Fragment_Dog[i].scl.y, g_Fragment_Dog[i].scl.z);
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Dog[i].rot.x, g_Fragment_Dog[i].rot.y, g_Fragment_Dog[i].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Dog[i].overallPos.x, g_Fragment_Dog[i].overallPos.y + 60.0f, g_Fragment_Dog[i].overallPos.z + 200.0f);
 		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
 
-		// 世界中心点
+		
 		XMVECTOR worldPos = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
 
-		// 投影到屏幕
+		
 		XMVECTOR screen = XMVector3Project(
 			worldPos,
 			0, 0,

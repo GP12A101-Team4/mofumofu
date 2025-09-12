@@ -97,24 +97,6 @@ void UninitBG(void)
 //*****************************************************************************
 void UpdateBG(void)
 {
-    //float dirX = 0.0f;
-
-    //if (GetKeyboardPress(DIK_LEFT) || GetKeyboardPress(DIK_A) || IsButtonPressed(0, BUTTON_LEFT))  dirX -= 1.0f;
-    //if (GetKeyboardPress(DIK_RIGHT) || GetKeyboardPress(DIK_D) || IsButtonPressed(0, BUTTON_RIGHT)) dirX += 1.0f;
-
-    //float inputSpeedY = XM_PI * 0.0007f; // Y軸の回転速度（入力時）
-    //float defaultSpeedY = XM_PI * 0.0001f; // デフォルトの自転速度
-
-    //if (dirX != 0.0f)
-    //{
-    //    g_bgc.rotSpeed.y = dirX * inputSpeedY;
-    //}
-    //else
-    //{
-    //    // スムーズに元の速度に戻す
-    //    g_bgc.rotSpeed.y += (defaultSpeedY - g_bgc.rotSpeed.y) * 0.1f;
-    //}
-
     g_bgc.rot.y += g_bgc.rotSpeed.y;
 
     // 回転角の制限

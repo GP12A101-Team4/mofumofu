@@ -198,10 +198,9 @@ bool CheckPuzzleRestored_Elph()
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 18.0f;  // 可接受误差半径
+	float tolerance = 18.0f; 
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		// 考虑缩放、旋转、平移后的世界坐标中心点
 		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Elph[i].scl.x, g_Fragment_Elph[i].scl.y, g_Fragment_Elph[i].scl.z);
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Elph[i].rot.x, g_Fragment_Elph[i].rot.y, g_Fragment_Elph[i].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Elph[i].overallPos.x, g_Fragment_Elph[i].overallPos.y + 60.0f, g_Fragment_Elph[i].overallPos.z + 200.0f);

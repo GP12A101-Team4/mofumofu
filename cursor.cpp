@@ -125,52 +125,8 @@ void UpdateCursor(void)
 		PlaySound(SOUND_LABEL_SE_MOUSECLICK);
 	}
 
-	/*if (GetKeyboardTrigger(DIK_F)) {
-	* 
-		isF++ ;
-		if (isF > 2 ) {
-			isF = 0;
-		}
-	}*/
-	
-	switch (isF)
-	{
-	case 0:
-		if (IsMouseLeftPressed()) {
-
-			cursorUV = CURSOR_CLICK;
-		}
-		else {
-			cursorUV = CURSOR_NORMAL;
-		}
-		break;
-	case 1:
-		if (IsMouseLeftPressed()) {
-
-			cursorUV = CURSOR_MIDDLE_CLICK;
-		}
-		else {
-			cursorUV = CURSOR_MIDDLE_NORMAL;
-		}
-		break;
-	case 2:
-		if (IsMouseLeftPressed()) {
-
-			cursorUV = CURSOR_GOLDEN_CLICK;
-		}
-		else {
-			cursorUV = CURSOR_GOLDEN_NORMAL;
-		}
-		break;
-	}
-	
-
-	
-
 #ifdef _DEBUG	// デバッグ情報を表示する
-	//char *str = GetDebugStr();
-	//sprintf(&str[strlen(str)], " PX:%.2f PY:%.2f", g_Pos.x, g_Pos.y);
-	PrintDebugProc("isF:%d \n", isF);
+
 #endif
 
 }
@@ -220,31 +176,6 @@ void DrawCursor(void)
 					float(GetMousePosX()), float(GetMousePosY()), 45.0f, 60.0f,
 					cursorUV, 0.0f, TEXTURE_PATTERN_DIVIDE_X, TEXTURE_PATTERN_DIVIDE_Y,
 					XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-
-
-				/*switch (isF)
-				{
-				case 0:
-					SetSpriteLTColor(g_VertexBuffer,
-						float(GetMousePosX()), float(GetMousePosY()), 30.0f, 50.0f,
-						cursorUV, 0.0f, TEXTURE_PATTERN_DIVIDE_X, TEXTURE_PATTERN_DIVIDE_Y,
-						XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-					break;
-				case 1:
-					SetSpriteLTColor(g_VertexBuffer,
-						float(GetMousePosX()), float(GetMousePosY()), 60.0f, 100.0f,
-						cursorUV, 0.0f, TEXTURE_PATTERN_DIVIDE_X, TEXTURE_PATTERN_DIVIDE_Y,
-						XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-					break;
-				case 2:
-					SetSpriteLTColor(g_VertexBuffer,
-						float(GetMousePosX()), float(GetMousePosY()), 60.0f, 100.0f,
-						cursorUV, 0.0f, TEXTURE_PATTERN_DIVIDE_X, TEXTURE_PATTERN_DIVIDE_Y,
-						XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f));
-					break;
-				}*/
-				
-				
 
 				// ポリゴン描画
 				GetDeviceContext()->Draw(4, 0);

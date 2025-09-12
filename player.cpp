@@ -178,20 +178,6 @@ void UpdatePlayer(void)
 	g_Player.spd *= 0.5f;
 
 
-
-	//{	// ポイントライトのテスト
-	//	LIGHT *light = GetLightData(1);
-	//	XMFLOAT3 pos = g_Player.pos;
-	//	pos.y += 20.0f;
-
-	//	light->Position = pos;
-	//	light->Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	//	light->Ambient = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	//	light->Type = LIGHT_TYPE_POINT;
-	//	light->Enable = TRUE;
-	//	SetLightData(1, light);
-	//}
-
 	long X = GetMouseX();
 	long Y = GetMouseY();
 	long Z = GetMouseZ();

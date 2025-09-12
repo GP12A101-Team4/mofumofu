@@ -48,10 +48,10 @@ struct FRAGMENT_RESTORED
 //*****************************************************************************
 // プロトタイプ宣言
 //*****************************************************************************
-HRESULT InitFragment(void);
-void UninitFragment(void);
-void UpdateFragment(void);
-void DrawFragment(void);
+HRESULT InitFragment_Cat(void);
+void UninitFragment_Cat(void);
+void UpdateFragment_Cat(void);
+void DrawFragment_Cat(void);
 
 void DrawPartDebugUI();
 

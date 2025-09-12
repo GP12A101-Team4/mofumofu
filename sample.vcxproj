@@ -164,7 +164,6 @@
     <ClInclude Include="main.h" />
     <ClInclude Include="menu.h" />
     <ClInclude Include="meshfield.h" />
-    <ClInclude Include="meshwall.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="object.h" />
     <ClInclude Include="player.h" />
@@ -175,6 +174,7 @@
     <ClInclude Include="sound.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="title.h" />
+    <ClInclude Include="tutorial.h" />
     <ClInclude Include="ui.h" />
   </ItemGroup>
   <ItemGroup>
@@ -203,7 +203,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu.cpp" />
     <ClCompile Include="meshfield.cpp" />
-    <ClCompile Include="meshwall.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="object.cpp" />
     <ClCompile Include="player.cpp" />
@@ -214,6 +213,7 @@
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="title.cpp" />
+    <ClCompile Include="tutorial.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
