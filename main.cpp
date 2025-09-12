@@ -33,6 +33,7 @@
 #include "bg.h"
 #include "menu.h"
 #include "object.h"
+#include "tutorial.h"
 
 #include "imgui.h"
 #include "imgui_impl_win32.h"
@@ -307,6 +308,8 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 
 	InitMenu();
 
+	InitTutorial();
+
 	InitCursor();
 
 	// 入力処理の初期化
@@ -316,31 +319,11 @@ HRESULT Init(HINSTANCE hInstance, HWND hWnd, BOOL bWindow)
 	InitMeshField(XMFLOAT3(0.0f, 0.0f, 0.0f), XMFLOAT3(0.0f, 0.0f, 0.0f), 1, 1, 1500.0f, 1500.0f);
 	InitBG();
 
-	// 壁の初期化
-	InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_TOP), XMFLOAT3(0.0f, 0.0f, 0.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(XMFLOAT3(MAP_LEFT, 0.0f, 0.0f), XMFLOAT3(0.0f, -XM_PI * 0.50f, 0.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(XMFLOAT3(MAP_RIGHT, 0.0f, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.50f, 0.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
-	InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_DOWN), XMFLOAT3(0.0f, XM_PI, 0.0f),
-		XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), 16, 2, 80.0f, 80.0f);
-
-	//// 壁(裏側用の半透明)
-	//InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_TOP), XMFLOAT3(0.0f, XM_PI, 0.0f),
-	//	XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	//InitMeshWall(XMFLOAT3(MAP_LEFT, 0.0f, 0.0f), XMFLOAT3(0.0f, XM_PI * 0.50f, 0.0f),
-	//	XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	//InitMeshWall(XMFLOAT3(MAP_RIGHT, 0.0f, 0.0f), XMFLOAT3(0.0f, -XM_PI * 0.50f, 0.0f),
-	//	XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-	//InitMeshWall(XMFLOAT3(0.0f, 0.0f, MAP_DOWN), XMFLOAT3(0.0f, 0.0f, 0.0f),
-	//	XMFLOAT4(1.0f, 1.0f, 1.0f, 0.25f), 16, 2, 80.0f, 80.0f);
-
 	// 影の初期化処理
 	InitShadow();
 
 	// 欠片の初期処理
-	InitFragment();
+	InitFragment_Cat();
 	InitFragment_Dog();
 	InitFragment_Elph();
 	InitFragment_Mouse();
@@ -380,11 +363,8 @@ void Uninit(void)
 	// 影の終了処理
 	UninitShadow();
 
-	// 壁の終了処理
-	UninitMeshWall();
-
 	//欠片の終了処理
-	UninitFragment();
+	UninitFragment_Cat();
 	UninitFragment_Dog();
 	UninitFragment_Elph();
 	UninitFragment_Mouse();
@@ -406,6 +386,8 @@ void Uninit(void)
 	UninitUI();
 
 	UninitMenu();
+	
+	UninitTutorial();
 
 	UninitCursor();
 	//入力の終了処理
@@ -436,6 +418,10 @@ void Update(void)
 		UpdateTitle();
 		break;
 
+	case MODE_TUTORIAL:
+		UpdateTutorial();
+		break;
+
 	case MODE_GAME:			// ゲーム画面の更新
 		UpdateGame();
 		//UpdateBG();
@@ -462,15 +448,9 @@ void Draw0(void)
 	// 地面の描画処理
 	DrawMeshField();
 
-	// 影の描画処理
-	//DrawShadow();
-
 	// プレイヤーの描画処理
 	/*DrawPlayer();*/
 
-	// 壁の描画処理
-	DrawMeshWall();
-	//DrawBG();
 	
 }
 
@@ -511,7 +491,28 @@ void Draw(void)
 		// Z比較あり
 		SetDepthEnable(TRUE);
 		break;
-      
+
+	case MODE_TUTORIAL:
+		SetViewPort(TYPE_FULL_SCREEN);
+
+		// 2Dの物を描画する処理
+		// Z比較なし
+		SetDepthEnable(FALSE);
+
+		// ライティングを無効
+		SetLightEnable(FALSE);
+
+		DrawTutorial();
+
+		DrawCursor();
+
+		// ライティングを有効に
+		SetLightEnable(TRUE);
+
+		// Z比較あり
+		SetDepthEnable(TRUE);
+		break;
+
 	case MODE_GAME:
 		DrawGame();
 
@@ -581,7 +582,6 @@ void Draw(void)
 
 #ifdef _DEBUG
 
-	/*g_ImmediateContext->OMSetRenderTargets(1, &g_RenderTargetView, g_DepthStencilView);*/
 
 	// デバッグ表示
 	DrawDebugProc();
@@ -592,7 +592,7 @@ void Draw(void)
 	ImGui::NewFrame();
 
 	ImGui::Begin("Debug Info");
-	ImGui::Text("FPS: %d", g_CountFPS); // 你已有的 FPS 計算變數
+	ImGui::Text("FPS: %d", g_CountFPS); 
 	ImGui::Text("Player Pos: %.2f, %.2f, %.2f", player->pos.x, player->pos.y, player->pos.z);
 	
 	ImGui::End();
@@ -611,13 +611,10 @@ void Draw(void)
 	DrawFadeDebugUI();
 	//ShowObjectDebugWindow();
 
-	// 結束新幀
 	ImGui::Render();
 
-	// 渲染 ImGui 主視窗
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-	// 如果啟用了多視窗（Docking / Viewports），要呼叫這兩個函式
 	ImGui::UpdatePlatformWindows();
 	ImGui::RenderPlatformWindowsDefault();
 
@@ -668,6 +665,11 @@ void SetMode(int mode)
 
 
 		break;
+
+	case MODE_TUTORIAL:
+		InitTutorial();
+		break;
+
 
 	case MODE_GAME:
 		// ゲーム画面の初期化

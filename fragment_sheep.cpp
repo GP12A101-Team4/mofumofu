@@ -193,10 +193,10 @@ bool CheckPuzzleRestored_Sheep()
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 10.0f;  // 可接受误差半径
+	float tolerance = 10.0f;  
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		// 考虑缩放、旋转、平移后的世界坐标中心点
+		
 		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Sheep[i].scl.x, g_Fragment_Sheep[i].scl.y, g_Fragment_Sheep[i].scl.z);
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Sheep[i].rot.x, g_Fragment_Sheep[i].rot.y, g_Fragment_Sheep[i].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y + 60.0f, g_Fragment_Sheep[i].overallPos.z + 200.0f);
@@ -426,20 +426,7 @@ void DrawFragment_Sheep(void)
 			XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Sheep[i].overallPos.x, g_Fragment_Sheep[i].overallPos.y + 60.0f, g_Fragment_Sheep[i].overallPos.z + 200.0f);
 			mtxWorld = mtxScl * mtxRot * mtxTranslate;
 
-			/*g_Fragment_Sheep[0].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Sheep[1].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Sheep[2].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Sheep[3].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Sheep[4].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-
-
-			g_Fragment_Sheep[0].scl = XMFLOAT3(1.21f, 1.21f, 0.0f);
-			g_Fragment_Sheep[1].scl = XMFLOAT3(0.87f, 0.87f, 0.0f);
-			g_Fragment_Sheep[2].scl = XMFLOAT3(0.84f, 0.84f, 0.0f);
-			g_Fragment_Sheep[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
-			g_Fragment_Sheep[4].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);*/
-
-
+	
 			g_Fragment_Sheep[0].overallPos = XMFLOAT3(366.0f, -4.0f, -485.0f);
 			g_Fragment_Sheep[1].overallPos = XMFLOAT3(494.0f, -4.5f, -612.0f);
 			g_Fragment_Sheep[2].overallPos = XMFLOAT3(369.0f, -3.0f, -467.0f);

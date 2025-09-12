@@ -61,7 +61,7 @@ static XMFLOAT2 g_TargetScreenPos_Mouse[TEXTURE_MAX] = {
 	{445.2f, 366.1f},
 	{441.7f, 355.8f},
 	{456.2f, 406.8f},
-	{0.0f, 0.0f}  // 第4张图是完整图，不需要判断
+	{0.0f, 0.0f} 
 };
 
 //static bool g_HasRecordedTarget = false;  // ← 直接设为 true
@@ -198,10 +198,10 @@ bool CheckPuzzleRestored_Mouse()
 
 	CAMERA* cam = GetCamera();
 
-	float tolerance = 10.0f;  // 可接受误差半径
+	float tolerance = 10.0f; 
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		// 考虑缩放、旋转、平移后的世界坐标中心点
+		
 		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Mouse[i].scl.x, g_Fragment_Mouse[i].scl.y, g_Fragment_Mouse[i].scl.z);
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Mouse[i].rot.x, g_Fragment_Mouse[i].rot.y, g_Fragment_Mouse[i].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Mouse[i].overallPos.x, g_Fragment_Mouse[i].overallPos.y + 60.0f, g_Fragment_Mouse[i].overallPos.z + 200.0f);
@@ -430,20 +430,6 @@ void DrawFragment_Mouse(void)
 			XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Mouse[i].overallPos.x, g_Fragment_Mouse[i].overallPos.y + 60.0f, g_Fragment_Mouse[i].overallPos.z + 200.0f);
 			mtxWorld = mtxScl * mtxRot * mtxTranslate;
 
-			/*g_Fragment_Mouse[0].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Mouse[1].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Mouse[2].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Mouse[3].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-			g_Fragment_Mouse[4].overallPos = XMFLOAT3(513.0f, -4.0f, 402.0f);
-
-
-			g_Fragment_Mouse[0].scl = XMFLOAT3(1.21f, 1.21f, 0.0f);
-			g_Fragment_Mouse[1].scl = XMFLOAT3(0.87f, 0.87f, 0.0f);
-			g_Fragment_Mouse[2].scl = XMFLOAT3(0.84f, 0.84f, 0.0f);
-			g_Fragment_Mouse[3].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);
-			g_Fragment_Mouse[4].scl = XMFLOAT3(0.9f, 0.9f, 0.0f);*/
-
-
 			g_Fragment_Mouse[0].overallPos = XMFLOAT3(399.0f, -26.0f, -191.5f);
 			g_Fragment_Mouse[1].overallPos = XMFLOAT3(507.0f, -49.0f, -193.0f);
 			g_Fragment_Mouse[2].overallPos = XMFLOAT3(517.0f, -51.0f, -193.0f);
@@ -485,7 +471,7 @@ void DrawFragment_Mouse(void)
 	if (g_FragmentRestored_Mouse[0].use)
 	{
 		XMMATRIX mtxWorld = XMMatrixIdentity();
-		XMMATRIX mtxScl = XMMatrixScaling(g_FragmentRestored_Mouse[0].scl.x, g_FragmentRestored_Mouse[0].scl.y, g_FragmentRestored_Mouse[0].scl.z);  // 你可以调整缩放
+		XMMATRIX mtxScl = XMMatrixScaling(g_FragmentRestored_Mouse[0].scl.x, g_FragmentRestored_Mouse[0].scl.y, g_FragmentRestored_Mouse[0].scl.z); 
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_FragmentRestored_Mouse[0].rot.x, g_FragmentRestored_Mouse[0].rot.y, g_FragmentRestored_Mouse[0].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_FragmentRestored_Mouse[0].pos.x, g_FragmentRestored_Mouse[0].pos.y + 60.0f, g_FragmentRestored_Mouse[0].pos.z + 200.0f);
 		mtxWorld = mtxScl * mtxRot * mtxTranslate;
@@ -494,7 +480,7 @@ void DrawFragment_Mouse(void)
 
 		material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, g_FragmentRestored_Mouse[0].alpha);
 		SetMaterial(material);
-		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture_Mouse[5]);  // 最后一张完整图
+		GetDeviceContext()->PSSetShaderResources(0, 1, &g_Texture_Mouse[5]); 
 
 		GetDeviceContext()->Draw(4, 0);
 
@@ -515,11 +501,11 @@ float GetPuzzleAlignmentRatio_Mouse()
 
 	CAMERA* cam = GetCamera();
 
-	const float maxDistance = 200.0f;  // 最大容忍误差
+	const float maxDistance = 200.0f; 
 	float ratioSum = 0.0f;
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		// 构建世界变换矩阵（缩放 → 旋转 → 平移）
+		
 		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Mouse[i].scl.x, g_Fragment_Mouse[i].scl.y, g_Fragment_Mouse[i].scl.z);
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Mouse[i].rot.x, g_Fragment_Mouse[i].rot.y, g_Fragment_Mouse[i].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Mouse[i].overallPos.x, g_Fragment_Mouse[i].overallPos.y + 60.0f, g_Fragment_Mouse[i].overallPos.z + 200.0f);
@@ -584,16 +570,16 @@ void DrawPartDebugUI_Mouse()
 	ImGui::Text("碎片中心位置（投影） vs 目标位置");
 
 	for (int i = 0; i < TEXTURE_MAX - 1; i++) {
-		// 构建世界矩阵
+		
 		XMMATRIX mtxScl = XMMatrixScaling(g_Fragment_Mouse[i].scl.x, g_Fragment_Mouse[i].scl.y, g_Fragment_Mouse[i].scl.z);
 		XMMATRIX mtxRot = XMMatrixRotationRollPitchYaw(g_Fragment_Mouse[i].rot.x, g_Fragment_Mouse[i].rot.y, g_Fragment_Mouse[i].rot.z);
 		XMMATRIX mtxTranslate = XMMatrixTranslation(g_Fragment_Mouse[i].overallPos.x, g_Fragment_Mouse[i].overallPos.y + 60.0f, g_Fragment_Mouse[i].overallPos.z + 200.0f);
 		XMMATRIX mtxWorld = mtxScl * mtxRot * mtxTranslate;
 
-		// 世界中心点
+		
 		XMVECTOR worldPos = XMVector3TransformCoord(XMVectorZero(), mtxWorld);
 
-		// 投影到屏幕
+		
 		XMVECTOR screen = XMVector3Project(
 			worldPos,
 			0, 0,

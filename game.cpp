@@ -80,7 +80,7 @@ HRESULT InitGame(void)
 	ResetPuzzleAnimationFlags();
 
 	// 欠片の初期処理
-	InitFragment();
+	InitFragment_Cat();
 	InitFragment_Dog();
 	InitFragment_Elph();
 	InitFragment_Mouse();
@@ -90,6 +90,7 @@ HRESULT InitGame(void)
 	// プレイヤーの初期化
 	InitPlayer();
 
+	//ステージの初期化
 	InitObject();
 
 	// スコアの初期化
@@ -114,20 +115,32 @@ void UninitGame(void)
 	// スコアの終了処理
 	UninitScore();
 
+	//UIの終了処理
 	UninitUI();
 
+	//メニューの終了処理
 	UninitMenu();
 
 	// 地面の終了処理
 	UninitMeshField();
+
+	//SkyBoxの終了処理
 	UninitBG();
 	// プレイヤーの終了処理
 	UninitPlayer();
 
+	//ステージの終了処理
 	UninitObject();
 
 	// 影の終了処理
 	UninitShadow();
+
+	//欠片の終了処理
+	UninitFragment_Cat();
+	UninitFragment_Dog();
+	UninitFragment_Mouse();
+	UninitFragment_Elph();
+	UninitFragment_Sheep();
 }
 
 //=============================================================================
@@ -162,26 +175,28 @@ void UpdateGame(void)
 
 	// 地面処理の更新
 	UpdateMeshField();
+
+	//SkyBoxの更新処理
 	UpdateBG();
 	// プレイヤーの更新処理
 	UpdatePlayer();
 
 	UpdateObject();
 	//欠片の更新処理
-	UpdateFragment();
+	UpdateFragment_Cat();
 	UpdateFragment_Dog();
 	UpdateFragment_Elph();
 	UpdateFragment_Mouse();
 	UpdateFragment_Sheep();
 	UpdateObstacleFragment();
 
-	// 影の更新処理
-	//UpdateShadow();
 
 	// スコアの更新処理
 	UpdateScore();
 
+	//プレーヤーの移動制限処理
 	CheckHit();
+
 
 	UpdateUI();
 
@@ -193,23 +208,20 @@ void UpdateGame(void)
 void DrawGame0(void)
 {
 	// 3Dの物を描画する処理
+	// 
 	// 地面の描画処理
 	DrawMeshField();
-
-	// 影の描画処理
-	//DrawShadow();
-
 	// プレイヤーの描画処理
 	DrawPlayer();
 
+	//ステージの描画処理
 	DrawObject();
 
-
-	// 壁の描画処理
-	DrawMeshWall();
+	//SkyBoxの描画処理
 	DrawBG();
+
 	//欠片の描画処理
-	DrawFragment();
+	DrawFragment_Cat();
 	DrawFragment_Dog();
 	DrawFragment_Elph();
 	DrawFragment_Mouse();
@@ -231,8 +243,10 @@ void DrawGame0(void)
 		DrawMenu();
 	}
 
+	//UIの描画処理
 	DrawUI();
 
+	//ゲージバーの描画処理
 	DrawGaugeBars();
 
 
@@ -250,35 +264,30 @@ void DrawGame(void)
 #ifdef _DEBUG
 	// デバッグ表示
 	/*PrintDebugProc("ViewPortType:%d\n", g_ViewPortType_Game);*/
-
 #endif
+
 	CAMERA* camera = GetCamera();
 	PLAYER* player = GetPlayer();
 	MENU* menu = GetMenu();
 	bool IsSetting = GetIsSetting();
 
 	{
-		if (IsSetting == false) {
-			if (!menu->use)
-			{
-				float dist = 10.0f;
-				XMFLOAT3 dir = GetCameraDir();
+		if (!menu->use)
+		{
+			float dist = 10.0f;
+			XMFLOAT3 dir = GetCameraDir();
 
-				//ベクトルを拡大する　Camera.atとCamera.posの値が同じになるバグを防ぐため 
-				dir.x *= dist;
-				dir.y *= dist;
-				dir.z *= dist;
+			//ベクトルを拡大する　Camera.atとCamera.posの値が同じになるバグを防ぐため 
+			dir.x *= dist;
+			dir.y *= dist;
+			dir.z *= dist;
 
-				camera->dir = { camera->pos.x + dir.x,
-								camera->pos.y + dir.y,
-								camera->pos.z + dir.z };
+			camera->dir = { camera->pos.x + dir.x,
+							camera->pos.y + dir.y,
+							camera->pos.z + dir.z };
 
-				SetCameraAT(camera->dir);
-				
-			}
-		}
-		else {
-			SetCameraAT({0.0f, 0.0f,0.0f});
+			SetCameraAT(camera->dir);
+
 		}
 		
 		SetCamera();
@@ -295,13 +304,6 @@ void DrawGame(void)
 void CheckHit(void)
 {
 	
-	//PLAYER* player = GetPlayer();	// プレイヤーのポインターを初期化
-
-	//if (player->pos.x < MAP_LEFT/2 + player->size)player->pos.x = MAP_LEFT/2 + player->size;
-	//if (player->pos.x > MAP_RIGHT/2 - player->size)player->pos.x = MAP_RIGHT/2 - player->size;
-	//if (player->pos.z < MAP_DOWN/2 + player->size)player->pos.z = MAP_DOWN/2 + player->size;
-	//if (player->pos.z > MAP_TOP/2 - player->size)player->pos.z = MAP_TOP/2 - player->size;
-
 	PLAYER* player = GetPlayer();   // プレイヤーのポインターを初期化
 
 	// 圓心在 (0,0,0)

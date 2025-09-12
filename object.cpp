@@ -239,12 +239,6 @@ HRESULT InitObject(void)
 		g_Object[i].isColliding = FALSE;
 		ComputeAABB(g_Object[i]);
 
-		//// ここでプレイヤー用の影を作成している
-		//XMFLOAT3 pos = g_Object[i].pos;
-		//pos.y -= (OBJECT_OFFSET_Y - 0.1f);
-		//g_Object[i].shadowIdx = CreateShadow(pos, OBJECT_SHADOW_SIZE, OBJECT_SHADOW_SIZE);
-		////          ↑
-		////        このメンバー変数が生成した影のIndex番号
 	}
 
 	LoadModel(MODEL_SHOP_1, &g_Object[shop_1].model);
@@ -495,12 +489,12 @@ void DrawObject(void)
 			{
 				if (i == Target_Object)
 				{
-					// 選中 → 改紅色
+					
 					SetModelDiffuse(&g_Object[i].model, j, XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f));
 				}
 				else
 				{
-					// 未選中 → 還原原始顏色
+					
 					SetModelDiffuse(&g_Object[i].model, j, g_Object[i].model.SubsetArray[j].Diffuse_Original);
 				}
 			}

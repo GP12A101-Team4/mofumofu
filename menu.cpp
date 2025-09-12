@@ -258,22 +258,6 @@ void UpdateMenu(void)
 	
 	if (!g_menu.use)return;
 
-	/*if (GetKeyboardTrigger(DIK_ADD)) {
-		bgmVolume += 0.05f;
-		if (bgmVolume > 1.0f) {
-			bgmVolume = 1.0f;
-		}
-	}
-	else if (GetKeyboardTrigger(DIK_SUBTRACT)) {
-		bgmVolume -= 0.05f;
-		if (bgmVolume < 0.0f) {
-			bgmVolume = 0.0f;
-		}
-	}*/
-
-	
-
-
 	XMFLOAT3 MousePos;
 	MousePos.x = float(GetMousePosX());
 	MousePos.y = float(GetMousePosY());
@@ -358,14 +342,11 @@ void UpdateMenu(void)
 			g_sprite[BAR_MASTER].py + g_sprite[BAR_MASTER].ph / 2, 0.0f),
 		g_sprite[BAR_MASTER].pw + HB_OFFSET, g_sprite[BAR_MASTER].ph) && IsMouseLeftPressed()) {
 
-		// 計算音量比例 (0.0 ~ 1.0)
 		bgmVolume = (MousePos.x - g_sprite[BAR_MASTER].px) / g_sprite[BAR_MASTER].pw;
 
-		// 限制在 0.0 ~ 1.0 範圍
 		if (bgmVolume < 0.0f) bgmVolume = 0.0f;
 		if (bgmVolume > 1.0f) bgmVolume = 1.0f;
 
-		// 將音量反映到テクスチャ幅 (tw)
 		g_sprite[BAR_MASTER_CURRENT].pw = BAR_WIDTH * bgmVolume;
 	}
 
@@ -374,14 +355,11 @@ void UpdateMenu(void)
 			g_sprite[BAR_SE].py + g_sprite[BAR_SE].ph / 2, 0.0f),
 		g_sprite[BAR_SE].pw + HB_OFFSET, g_sprite[BAR_SE].ph) && IsMouseLeftPressed()) {
 
-		// 計算音量比例 (0.0 ~ 1.0)
 		seVolume = (MousePos.x - g_sprite[BAR_SE].px) / g_sprite[BAR_SE].pw;
 
-		// 限制在 0.0 ~ 1.0 範圍
 		if (seVolume < 0.0f) seVolume = 0.0f;
 		if (seVolume > 1.0f) seVolume = 1.0f;
 
-		// 將音量反映到テクスチャ幅 (tw)
 		g_sprite[BAR_SE_CURRENT].pw = BAR_WIDTH * seVolume;
 	}
 

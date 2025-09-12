@@ -159,7 +159,6 @@ void UpdateFade(void)
 	{// フェード処理中
 		if (g_Fade == FADE_OUT)
 		{// フェードアウト処理
-			//g_fade.radius -= 0.01f;
 			g_pawfade.g_FadeAmount -= 0.1f;
 			if (g_pawfade.g_FadeAmount < 0.0f)
 			{

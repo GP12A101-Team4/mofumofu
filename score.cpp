@@ -127,18 +127,18 @@ void DrawScore(void)
     int ms = (msAll % 1000) / 10; // 2桁ミリ秒
 
     // 桁ごとの配列：MM:SS:MS
-    // -1 を「冒号」にする（テクスチャの最後の列を使用）
+   
     int layout[8] = {
         mm / 10, mm % 10,
-        -1,                 // 冒号
+        -1,                 
         ss / 10, ss % 10,
-        -1,                 // 冒号
+        -1,                 
         ms / 10, ms % 10
     };
 
     float startX = g_Pos.x;
     float startY = g_Pos.y;
-    float tw = 1.0f / 11.0f;  // 数字(0-9) + 冒号(10) → 11列
+    float tw = 1.0f / 11.0f;  
 
     for (int i = 0; i < 8; i++)
     {
@@ -146,11 +146,11 @@ void DrawScore(void)
         float tx;
 
         if (d == -1) {
-            // 冒号：最后一列 (index = 10)
+            
             tx = 10 * tw;
         }
         else {
-            // 普通数字
+           
             tx = d * tw;
         }
 
@@ -195,18 +195,13 @@ int GetElapsedTimeMs()
 
 void Score_SetPosition(float x, float y)
 {
-    // g_Pos 在 score.cpp 内部就是显示起点坐标
-    // 默认为 {450, 5, 0}，改成传入坐标即可
-    // g_Pos.z 不用动
-    extern XMFLOAT3 g_Pos; // 如果在同文件顶端可见则无需 extern
+    extern XMFLOAT3 g_Pos;
     g_Pos.x = x;
     g_Pos.y = y;
 }
 
 void Score_SetScale(float scale)
 {
-    // g_w/g_h 是每个字符的绘制尺寸；默认 22x38
-    // 用统一缩放即可得到想要的大小
     extern float g_w, g_h;
     g_w = 22.0f * scale;  // TEXTURE_WIDTH = 22
     g_h = 38.0f * scale;  // TEXTURE_HEIGHT = 38
